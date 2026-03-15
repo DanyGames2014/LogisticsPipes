@@ -16,6 +16,8 @@
   "environment": "*",
   "entrypoints": {
     "stationapi:event_bus": [
+      "net.danygames2014.logisticspipes.LogisticsPipes",
+      "net.danygames2014.logisticspipes.init.BlockEntityListener"
     ],
     "stationapi:event_bus_client": [
     ],
