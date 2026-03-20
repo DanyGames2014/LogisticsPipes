@@ -5,6 +5,8 @@ import net.danygames2014.buildcraft.block.PipeBlock;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeBlockEntity;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeType;
 import net.danygames2014.buildcraft.block.material.PipeMaterial;
+import net.danygames2014.logisticspipes.block.LogisticPipeBlock;
+import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.pipe.behavior.LogisticPipeBehavior;
 import net.danygames2014.logisticspipes.block.pipe.transporter.LogisticItemPipeTransporter;
 import net.mine_diver.unsafeevents.listener.EventListener;
@@ -35,15 +37,15 @@ public class LogisticsPipes {
 
         logisticPipeBehavior = new LogisticPipeBehavior();
 
-        basicItemPipe = new PipeBlock(
+        basicItemPipe = new LogisticPipeBlock(
                 NAMESPACE.id("basic_item_pipe"),
                 pipeMaterial,
-                Buildcraft.NAMESPACE.id("block/pipe/cobblestone_structure_pipe"),
+                NAMESPACE.id("block/pipe/basic_pipe"),
                 null,
                 PipeType.ITEM,
                 logisticPipeBehavior,
                 LogisticItemPipeTransporter::new,
-                PipeBlockEntity::new
+                LogisticPipeBlockEntity::new
         ).setTranslationKey(NAMESPACE, "basic_item_pipe").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
     }
 }
