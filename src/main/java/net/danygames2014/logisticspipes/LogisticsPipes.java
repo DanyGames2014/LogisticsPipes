@@ -30,6 +30,9 @@ public class LogisticsPipes {
     public static LogisticPipeBehavior logisticPipeBehavior;
 
     public static Block basicItemPipe;
+    public static Block requestItemPipe;
+    public static Block requestItemPipeMk2;
+    public static Block providerItemPipe;
 
     @EventListener
     public void registerBlocks(BlockRegistryEvent event) {
@@ -40,12 +43,45 @@ public class LogisticsPipes {
         basicItemPipe = new LogisticPipeBlock(
                 NAMESPACE.id("basic_item_pipe"),
                 pipeMaterial,
-                NAMESPACE.id("block/pipe/basic_pipe"),
+                NAMESPACE.id("block/pipe/basic_item_pipe"),
                 null,
                 PipeType.ITEM,
                 logisticPipeBehavior,
                 LogisticItemPipeTransporter::new,
                 LogisticPipeBlockEntity::new
         ).setTranslationKey(NAMESPACE, "basic_item_pipe").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
+
+        requestItemPipe = new LogisticPipeBlock(
+                NAMESPACE.id("request_item_pipe"),
+                pipeMaterial,
+                NAMESPACE.id("block/pipe/request_item_pipe"),
+                null,
+                PipeType.ITEM,
+                logisticPipeBehavior,
+                LogisticItemPipeTransporter::new,
+                LogisticPipeBlockEntity::new
+        ).setTranslationKey(NAMESPACE, "request_item_pipe").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
+
+        requestItemPipeMk2 = new LogisticPipeBlock(
+                NAMESPACE.id("request_item_pipe_mk2"),
+                pipeMaterial,
+                NAMESPACE.id("block/pipe/request_item_pipe_mk2"),
+                null,
+                PipeType.ITEM,
+                logisticPipeBehavior,
+                LogisticItemPipeTransporter::new,
+                LogisticPipeBlockEntity::new
+        ).setTranslationKey(NAMESPACE, "request_item_pipe_mk2").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
+
+        providerItemPipe = new LogisticPipeBlock(
+                NAMESPACE.id("provider_item_pipe"),
+                pipeMaterial,
+                NAMESPACE.id("block/pipe/provider_item_pipe"),
+                null,
+                PipeType.ITEM,
+                logisticPipeBehavior,
+                LogisticItemPipeTransporter::new,
+                LogisticPipeBlockEntity::new
+        ).setTranslationKey(NAMESPACE, "provider_item_pipe").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
     }
 }

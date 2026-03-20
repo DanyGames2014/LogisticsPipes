@@ -1,10 +1,7 @@
 package net.danygames2014.logisticspipes.block;
 
 import net.danygames2014.buildcraft.block.PipeBlock;
-import net.danygames2014.buildcraft.block.entity.pipe.PipeBlockEntityFactory;
-import net.danygames2014.buildcraft.block.entity.pipe.PipeConnectionType;
-import net.danygames2014.buildcraft.block.entity.pipe.PipeTransporter;
-import net.danygames2014.buildcraft.block.entity.pipe.PipeType;
+import net.danygames2014.buildcraft.block.entity.pipe.*;
 import net.danygames2014.buildcraft.block.entity.pipe.behavior.PipeBehavior;
 import net.danygames2014.logisticspipes.init.TextureListener;
 import net.minecraft.block.material.Material;
@@ -18,13 +15,13 @@ public class LogisticPipeBlock extends PipeBlock {
     }
 
     @Override
-    public Identifier getTextureIdentifierForSide(@Nullable Direction direction, @Nullable PipeConnectionType connectionType) {
-        if(connectionType == PipeConnectionType.NORMAL){
+    public Identifier getTextureIdentifierForSide(PipeBlockEntity pipe, @Nullable Direction direction, @Nullable PipeConnectionType connectionType) {
+        if(connectionType == PipeConnectionType.NORMAL && direction != null){
             return TextureListener.notRoutedStatus;
         }
-        if(connectionType == PipeConnectionType.ALTERNATE){
+        if(connectionType == PipeConnectionType.ALTERNATE && direction != null){
             return TextureListener.routedStatus;
         }
-        return super.getTextureIdentifierForSide(null, connectionType);
+        return super.getTextureIdentifierForSide(pipe, direction, connectionType);
     }
 }
