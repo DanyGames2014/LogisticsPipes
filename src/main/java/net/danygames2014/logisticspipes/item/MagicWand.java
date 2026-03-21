@@ -28,8 +28,17 @@ public class MagicWand extends TemplateItem {
         BlockPos blockPos = new BlockPos(x, y, z);
         BlockPos offset = blockPos.offset(Direction.byId(side));
 
+        float boundry = 0.4F;
+        int pipeWidth = 3;
+
+        float width = boundry + world.random.nextInt(pipeWidth) / 10.0F;
+        float length = boundry + world.random.nextInt(pipeWidth) / 10.0F;
+        float height = world.random.nextInt(7) / 10.0F + 0.2F;
+
+        float scalemult = 1f + (float)Math.log10(4);
+
         if(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT){
-            Minecraft.INSTANCE.particleManager.addParticle(new SparkleParticle(world, offset.getX() + 0.5d, offset.getY() + 0.5d, offset.getZ() + 0.5d, 0d, 0d, 0d));
+            Minecraft.INSTANCE.particleManager.addParticle(new SparkleParticle(world, offset.getX() + length, offset.getY() + height, offset.getZ() + width, scalemult, 1f, 1f, 0f, 6 + world.random.nextInt(3)));
         }
 
         return true;
