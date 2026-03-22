@@ -6,13 +6,16 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.danygames2014.buildcraft.block.PipeBlock;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeBlockEntity;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeConnectionType;
+import net.danygames2014.logisticspipes.block.pipe.ItemSendMode;
 import net.danygames2014.logisticspipes.gui.hud.TestHud;
 import net.danygames2014.logisticspipes.interfaces.HUDRenderer;
 import net.danygames2014.logisticspipes.interfaces.HUDRendererProvider;
 import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
+import net.danygames2014.logisticspipes.interfaces.RoutedItem;
 import net.danygames2014.logisticspipes.routing.RouteDestination;
 import net.danygames2014.logisticspipes.routing.Router;
 import net.danygames2014.logisticspipes.util.RoutingUtil;
+import net.danygames2014.logisticspipes.util.tuple.Pair3;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.World;
@@ -23,6 +26,10 @@ import java.util.Map;
 import java.util.Queue;
 
 public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements Router, HUDRendererProvider {
+    private boolean enabled = true;
+
+    protected final LinkedList<Pair3<RoutedItem, Direction, ItemSendMode>> _sendQueue = new LinkedList<>();
+
     // Routing
     public Long2ObjectOpenHashMap<RouteDestination> routingTable = new Long2ObjectOpenHashMap<>(32, 0.5F);
     public Long2ByteOpenHashMap neighborTable = new Long2ByteOpenHashMap(32, 0.5F);
@@ -39,6 +46,36 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         this.neighborTable.defaultReturnValue((byte) -1);
         setup();
     }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (getLogisticsModule() == null) return;
+        if (!isEnabled()) return;
+        getLogisticsModule().tick();
+    }
+
+    public boolean isEnabled(){
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled){
+        this.enabled = enabled;
+    }
+
+    public abstract ItemSendMode getItemSendMode();
+
+    public void queueRoutedItem(RoutedItem routedItem, Direction from) {
+        _sendQueue.addLast(new Pair3<>(routedItem, from, ItemSendMode.Normal));
+        sendQueueChanged();
+    }
+
+    public void queueRoutedItem(RoutedItem routedItem, Direction from, ItemSendMode mode) {
+        _sendQueue.addLast(new Pair3<>(routedItem, from, mode));
+        sendQueueChanged();
+    }
+
+    protected void sendQueueChanged() {}
 
     @Override
     public HUDRenderer getRenderer() {

@@ -19,7 +19,8 @@
       "net.danygames2014.logisticspipes.LogisticsPipes",
       "net.danygames2014.logisticspipes.init.BlockEntityListener",
       "net.danygames2014.logisticspipes.init.TextureListener",
-      "net.danygames2014.logisticspipes.init.WrenchModeListener"
+      "net.danygames2014.logisticspipes.init.WrenchModeListener",
+      "net.danygames2014.logisticspipes.init.EntityListener"
     ],
     "stationapi:event_bus_client": [
     ],

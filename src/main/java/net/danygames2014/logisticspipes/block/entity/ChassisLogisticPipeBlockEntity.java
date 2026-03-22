@@ -6,14 +6,14 @@ import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
 import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
 import net.danygames2014.logisticspipes.module.ItemSinkModule;
 
-public class BasicLogisticPipeBlockEntity extends LogisticPipeBlockEntity {
+public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity {
     private ItemSinkModule itemSinkModule;
 
-    public BasicLogisticPipeBlockEntity() {
+    public ChassisLogisticPipeBlockEntity() {
         super();
     }
 
-    public BasicLogisticPipeBlockEntity(PipeBlock pipeBlock) {
+    public ChassisLogisticPipeBlockEntity(PipeBlock pipeBlock) {
         super(pipeBlock);
     }
 
