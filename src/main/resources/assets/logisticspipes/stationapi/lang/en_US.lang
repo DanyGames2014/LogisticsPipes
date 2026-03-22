@@ -2,3 +2,10 @@ tile.logisticspipes.basic_item_pipe.name=Basic Logistics Pipe
 tile.logisticspipes.request_item_pipe.name=Request Logistics Pipe
 tile.logisticspipes.request_item_pipe_mk2.name=Request Logistics Pipe Mk2
 tile.logisticspipes.provider_item_pipe.name=Provider Logistics Pipe
+
+item.logisticspipes.magic_wand.name=Magic Wand
+item.logisticspipes.routing_debugger.name=Routing Debugger
+
+wrenchmode.logisticspipes.discover_neighbors.name=Discover Neighbors
+wrenchmode.logisticspipes.validate_routes.name=Validate Routes
+wrenchmode.logisticspipes.learn_routes.name=Learn Routes from Neighbors

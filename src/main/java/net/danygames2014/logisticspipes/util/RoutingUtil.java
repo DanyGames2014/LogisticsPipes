@@ -36,38 +36,44 @@ public class RoutingUtil {
         BlockEntity blockEntity = world.getBlockEntity(x, y, z);
         
         if (blockEntity instanceof PipeBlockEntity pipe) {
-            if (pipe instanceof Router) {
-                return 1;
-            }
-            
-            if (pipe.behavior == Buildcraft.stonePipeBehavior) {
-                return 10;
-            }
-            
-            if (pipe.behavior == Buildcraft.cobblestonePipeBehavior) {
-                return 10;
-            }
-            
-            if (pipe.behavior == Buildcraft.goldenPipeBehavior) {
-                return 2;
-            }
-            
-            if (pipe.behavior == Buildcraft.clayPipeBehavior) {
-                return 10;
-            }
-            
-            if (pipe.behavior == Buildcraft.sandstonePipeBehavior) {
-                return 10;
-            }
+            return getPipeMetric(pipe);
         }
         
+        return -1;
+    }
+    
+    public static int getPipeMetric(PipeBlockEntity pipe) {
+        if (pipe instanceof Router) {
+            return 1;
+        }
+
+        if (pipe.behavior == Buildcraft.stonePipeBehavior) {
+            return 10;
+        }
+
+        if (pipe.behavior == Buildcraft.cobblestonePipeBehavior) {
+            return 10;
+        }
+
+        if (pipe.behavior == Buildcraft.goldenPipeBehavior) {
+            return 2;
+        }
+
+        if (pipe.behavior == Buildcraft.clayPipeBehavior) {
+            return 10;
+        }
+
+        if (pipe.behavior == Buildcraft.sandstonePipeBehavior) {
+            return 10;
+        }
+
         return -1;
     }
     
     public static boolean isPipe(World world, int x, int y, int z) {
         BlockEntity blockEntity = world.getBlockEntity(x, y, z);
 
-        return blockEntity instanceof PipeBlockEntity && !(blockEntity instanceof LogisticPipeBlockEntity);
+        return blockEntity instanceof PipeBlockEntity;
     }
     
     public static Router getRouter(World world, long routerId) {
