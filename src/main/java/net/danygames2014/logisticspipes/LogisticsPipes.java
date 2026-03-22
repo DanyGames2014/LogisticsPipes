@@ -3,6 +3,7 @@ package net.danygames2014.logisticspipes;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeType;
 import net.danygames2014.buildcraft.block.material.PipeMaterial;
 import net.danygames2014.logisticspipes.block.LogisticPipeBlock;
+import net.danygames2014.logisticspipes.block.entity.BasicLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.pipe.behavior.LogisticPipeBehavior;
 import net.danygames2014.logisticspipes.block.pipe.transporter.LogisticItemPipeTransporter;
@@ -53,7 +54,7 @@ public class LogisticsPipes {
                 PipeType.ITEM,
                 logisticPipeBehavior,
                 LogisticItemPipeTransporter::new,
-                LogisticPipeBlockEntity::new
+                BasicLogisticPipeBlockEntity::new
         ).setTranslationKey(NAMESPACE, "basic_item_pipe").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
 
         requestItemPipe = new LogisticPipeBlock(
@@ -64,7 +65,7 @@ public class LogisticsPipes {
                 PipeType.ITEM,
                 logisticPipeBehavior,
                 LogisticItemPipeTransporter::new,
-                LogisticPipeBlockEntity::new
+                BasicLogisticPipeBlockEntity::new
         ).setTranslationKey(NAMESPACE, "request_item_pipe").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
 
         requestItemPipeMk2 = new LogisticPipeBlock(
@@ -75,7 +76,7 @@ public class LogisticsPipes {
                 PipeType.ITEM,
                 logisticPipeBehavior,
                 LogisticItemPipeTransporter::new,
-                LogisticPipeBlockEntity::new
+                BasicLogisticPipeBlockEntity::new
         ).setTranslationKey(NAMESPACE, "request_item_pipe_mk2").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
 
         providerItemPipe = new LogisticPipeBlock(
@@ -86,7 +87,7 @@ public class LogisticsPipes {
                 PipeType.ITEM,
                 logisticPipeBehavior,
                 LogisticItemPipeTransporter::new,
-                LogisticPipeBlockEntity::new
+                BasicLogisticPipeBlockEntity::new
         ).setTranslationKey(NAMESPACE, "provider_item_pipe").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
     }
 

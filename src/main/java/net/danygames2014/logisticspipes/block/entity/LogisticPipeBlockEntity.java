@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-public class LogisticPipeBlockEntity extends PipeBlockEntity implements Router, HUDRendererProvider {
+public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements Router, HUDRendererProvider {
     // Routing
     public Long2ObjectOpenHashMap<RouteDestination> routingTable = new Long2ObjectOpenHashMap<>(32, 0.5F);
     public Long2ByteOpenHashMap neighborTable = new Long2ByteOpenHashMap(32, 0.5F);
