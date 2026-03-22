@@ -10,44 +10,54 @@ import net.danygames2014.buildcraft.entity.TravellingItemEntity;
 import net.danygames2014.buildcraft.util.MathUtil;
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
+import net.danygames2014.logisticspipes.interfaces.RoutedItem;
 import net.danygames2014.logisticspipes.routing.RouteDestination;
+import net.danygames2014.logisticspipes.util.ItemUtil;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 public class LogisticPipeBehavior extends PipeBehavior {
     @Override
     public Direction routeItem(PipeBlockEntity blockEntity, ObjectArrayList<Direction> validOutputDirections, TravellingItemEntity item) {
-        if (item instanceof RoutedItemEntity routedItem) {
-            // If there is no destination, we cant route
-            if (routedItem.destinationUUID == null) {
-                return null;
-            }
-            
-            if (blockEntity instanceof LogisticPipeBlockEntity logisticsPipe) {
-                RouteDestination route = logisticsPipe.routingTable.getOrDefault(routedItem.destinationUUID.longValue(), null);
-                
-                // If we do not know the route to destination, we cannot route
-                if (route == null) {
-                    return null;
-                }
-                
-                int nextHopDirection = logisticsPipe.neighborTable.getOrDefault(route.routerId, -1);
-                
-                // We do not know in which direction the router is
-                if (nextHopDirection == -1) {
-                    return null;
-                }
-                
-                Direction direction = Direction.byId(nextHopDirection);
-                
-                return validOutputDirections.contains(direction) ? direction : null;
-            }
-            
-            return super.routeItem(blockEntity, validOutputDirections, routedItem);
-        }
-        
-        // Non routed items cannot be routed
-        return null;
+        boolean forcePacket = !(item instanceof RoutedItem routedItem) || routedItem.getDestination() == null;
+        RoutedItem routedItem = ItemUtil.GetOrCreateRoutedItem(blockEntity.world, item);
+        LogisticPipeBlockEntity pipe = (LogisticPipeBlockEntity)blockEntity;
+        return pipe.getDirectionForItem(routedItem);
     }
+
+    //    @Override
+//    public Direction routeItem(PipeBlockEntity blockEntity, ObjectArrayList<Direction> validOutputDirections, TravellingItemEntity item) {
+//        if (item instanceof RoutedItemEntity routedItem) {
+//            // If there is no destination, we cant route
+//            if (routedItem.destinationUUID == null) {
+//                return null;
+//            }
+//
+//            if (blockEntity instanceof LogisticPipeBlockEntity logisticsPipe) {
+//                RouteDestination route = logisticsPipe.routingTable.getOrDefault(routedItem.destinationUUID.longValue(), null);
+//
+//                // If we do not know the route to destination, we cannot route
+//                if (route == null) {
+//                    return null;
+//                }
+//
+//                int nextHopDirection = logisticsPipe.neighborTable.getOrDefault(route.routerId, -1);
+//
+//                // We do not know in which direction the router is
+//                if (nextHopDirection == -1) {
+//                    return null;
+//                }
+//
+//                Direction direction = Direction.byId(nextHopDirection);
+//
+//                return validOutputDirections.contains(direction) ? direction : null;
+//            }
+//
+//            return super.routeItem(blockEntity, validOutputDirections, routedItem);
+//        }
+//
+//        // Non routed items cannot be routed
+//        return null;
+//    }
 
     @Override
     public ItemPipeTransporter.HandOffResult getFailedInsertResult(PipeBlockEntity blockEntity, ItemPipeTransporter transporter, TravellingItemEntity item) {

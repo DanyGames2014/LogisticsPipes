@@ -1,5 +1,6 @@
 package net.danygames2014.logisticspipes.entity;
 
+import net.danygames2014.buildcraft.block.entity.pipe.transporter.ItemPipeTransporter;
 import net.danygames2014.buildcraft.entity.TravellingItemEntity;
 import net.danygames2014.logisticspipes.block.entity.ChassisLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.interfaces.RequireReliableTransport;
@@ -28,7 +29,16 @@ public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem
     private List<PlayerEntity> knownBy = new ArrayList<>();
 
     public RoutedItemEntity(World world, TravellingItemEntity itemEntity){
-        super(world);
+        super(world, itemEntity.x, itemEntity.y, itemEntity.z, itemEntity.stack);
+        this.transporter = itemEntity.transporter;
+        this.input = itemEntity.input;
+        this.travelDirection = itemEntity.travelDirection;
+        this.lastTravelDirection = itemEntity.lastTravelDirection;
+        this.speed = itemEntity.speed;
+        this.lastSpeed = itemEntity.lastSpeed;
+        this.invalidTimer = itemEntity.invalidTimer;
+        this.toMiddle = itemEntity.toMiddle;
+
     }
 
     public RoutedItemEntity(World world, double x, double y, double z) {
@@ -110,6 +120,8 @@ public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem
         }
         transporter.receiveTravellingItem(newItem, direction);
 
+        world.spawnEntity(newItem);
+
         knownBy.clear();
 
         return newItem;
@@ -118,7 +130,9 @@ public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem
     @Override
     public void setPosition(double x, double y, double z) {
         super.setPosition(x, y, z);
-        knownBy.clear();
+        if(knownBy != null) {
+            knownBy.clear();
+        }
     }
 
     @Override

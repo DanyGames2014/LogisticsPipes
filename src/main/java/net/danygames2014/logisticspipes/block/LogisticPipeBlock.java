@@ -3,8 +3,12 @@ package net.danygames2014.logisticspipes.block;
 import net.danygames2014.buildcraft.block.PipeBlock;
 import net.danygames2014.buildcraft.block.entity.pipe.*;
 import net.danygames2014.buildcraft.block.entity.pipe.behavior.PipeBehavior;
+import net.danygames2014.buildcraft.block.entity.pipe.transporter.ItemPipeTransporter;
+import net.danygames2014.buildcraft.entity.TravellingItemEntity;
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
+import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
 import net.danygames2014.logisticspipes.init.TextureListener;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -34,5 +38,20 @@ public class LogisticPipeBlock extends PipeBlock {
         if (world.getBlockEntity(x,y,z) instanceof LogisticPipeBlockEntity pipe) {
             pipe.debugPrint(player);
         }
+    }
+
+    @Override
+    public boolean onUse(World world, int x, int y, int z, PlayerEntity player) {
+        if(world.getBlockEntity(x, y, z) instanceof LogisticPipeBlockEntity pipe){
+            RoutedItemEntity routedItemEntity =  new RoutedItemEntity(world, new TravellingItemEntity(world, x+ 0.5D, y+ 0.5D, z+ 0.5D, new ItemStack(Block.DIAMOND_BLOCK, 1)));
+            routedItemEntity.setSource(pipe.getRouterId());
+            routedItemEntity.setDestination(pipe.routingTable.keySet().toLongArray()[world.random.nextInt(pipe.routingTable.size())]);
+            routedItemEntity.travelDirection = Direction.DOWN;
+            routedItemEntity.lastTravelDirection = routedItemEntity.travelDirection;
+            ((ItemPipeTransporter)pipe.transporter).receiveTravellingItem(routedItemEntity, Direction.UP);
+            world.spawnEntity(routedItemEntity);
+            return true;
+        }
+        return false;
     }
 }
