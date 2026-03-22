@@ -84,9 +84,9 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         super.tick();
 
         if (updateNeighbors || (world.getTime() % Config.NETWORK_CONFIG.neighborDetectionFrequency == this.updateOffset)) {
-            long nanoTime = System.nanoTime();
-            updateNeighbors();
-            System.err.println("Took " + ((System.nanoTime() - nanoTime) / 1000) + "us to update neighbors on time " + world.getTime());
+//            long nanoTime = System.nanoTime();
+//            updateNeighbors();
+//            System.err.println("Took " + ((System.nanoTime() - nanoTime) / 1000) + "us to update neighbors on time " + world.getTime());
             updateNeighbors = false;
         }
 
@@ -204,11 +204,21 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             return itemArrived(item);
         }
 
-        if(!routingTable.containsKey((long)item.getDestination())){
+        long nextHopId = getNextHop(item.getDestination());
+
+        // If we do not know the route to destination, we cannot route
+        if (nextHopId == -1) {
             return null;
         }
 
-        return Direction.byId(neighborTable.get((long)item.getDestination()));
+        int nextHopDirection = neighborTable.getOrDefault(nextHopId, -1);
+
+        // We do not know in which direction the router is
+        if (nextHopDirection == -1) {
+            return null;
+        }
+
+        return Direction.byId(nextHopDirection);
     }
 
     public LinkedList<AdjacentBlockEntity> getConnectedEntities() {
@@ -305,6 +315,21 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     }
 
     // Routing
+    public long getNextHop(long destinationId) {
+        while (true) {
+            if (!routingTable.containsKey(destinationId)) {
+                return -1;
+            } else {
+                if (routingTable.get(destinationId).routerId == destinationId) {
+                    return destinationId;
+                }
+                
+                RouteDestination route = routingTable.get(destinationId);
+                destinationId = route.routerId;
+            }
+        }
+    }
+    
     public void learnRoutesFromNeighbors() {
         for (long routerId : neighborTable.keySet()) {
             Router router = RoutingUtil.getRouter(world, routerId);
@@ -406,8 +431,12 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
             BlockEntity blockEntity = world.getBlockEntity(current.x, current.y, current.z);
 
+            if (blockEntity == this) {
+                continue;
+            }
+            
             // If we find a router, check if the route is better than an existing one
-            if (blockEntity instanceof Router router && blockEntity != this) {
+            if (blockEntity instanceof Router router) {
                 RouteDestination existing = routingTable.get(pos);
                 int currentMetric = existing != null ? existing.metric : -1;
 
