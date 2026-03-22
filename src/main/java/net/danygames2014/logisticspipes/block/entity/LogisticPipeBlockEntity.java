@@ -58,7 +58,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     public boolean updateNeighbors = true;
 
     // HUD Rendering
-    private final TestHud HUD = new TestHud();
+    private final TestHud HUD = new TestHud(this);
 
     public LogisticPipeBlockEntity() {
         init();

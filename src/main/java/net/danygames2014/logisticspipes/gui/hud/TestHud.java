@@ -1,5 +1,7 @@
 package net.danygames2014.logisticspipes.gui.hud;
 
+import net.danygames2014.logisticspipes.block.LogisticPipeBlock;
+import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.util.gui.BasicGuiHelper;
 import net.danygames2014.logisticspipes.util.gui.hud.BasicHUDButton;
 import net.minecraft.client.Minecraft;
@@ -7,7 +9,9 @@ import org.lwjgl.opengl.GL11;
 
 public class TestHud extends BasicGuiHud{
 
-    public TestHud(){
+    private final LogisticPipeBlockEntity parent;
+    public TestHud(LogisticPipeBlockEntity parent){
+        this.parent = parent;
         this.buttons.add(new BasicHUDButton("this is a button", -40, -30, 80, 10) {
             @Override
             public void clicked() {
@@ -54,7 +58,7 @@ public class TestHud extends BasicGuiHud{
         super.renderHeadUpDisplay(d, day, mc);
 
         GL11.glScalef(1.5F, 1.5F, 0.0001F);
-        String message = "test screen";
+        String message = String.valueOf(parent.getRouterId());
 
         mc.textRenderer.drawWithShadow(message, -30, -30, 0xFFFFFF);
     }
