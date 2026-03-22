@@ -9,6 +9,7 @@ import net.danygames2014.buildcraft.block.entity.pipe.PipeConnectionType;
 import net.danygames2014.logisticspipes.gui.hud.TestHud;
 import net.danygames2014.logisticspipes.interfaces.HUDRenderer;
 import net.danygames2014.logisticspipes.interfaces.HUDRendererProvider;
+import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
 import net.danygames2014.logisticspipes.routing.RouteDestination;
 import net.danygames2014.logisticspipes.routing.Router;
 import net.danygames2014.logisticspipes.util.RoutingUtil;
@@ -30,17 +31,22 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
     public LogisticPipeBlockEntity() {
         this.neighborTable.defaultReturnValue((byte) -1);
+        setup();
     }
 
     public LogisticPipeBlockEntity(PipeBlock pipeBlock) {
         super(pipeBlock);
         this.neighborTable.defaultReturnValue((byte) -1);
+        setup();
     }
 
     @Override
     public HUDRenderer getRenderer() {
         return HUD;
     }
+
+    public abstract LogisticsModule getLogisticsModule();
+    public abstract void setup();
 
     @Override
     public int getX() {
