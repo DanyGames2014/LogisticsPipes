@@ -3,8 +3,12 @@ package net.danygames2014.logisticspipes.block;
 import net.danygames2014.buildcraft.block.PipeBlock;
 import net.danygames2014.buildcraft.block.entity.pipe.*;
 import net.danygames2014.buildcraft.block.entity.pipe.behavior.PipeBehavior;
+import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.init.TextureListener;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
@@ -23,5 +27,12 @@ public class LogisticPipeBlock extends PipeBlock {
             return TextureListener.routedStatus;
         }
         return super.getTextureIdentifierForSide(pipe, direction, connectionType);
+    }
+
+    @Override
+    public void debug(ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side) {
+        if (world.getBlockEntity(x,y,z) instanceof LogisticPipeBlockEntity pipe) {
+            pipe.debugPrint(player);
+        }
     }
 }
