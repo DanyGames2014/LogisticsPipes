@@ -8,6 +8,7 @@ import net.danygames2014.buildcraft.block.entity.pipe.PipeConnectionType;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeTransporter;
 import net.danygames2014.buildcraft.block.entity.pipe.transporter.ItemPipeTransporter;
 import net.danygames2014.logisticspipes.block.pipe.ItemSendMode;
+import net.danygames2014.logisticspipes.block.pipe.LogisticsManager;
 import net.danygames2014.logisticspipes.config.Config;
 import net.danygames2014.logisticspipes.gui.hud.TestHud;
 import net.danygames2014.logisticspipes.interfaces.HUDRenderer;
@@ -16,7 +17,9 @@ import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
 import net.danygames2014.logisticspipes.interfaces.RoutedItem;
 import net.danygames2014.logisticspipes.routing.RouteDestination;
 import net.danygames2014.logisticspipes.routing.Router;
+import net.danygames2014.logisticspipes.util.AdjacentBlockEntity;
 import net.danygames2014.logisticspipes.util.RoutingUtil;
+import net.danygames2014.logisticspipes.util.WorldUtil;
 import net.danygames2014.logisticspipes.util.tuple.Pair;
 import net.danygames2014.logisticspipes.util.tuple.Pair3;
 import net.minecraft.block.entity.BlockEntity;
@@ -25,6 +28,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
@@ -123,6 +127,94 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             return;
         }
         getLogisticsModule().tick();
+    }
+
+    public Direction itemArrived(RoutedItem item){
+        if(item.getItemStack() != null) {
+            statLifetimeReceived++;
+            statSessionReceived++;
+        }
+
+        LinkedList<AdjacentBlockEntity> adjacentEntities = getConnectedEntities();
+        LinkedList<Direction> possibleDirections = new LinkedList<>();
+
+        for(AdjacentBlockEntity adjacent : adjacentEntities) {
+            if(adjacent.blockEntity instanceof PipeBlockEntity){
+                continue;
+            }
+            if(isLockedExit(adjacent.direction)){
+                continue;
+            }
+            possibleDirections.add(adjacent.direction);
+        }
+        if(!possibleDirections.isEmpty()){
+            return possibleDirections.get(world.random.nextInt(possibleDirections.size()));
+        }
+
+        for(AdjacentBlockEntity adjacent : adjacentEntities) {
+            if(neighborTable.containsValue(adjacent.direction.getId())){
+                continue;
+            }
+            if(isLockedExit(adjacent.direction)){
+                continue;
+            }
+            possibleDirections.add(adjacent.direction);
+        }
+
+        if (possibleDirections.isEmpty()){
+            return null;
+        }
+
+        return possibleDirections.get(world.random.nextInt(possibleDirections.size()));
+    }
+
+    public boolean stillWantItem(RoutedItem item){
+        return true;
+    }
+
+    public Direction getDirectionForItem(RoutedItem item){
+        if(item.getDestination() == null && world.isRemote){
+            return null;
+        }
+
+        //If items have no destination, see if we can get one (unless it has a source, then drop it)
+        if (item.getDestination() == null){
+            if (item.getSource() != null) return null;
+            item = LogisticsManager.getInstance().assignDestinationFor(world, item, getRouterId(), false);
+        }
+
+        //If the destination is unknown / unroutable
+        if(item.getDestination() != null && !routingTable.containsKey((long)item.getDestination())){
+            item = LogisticsManager.getInstance().destinationUnreachable(world, item, getRouterId());
+        }
+
+        //If we still have no destination, drop it
+        if (item.getDestination() == null){
+            return null;
+        }
+
+        //Is the destination ourself? Deliver it
+        if (item.getDestination().equals(getRouterId())){
+
+            if (!stillWantItem(item)){
+                return getDirectionForItem(LogisticsManager.getInstance().assignDestinationFor(world, item, getRouterId(), true));
+            }
+
+            item.setDoNotBuffer(true);
+            return itemArrived(item);
+        }
+
+        if(!routingTable.containsKey((long)item.getDestination())){
+            return null;
+        }
+
+        return Direction.byId(neighborTable.get((long)item.getDestination()));
+    }
+
+    public LinkedList<AdjacentBlockEntity> getConnectedEntities() {
+        LinkedList<AdjacentBlockEntity> adjacent = WorldUtil.getAdjacentBlockEntities(world, x, y, z);
+        adjacent.removeIf(blockEntity -> connections.get(blockEntity.direction) == PipeConnectionType.NONE);
+        return adjacent;
     }
 
     public boolean isEnabled() {
@@ -359,6 +451,10 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
     private record SearchNode(int x, int y, int z, int metric, Direction firstDir) {
 
+    }
+
+    public boolean isLockedExit(Direction direction) {
+        return false;
     }
 
     @Override
