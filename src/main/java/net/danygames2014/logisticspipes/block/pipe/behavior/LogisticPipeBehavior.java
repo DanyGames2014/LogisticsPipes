@@ -13,6 +13,10 @@ import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
 import net.danygames2014.logisticspipes.interfaces.RoutedItem;
 import net.danygames2014.logisticspipes.routing.RouteDestination;
 import net.danygames2014.logisticspipes.util.ItemUtil;
+import net.danygames2014.uniwrench.api.WrenchMode;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 public class LogisticPipeBehavior extends PipeBehavior {
@@ -106,5 +110,13 @@ public class LogisticPipeBehavior extends PipeBehavior {
         }
         
         return type;
+    }
+
+    @Override
+    public boolean wrenchRightClick(PipeBlockEntity blockEntity, ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side, WrenchMode wrenchMode) {
+        if(blockEntity instanceof LogisticPipeBlockEntity pipe){
+            return pipe.wrenchRightClick(stack, player, isSneaking, world, x, y, z, side, wrenchMode);
+        }
+        return false;
     }
 }

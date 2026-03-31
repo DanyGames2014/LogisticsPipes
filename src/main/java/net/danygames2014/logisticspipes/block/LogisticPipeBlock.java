@@ -8,6 +8,7 @@ import net.danygames2014.buildcraft.entity.TravellingItemEntity;
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
 import net.danygames2014.logisticspipes.init.TextureListener;
+import net.danygames2014.uniwrench.api.WrenchMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
@@ -53,5 +54,10 @@ public class LogisticPipeBlock extends PipeBlock {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean wrenchRightClick(ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side, WrenchMode wrenchMode) {
+        return super.wrenchRightClick(stack, player, isSneaking, world, x, y, z, side, wrenchMode);
     }
 }

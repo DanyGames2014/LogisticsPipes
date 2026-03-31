@@ -3,6 +3,7 @@ package net.danygames2014.logisticspipes.interfaces;
 import net.danygames2014.logisticspipes.interfaces.routing.SaveState;
 import net.danygames2014.logisticspipes.util.SinkReply;
 import net.minecraft.item.ItemStack;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 public interface LogisticsModule extends SaveState {
     /**
@@ -20,9 +21,9 @@ public interface LogisticsModule extends SaveState {
 
     /**
      *
-     * @return The gui id of the given module;
+     * @return The gui identifier of the given module;
      */
-    int getGuiHandlerID();
+    Identifier getScreenIdentifier();
 
     /**
      * Gives an sink answer on the given itemstack

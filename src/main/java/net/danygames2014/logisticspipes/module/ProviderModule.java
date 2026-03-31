@@ -1,5 +1,6 @@
 package net.danygames2014.logisticspipes.module;
 
+import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.pipe.ExtractionMode;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.request.RequestTreeNode;
@@ -15,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.*;
 
@@ -66,9 +68,8 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
     }
 
     @Override
-    public int getGuiHandlerID() {
-//        return GuiIDs.GUI_Module_Provider_ID;
-        return 0;
+    public Identifier getScreenIdentifier() {
+        return LogisticsPipes.NAMESPACE.id("screen");
     }
 
     @Override
@@ -126,7 +127,7 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
 
     @Override
     public HashMap<ItemStack, Integer> getAllItems() {
-        HashMap<ItemStack, Integer> allItems = new HashMap<ItemStack, Integer>();
+        HashMap<ItemStack, Integer> allItems = new HashMap<>();
         if (invProvider.getInventory() == null) return allItems;
 
         InventoryUtil inv = getAdaptedUtil(invProvider.getInventory());

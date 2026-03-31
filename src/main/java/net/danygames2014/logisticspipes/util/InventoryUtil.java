@@ -12,6 +12,7 @@ public class InventoryUtil {
     public InventoryUtil(Inventory inventory, boolean hideOne) {
         this.inventory = inventory;
         this.hideOne = hideOne;
+
     }
 
     public int itemCount(final ItemStack item){

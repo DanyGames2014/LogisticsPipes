@@ -1,5 +1,6 @@
 package net.danygames2014.logisticspipes.module;
 
+import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.util.InventoryUtil;
 import net.danygames2014.logisticspipes.util.SimpleInventory;
@@ -8,6 +9,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -71,8 +73,8 @@ public class ItemSinkModule implements LogisticsModule, ClientInformationProvide
     }
 
     @Override
-    public int getGuiHandlerID() {
-        return 0;
+    public Identifier getScreenIdentifier() {
+        return LogisticsPipes.NAMESPACE.id("screen");
     }
 
     @Override

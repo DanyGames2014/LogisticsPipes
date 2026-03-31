@@ -22,10 +22,13 @@ import net.danygames2014.logisticspipes.util.RoutingUtil;
 import net.danygames2014.logisticspipes.util.WorldUtil;
 import net.danygames2014.logisticspipes.util.tuple.Pair;
 import net.danygames2014.logisticspipes.util.tuple.Pair3;
+import net.danygames2014.uniwrench.api.WrenchMode;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
+import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 import java.util.Iterator;
@@ -170,6 +173,16 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
     public boolean stillWantItem(RoutedItem item){
         return true;
+    }
+
+    public boolean wrenchRightClick(ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side, WrenchMode wrenchMode) {
+        if(wrenchMode == WrenchMode.MODE_WRENCH && !isSneaking){
+            if(getLogisticsModule() != null){
+                GuiHelper.openGUI(player, getLogisticsModule().getScreenIdentifier(), this, null);
+            }
+            return true;
+        }
+        return false;
     }
 
     public Direction getDirectionForItem(RoutedItem item){
@@ -484,6 +497,14 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
     public boolean isLockedExit(Direction direction) {
         return false;
+    }
+
+    @Override
+    public boolean isRoutedExit(Direction direction) {
+        if(direction == null){
+            return false;
+        }
+        return neighborTable.containsValue(direction.getId());
     }
 
     @Override
