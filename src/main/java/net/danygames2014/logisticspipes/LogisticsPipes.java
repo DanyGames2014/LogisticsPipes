@@ -4,6 +4,7 @@ import net.danygames2014.buildcraft.block.entity.pipe.PipeType;
 import net.danygames2014.buildcraft.block.material.PipeMaterial;
 import net.danygames2014.logisticspipes.block.LogisticPipeBlock;
 import net.danygames2014.logisticspipes.block.entity.BasicLogisticPipeBlockEntity;
+import net.danygames2014.logisticspipes.block.entity.ChassisLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.pipe.behavior.LogisticPipeBehavior;
 import net.danygames2014.logisticspipes.block.pipe.transporter.LogisticItemPipeTransporter;
@@ -36,6 +37,12 @@ public class LogisticsPipes {
     public static Block requestItemPipe;
     public static Block requestItemPipeMk2;
     public static Block providerItemPipe;
+
+    public static Block chassisItemPipeMk1;
+    public static Block chassisItemPipeMk2;
+    public static Block chassisItemPipeMk3;
+    public static Block chassisItemPipeMk4;
+    public static Block chassisItemPipeMk5;
 
     public static Item magicWand;
     public static Item routingDebugger;
@@ -89,6 +96,61 @@ public class LogisticsPipes {
                 LogisticItemPipeTransporter::new,
                 BasicLogisticPipeBlockEntity::new
         ).setTranslationKey(NAMESPACE, "provider_item_pipe").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
+
+        chassisItemPipeMk1 = new LogisticPipeBlock(
+                NAMESPACE.id("chassis_item_pipe_mk1"),
+                pipeMaterial,
+                NAMESPACE.id("block/pipe/chassis_item_pipe_mk1"),
+                null,
+                PipeType.ITEM,
+                logisticPipeBehavior,
+                LogisticItemPipeTransporter::new,
+                ChassisLogisticPipeBlockEntity::new
+        ).setTranslationKey(NAMESPACE, "chassis_item_pipe_mk1").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
+
+        chassisItemPipeMk2 = new LogisticPipeBlock(
+                NAMESPACE.id("chassis_item_pipe_mk2"),
+                pipeMaterial,
+                NAMESPACE.id("block/pipe/chassis_item_pipe_mk2"),
+                null,
+                PipeType.ITEM,
+                logisticPipeBehavior,
+                LogisticItemPipeTransporter::new,
+                ChassisLogisticPipeBlockEntity::new
+        ).setTranslationKey(NAMESPACE, "chassis_item_pipe_mk2").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
+
+        chassisItemPipeMk3 = new LogisticPipeBlock(
+                NAMESPACE.id("chassis_item_pipe_mk3"),
+                pipeMaterial,
+                NAMESPACE.id("block/pipe/chassis_item_pipe_mk3"),
+                null,
+                PipeType.ITEM,
+                logisticPipeBehavior,
+                LogisticItemPipeTransporter::new,
+                ChassisLogisticPipeBlockEntity::new
+        ).setTranslationKey(NAMESPACE, "chassis_item_pipe_mk3").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
+
+        chassisItemPipeMk4 = new LogisticPipeBlock(
+                NAMESPACE.id("chassis_item_pipe_mk4"),
+                pipeMaterial,
+                NAMESPACE.id("block/pipe/chassis_item_pipe_mk4"),
+                null,
+                PipeType.ITEM,
+                logisticPipeBehavior,
+                LogisticItemPipeTransporter::new,
+                ChassisLogisticPipeBlockEntity::new
+        ).setTranslationKey(NAMESPACE, "chassis_item_pipe_mk4").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
+
+        chassisItemPipeMk5 = new LogisticPipeBlock(
+                NAMESPACE.id("chassis_item_pipe_mk5"),
+                pipeMaterial,
+                NAMESPACE.id("block/pipe/chassis_item_pipe_mk5"),
+                null,
+                PipeType.ITEM,
+                logisticPipeBehavior,
+                LogisticItemPipeTransporter::new,
+                ChassisLogisticPipeBlockEntity::new
+        ).setTranslationKey(NAMESPACE, "chassis_item_pipe_mk5").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
     }
 
     @EventListener

@@ -109,6 +109,6 @@ public class ChassisModule implements LogisticsModule {
 
     @Override
     public Identifier getScreenIdentifier() {
-        return LogisticsPipes.NAMESPACE.id("screen");
+        return LogisticsPipes.NAMESPACE.id("chassis");
     }
 }

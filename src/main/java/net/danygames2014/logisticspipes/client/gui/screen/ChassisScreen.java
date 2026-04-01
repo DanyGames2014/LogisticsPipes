@@ -103,7 +103,7 @@ public class ChassisScreen extends LogisticsBaseScreen{
 
     @Override
     protected void drawBackground(float tickDelta) {
-        minecraft.textureManager.bindTexture(minecraft.textureManager.getTextureId("/assets/logisticspipes/stationapi/textures/gui/chassis_sise" + pipe.getChassisSize() + ".png"));
+        minecraft.textureManager.bindTexture(minecraft.textureManager.getTextureId("/assets/logisticspipes/stationapi/textures/gui/chassis_size" + pipe.getChassisSize() + ".png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         int j = (width - backgroundWidth) / 2;
         int k = (height - backgroundHeight) / 2;

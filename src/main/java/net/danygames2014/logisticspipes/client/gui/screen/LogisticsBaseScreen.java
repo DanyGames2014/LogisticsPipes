@@ -130,7 +130,7 @@ public class LogisticsBaseScreen extends HandledScreen implements SubScreenContr
             GL11.glTranslatef(0.0F, 0.0F, -101.0F);
             Lighting.turnOn();
         } else {
-            super.render(0, 0, delta);
+            super.render(mouseX, mouseY, delta);
             Lighting.turnOff();
             for(RenderSlot slot : slots) {
                 int mouseXOffset = mouseX - guiLeft;

@@ -4,6 +4,7 @@ import net.danygames2014.buildcraft.api.core.Position;
 import net.danygames2014.buildcraft.block.PipeBlock;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeBlockEntity;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeConnectionType;
+import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.pipe.ItemSendMode;
 import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
 import net.danygames2014.logisticspipes.interfaces.*;
@@ -26,18 +27,20 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
+import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 import java.util.*;
 
-public abstract class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity implements InventoryProvider, SendRoutedItem, ProvideItems, WorldProvider, HUDRendererProvider, SendQueueContentReceiver {
+public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity implements InventoryProvider, SendRoutedItem, ProvideItems, WorldProvider, HUDRendererProvider, SendQueueContentReceiver {
     private ChassisModule module;
     private SimpleInventory moduleInventory;
     private boolean switchOrientationOnTick = true;
     private boolean init = false;
     private long tick = 0;
-    private Direction direction = null;
+    private Direction direction = Direction.UP;
     private boolean convertFromMeta = false;
+    private int chassisSize = 1;
 
     //HUD
     public final LinkedList<ItemStack> displayList = new LinkedList<ItemStack>();
@@ -57,6 +60,26 @@ public abstract class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEn
         moduleInventory = new SimpleInventory(getChassisSize(), "Chassis pipe", 1, this::markInventoryDirty);
         module = new ChassisModule(getChassisSize(), this);
 //        HUD = new HUDChassiePipe(this, _module, _moduleInventory);
+    }
+
+    @Override
+    public void init(BlockState blockState) {
+        super.init(blockState);
+        if(blockState.getBlock() == LogisticsPipes.chassisItemPipeMk1){
+            chassisSize = 1;
+        }
+        if(blockState.getBlock() == LogisticsPipes.chassisItemPipeMk2){
+            chassisSize = 2;
+        }
+        if(blockState.getBlock() == LogisticsPipes.chassisItemPipeMk3){
+            chassisSize = 3;
+        }
+        if(blockState.getBlock() == LogisticsPipes.chassisItemPipeMk4){
+            chassisSize = 4;
+        }
+        if(blockState.getBlock() == LogisticsPipes.chassisItemPipeMk5){
+            chassisSize = 8;
+        }
     }
 
     public Direction getPointedDirection(){
@@ -268,7 +291,9 @@ public abstract class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEn
         }
     }
 
-    public abstract int getChassisSize();
+    public int getChassisSize(){
+        return chassisSize;
+    }
 
     @Override
     public LogisticsModule getLogisticsModule() {
