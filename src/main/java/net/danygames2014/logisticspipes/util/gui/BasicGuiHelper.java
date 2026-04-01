@@ -1,8 +1,13 @@
 package net.danygames2014.logisticspipes.util.gui;
 
+import net.danygames2014.buildcraft.util.ScreenUtil;
+import net.danygames2014.logisticspipes.client.gui.screen.LogisticsBaseScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.Tessellator;
+import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import org.lwjgl.opengl.GL11;
+
+import java.util.List;
 
 public class BasicGuiHelper {
     public static void drawGuiBackGround(Minecraft mc, int guiLeft, int guiTop, int right, int bottom, float zLevel, boolean resetColor) {
@@ -10,6 +15,9 @@ public class BasicGuiHelper {
     }
 
     private static final String BACKGROUND = "/assets/logisticspipes/stationapi/textures/gui/gui_background.png";
+    private static final String SLOT = "/assets/logisticspipes/stationapi/textures/gui/slot/slot.png";
+    private static final String SMALL_SLOT = "/assets/logisticspipes/stationapi/textures/gui/slot/small_slot.png";
+    private static final String BIG_SLOT = "/assets/logisticspipes/stationapi/textures/gui/slot/big_slot.png";
 
     public static void drawGuiBackGround(Minecraft mc, int guiLeft, int guiTop, int right, int bottom, float zLevel, boolean resetColor, boolean displayTop, boolean displayLeft, boolean displayBottom, boolean displayRight){
         if(resetColor) {
@@ -115,6 +123,36 @@ public class BasicGuiHelper {
         var9.draw();
     }
 
+    private static void drawGradientRect(int par1, int par2, int par3, int par4, int par5, int par6, float zOffset)
+    {
+        float var7 = (float)(par5 >> 24 & 255) / 255.0F;
+        float var8 = (float)(par5 >> 16 & 255) / 255.0F;
+        float var9 = (float)(par5 >> 8 & 255) / 255.0F;
+        float var10 = (float)(par5 & 255) / 255.0F;
+        float var11 = (float)(par6 >> 24 & 255) / 255.0F;
+        float var12 = (float)(par6 >> 16 & 255) / 255.0F;
+        float var13 = (float)(par6 >> 8 & 255) / 255.0F;
+        float var14 = (float)(par6 & 255) / 255.0F;
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glShadeModel(GL11.GL_SMOOTH);
+        Tessellator tessellator = Tessellator.INSTANCE;
+        tessellator.startQuads();
+        tessellator.color(var8, var9, var10, var7);
+        tessellator.vertex(par3, par2, zOffset);
+        tessellator.vertex(par1, par2, zOffset);
+        tessellator.color(var12, var13, var14, var11);
+        tessellator.vertex(par1, par4, zOffset);
+        tessellator.vertex(par3, par4, zOffset);
+        tessellator.draw();
+        GL11.glShadeModel(GL11.GL_FLAT);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+    }
+
     /**
      * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height
      */
@@ -129,5 +167,141 @@ public class BasicGuiHelper {
         var9.vertex(par1 + par5, par2 + 0, zLevel, (float)(par3 + par5) * var7, (float)(par4 + 0) * var8);
         var9.vertex(par1 + 0, par2 + 0, zLevel, (float)(par3 + 0) * var7, (float)(par4 + 0) * var8);
         var9.draw();
+    }
+
+    public static void renderSpriteAt(int x, int y, float zOffset, Atlas.Sprite sprite){
+        ScreenUtil.drawSprite(sprite, x, y, 16, 16, zOffset);
+    }
+
+    public static void drawSlotBackground(Minecraft mc, int x, int y) {
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        mc.textureManager.bindTexture(mc.textureManager.getTextureId(SLOT));
+
+        Tessellator tessellator = Tessellator.INSTANCE;
+        tessellator.startQuads();
+        tessellator.vertex(x		, y + 18	, 0, 0	, 1);
+        tessellator.vertex(x + 18	, y + 18	, 0, 1	, 1);
+        tessellator.vertex(x + 18	, y			, 0, 1	, 0);
+        tessellator.vertex(x		, y			, 0, 0	, 0);
+        tessellator.draw();
+    }
+
+    public static void drawSlotBackground(Minecraft mc, int x, int y, int color) {
+        float colorA = (color >> 24 & 0xFF) / 255.0F;
+        float colorR = (color >> 16 & 0xFF) / 255.0F;
+        float colorG = (color >> 8 & 0xFF) / 255.0F;
+        float colorB = (color & 0xFF) / 255.0F;
+        GL11.glColor4f(colorR, colorG, colorB, colorA);
+        mc.textureManager.bindTexture(mc.textureManager.getTextureId(SLOT));
+
+        Tessellator tessellator = Tessellator.INSTANCE;
+        tessellator.startQuads();
+        tessellator.vertex(x		, y + 18	, 0, 0	, 1);
+        tessellator.vertex(x + 18	, y + 18	, 0, 1	, 1);
+        tessellator.vertex(x + 18	, y			, 0, 1	, 0);
+        tessellator.vertex(x		, y			, 0, 0	, 0);
+        tessellator.draw();
+
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+    }
+
+    public static void drawSmallSlotBackground(Minecraft mc, int x, int y) {
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        mc.textureManager.bindTexture(mc.textureManager.getTextureId(SMALL_SLOT));
+
+        Tessellator tessellator = Tessellator.INSTANCE;
+        tessellator.startQuads();
+        tessellator.vertex(x		, y + 8		, 0, 0	, 1);
+        tessellator.vertex(x + 8	, y + 8		, 0, 1	, 1);
+        tessellator.vertex(x + 8	, y			, 0, 1	, 0);
+        tessellator.vertex(x		, y			, 0, 0	, 0);
+        tessellator.draw();
+    }
+
+    public static void drawBigSlotBackground(Minecraft mc, int x, int y) {
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        mc.textureManager.bindTexture(mc.textureManager.getTextureId(BIG_SLOT));
+
+        Tessellator tessellator = Tessellator.INSTANCE;
+        tessellator.startQuads();
+        tessellator.vertex(x		, y + 26	, 0, 0	, 1);
+        tessellator.vertex(x + 26	, y + 26	, 0, 1	, 1);
+        tessellator.vertex(x + 26	, y			, 0, 1	, 0);
+        tessellator.vertex(x		, y			, 0, 0	, 0);
+        tessellator.draw();
+    }
+
+    public static int ConvertEnumToColor(LogisticsBaseScreen.Colors color){
+        return switch (color) {
+            case Black -> 0xFF000000;
+            case White -> 0xFFFFFFFF;
+            case DarkGrey -> 0xFF555555;
+            case MiddleGrey -> 0xFF8b8b8b;
+            case LightGrey -> 0xFFC6C6C6;
+            case Red -> 0xFFFF0000;
+        };
+    }
+
+    public static void drawToolTip(int posX, int posY, List<String> msg, int color, boolean forceminecraft) {
+
+        if (!msg.isEmpty()) {
+            int var10 = 0;
+            int var11;
+            int var12;
+
+            for (var11 = 0; var11 < msg.size(); ++var11) {
+                var12 = Minecraft.INSTANCE.textRenderer.getWidth(msg.get(var11));
+
+                if (var12 > var10) {
+                    var10 = var12;
+                }
+            }
+
+            var11 = posX + 12;
+            var12 = posY - 12;
+            int var14 = 8;
+
+            if (msg.size() > 1) {
+                var14 += 2 + (msg.size() - 1) * 10;
+            }
+
+            GL11.glDisable(2896 /*GL_LIGHTING*/);
+            GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
+            float zOffset = 300.0F;
+            int var15 = -267386864;
+            drawGradientRect(var11 - 3, var12 - 4, var11 + var10 + 3, var12 - 3, var15, var15, zOffset);
+            drawGradientRect(var11 - 3, var12 + var14 + 3, var11 + var10 + 3, var12 + var14 + 4, var15, var15, zOffset);
+            drawGradientRect(var11 - 3, var12 - 3, var11 + var10 + 3, var12 + var14 + 3, var15, var15, zOffset);
+            drawGradientRect(var11 - 4, var12 - 3, var11 - 3, var12 + var14 + 3, var15, var15, zOffset);
+            drawGradientRect(var11 + var10 + 3, var12 - 3, var11 + var10 + 4, var12 + var14 + 3, var15, var15, zOffset);
+            int var16 = 1347420415;
+            int var17 = (var16 & 16711422) >> 1 | var16 & -16777216;
+            drawGradientRect(var11 - 3, var12 - 3 + 1, var11 - 3 + 1, var12 + var14 + 3 - 1, var16, var17, zOffset);
+            drawGradientRect(var11 + var10 + 2, var12 - 3 + 1, var11 + var10 + 3, var12 + var14 + 3 - 1, var16, var17, zOffset);
+            drawGradientRect(var11 - 3, var12 - 3, var11 + var10 + 3, var12 - 3 + 1, var16, var16, zOffset);
+            drawGradientRect(var11 - 3, var12 + var14 + 2, var11 + var10 + 3, var12 + var14 + 3, var17, var17, zOffset);
+
+            for (int var18 = 0; var18 < msg.size(); ++var18) {
+                String var19 = msg.get(var18);
+
+                if (var18 == 0) {
+                    var19 = "\u00a7" + Integer.toHexString(color) + var19;
+                } else {
+                    var19 = "\u00a77" + var19;
+                }
+
+                Minecraft.INSTANCE.textRenderer.drawWithShadow(var19, var11, var12, -1);
+
+                if (var18 == 0) {
+                    var12 += 2;
+                }
+
+                var12 += 10;
+            }
+
+
+            GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
+            GL11.glEnable(2896 /*GL_LIGHTING*/);
+        }
     }
 }
