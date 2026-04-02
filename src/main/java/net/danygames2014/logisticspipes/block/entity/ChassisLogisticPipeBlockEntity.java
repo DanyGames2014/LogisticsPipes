@@ -8,6 +8,7 @@ import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.pipe.ItemSendMode;
 import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
 import net.danygames2014.logisticspipes.interfaces.*;
+import net.danygames2014.logisticspipes.item.ModuleItem;
 import net.danygames2014.logisticspipes.module.ChassisModule;
 import net.danygames2014.logisticspipes.request.RequestTreeNode;
 import net.danygames2014.logisticspipes.routing.LogisticsPromise;
@@ -57,8 +58,6 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
 
     @Override
     public void setup() {
-        moduleInventory = new SimpleInventory(getChassisSize(), "Chassis pipe", 1, this::markInventoryDirty);
-        module = new ChassisModule(getChassisSize(), this);
 //        HUD = new HUDChassiePipe(this, _module, _moduleInventory);
     }
 
@@ -80,6 +79,9 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
         if(blockState.getBlock() == LogisticsPipes.chassisItemPipeMk5){
             chassisSize = 8;
         }
+
+        moduleInventory = new SimpleInventory(getChassisSize(), "Chassis pipe", 1, this::markInventoryDirty);
+        module = new ChassisModule(getChassisSize(), this);
     }
 
     public Direction getPointedDirection(){
@@ -248,16 +250,17 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
                 continue;
             }
 
-//            if (stack.getItem() instanceof ItemModule){
-//                ILogisticsModule current = _module.getModule(i);
-//                ILogisticsModule next = ((ItemModule)stack.getItem()).getModuleForItem(stack, _module.getModule(i), this, this, this, this);
-//                next.registerPosition(xCoord, yCoord, zCoord, i);
-//                if (current != next){
-//                    _module.installModule(i, next);
-//                    ItemModuleInformationManager.readInformation(stack, next, this.worldObj);
-//                    ItemModuleInformationManager.removeInformation(stack);
-//                }
-//            }
+            if (stack.getItem() instanceof ModuleItem moduleItem){
+                LogisticsModule current = module.getModule(i);
+                LogisticsModule next = moduleItem.getLogisticsModule();
+                next.registerHandler(this, this, this);
+                next.registerPosition(x, y, z, i);
+                if (current != next){
+                    module.installModule(i, next);
+                    ModuleItem.readInformation(stack, next, this.world);
+                    ModuleItem.removeInformation(stack);
+                }
+            }
         }
         // TODO: handle this
         if (reInitGui) {

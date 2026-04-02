@@ -9,7 +9,9 @@ import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.pipe.behavior.LogisticPipeBehavior;
 import net.danygames2014.logisticspipes.block.pipe.transporter.LogisticItemPipeTransporter;
 import net.danygames2014.logisticspipes.item.MagicWand;
+import net.danygames2014.logisticspipes.item.ModuleItem;
 import net.danygames2014.logisticspipes.item.RoutingDebugger;
+import net.danygames2014.logisticspipes.module.ProviderModule;
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.Block;
@@ -46,6 +48,8 @@ public class LogisticsPipes {
 
     public static Item magicWand;
     public static Item routingDebugger;
+
+    public static Item providerModule;
 
     @EventListener
     public void registerBlocks(BlockRegistryEvent event) {
@@ -159,5 +163,7 @@ public class LogisticsPipes {
             magicWand = new MagicWand(NAMESPACE.id("magic_wand")).setTranslationKey(NAMESPACE, "magic_wand");
         }
         routingDebugger = new RoutingDebugger(NAMESPACE.id("routing_debugger")).setTranslationKey(NAMESPACE, "routing_debugger");
+
+        providerModule = new ModuleItem(NAMESPACE.id("provider_module"), ProviderModule::new).setTranslationKey(NAMESPACE, "provider_module");
     }
 }

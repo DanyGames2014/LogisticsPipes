@@ -2,6 +2,7 @@ package net.danygames2014.logisticspipes.item;
 
 import net.danygames2014.logisticspipes.interfaces.ClientInformationProvider;
 import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
+import net.danygames2014.logisticspipes.module.ModuleFactory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
@@ -17,8 +18,18 @@ import java.util.Random;
 
 public class ModuleItem extends TemplateItem {
 
-    public ModuleItem(Identifier identifier) {
+    private final ModuleFactory moduleFactory;
+    public ModuleItem(Identifier identifier, ModuleFactory moduleFactory) {
         super(identifier);
+        this.moduleFactory = moduleFactory;
+    }
+
+    public LogisticsModule getLogisticsModule(){
+        return moduleFactory.create();
+    }
+
+    public ModuleFactory getModuleFactory(){
+        return moduleFactory;
     }
 
     public static void saveInformation(ItemStack itemStack, LogisticsModule module, World world){

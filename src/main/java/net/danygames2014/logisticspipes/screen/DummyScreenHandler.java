@@ -92,9 +92,9 @@ public class DummyScreenHandler extends ScreenHandler {
             ItemStack stack1 = super.onSlotClick(index, button, shift, player);
             ItemStack stack2 = slot.getStack();
             if(stack2 != null && stack2.getItem() instanceof ModuleItem) {
-                if(player instanceof ServerPlayerEntity serverPlayerEntity && FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-                    serverPlayerEntity.onSlotUpdate(this, index, stack2);
-                }
+//                if(player instanceof ServerPlayerEntity serverPlayerEntity && FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+//                    serverPlayerEntity.onSlotUpdate(this, index, stack2);
+//                }
             }
             return stack1;
         }

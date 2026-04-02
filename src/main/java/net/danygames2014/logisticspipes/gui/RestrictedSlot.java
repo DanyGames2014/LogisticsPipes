@@ -23,7 +23,8 @@ public class RestrictedSlot extends Slot {
     /**
      * Check if the stack is a valid item for this slot. Always true beside for the armor slots.
      */
-    public boolean isItemValid(ItemStack stack) {
+    @Override
+    public boolean canInsert(ItemStack stack) {
         if(slotCheck == null) {
             return stack.itemId == itemId;
         } else {

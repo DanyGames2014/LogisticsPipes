@@ -45,8 +45,8 @@ public class ChassisScreen extends LogisticsBaseScreen{
 
         this.handler = dummy;
 
-        backgroundWidth = 194;
-        backgroundHeight = 256;
+        this.backgroundWidth = 194;
+        this.backgroundHeight = 256;
     }
 
     @SuppressWarnings("unchecked")
@@ -105,8 +105,8 @@ public class ChassisScreen extends LogisticsBaseScreen{
     protected void drawBackground(float tickDelta) {
         minecraft.textureManager.bindTexture(minecraft.textureManager.getTextureId("/assets/logisticspipes/stationapi/textures/gui/chassis_size" + pipe.getChassisSize() + ".png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        int j = (width - backgroundWidth) / 2;
-        int k = (height - backgroundHeight) / 2;
+        int j = (this.width - this.backgroundWidth) / 2;
+        int k = (this.height - this.backgroundHeight) / 2;
         drawTexture(j, k, 0, 0, backgroundWidth, backgroundHeight);
     }
 
