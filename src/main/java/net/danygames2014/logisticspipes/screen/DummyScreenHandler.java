@@ -101,7 +101,7 @@ public class DummyScreenHandler extends ScreenHandler {
 
         PlayerInventory inventoryplayer = player.inventory;
 
-        ItemStack currentlyEquippedStack = inventoryplayer.getSelectedItem();
+        ItemStack currentlyEquippedStack = inventoryplayer.getCursorStack();
         if (currentlyEquippedStack == null){
             if (slot.getStack() != null && button == 1){
                 if (shift){

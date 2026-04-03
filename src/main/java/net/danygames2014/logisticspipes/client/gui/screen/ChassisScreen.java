@@ -12,6 +12,8 @@ import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
+import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.api.util.Identifier;
 import org.lwjgl.opengl.GL11;
 
@@ -119,6 +121,10 @@ public class ChassisScreen extends LogisticsBaseScreen implements ScreenIdentifi
             LogisticsModule module = pipe.getLogisticsModule().getSubModule(button.id);
             if(module != null){
 //                PacketDispatcher.sendPacketToServer(new PacketPipeInteger(NetworkConstants.CHASSI_GUI_PACKET_ID,_chassiPipe.xCoord,_chassiPipe.yCoord,_chassiPipe.zCoord,guibutton.id).getPacket());
+                GuiHelper.openGUI(minecraft.player, module.getScreenIdentifier(), pipe, null, (messagePacket) -> {
+                    messagePacket.ints = new int[]{pipe.getX(), pipe.getY(), pipe.getZ(), button.id};
+                });
+
             }
         }
     }

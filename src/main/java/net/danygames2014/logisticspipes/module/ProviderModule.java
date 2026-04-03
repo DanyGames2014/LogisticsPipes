@@ -69,7 +69,7 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
 
     @Override
     public Identifier getScreenIdentifier() {
-        return LogisticsPipes.NAMESPACE.id("screen");
+        return LogisticsPipes.NAMESPACE.id("provider");
     }
 
     @Override
