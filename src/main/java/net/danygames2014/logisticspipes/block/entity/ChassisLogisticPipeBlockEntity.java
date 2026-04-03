@@ -44,8 +44,8 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
     private int chassisSize = 1;
 
     //HUD
-    public final LinkedList<ItemStack> displayList = new LinkedList<ItemStack>();
-    public final List<PlayerEntity> localModeWatchers = new ArrayList<PlayerEntity>();
+    public final LinkedList<ItemStack> displayList = new LinkedList<>();
+    public final List<PlayerEntity> localModeWatchers = new ArrayList<>();
 //    private HUDChassiePipe HUD;
 
     public ChassisLogisticPipeBlockEntity() {

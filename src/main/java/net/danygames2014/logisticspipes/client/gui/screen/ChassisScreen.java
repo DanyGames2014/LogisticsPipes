@@ -1,8 +1,10 @@
 package net.danygames2014.logisticspipes.client.gui.screen;
 
+import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.entity.ChassisLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.gui.SmallButtonWidget;
 import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
+import net.danygames2014.logisticspipes.interfaces.ScreenIdentifierProvider;
 import net.danygames2014.logisticspipes.item.ModuleItem;
 import net.danygames2014.logisticspipes.screen.DummyScreenHandler;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -10,9 +12,10 @@ import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.modificationstation.stationapi.api.util.Identifier;
 import org.lwjgl.opengl.GL11;
 
-public class ChassisScreen extends LogisticsBaseScreen{
+public class ChassisScreen extends LogisticsBaseScreen implements ScreenIdentifierProvider {
     ChassisLogisticPipeBlockEntity pipe;
     PlayerEntity player;
     Inventory moduleInventory;
@@ -118,5 +121,10 @@ public class ChassisScreen extends LogisticsBaseScreen{
 //                PacketDispatcher.sendPacketToServer(new PacketPipeInteger(NetworkConstants.CHASSI_GUI_PACKET_ID,_chassiPipe.xCoord,_chassiPipe.yCoord,_chassiPipe.zCoord,guibutton.id).getPacket());
             }
         }
+    }
+
+    @Override
+    public Identifier getScreenIdentifier() {
+        return LogisticsPipes.NAMESPACE.id("chassis");
     }
 }
