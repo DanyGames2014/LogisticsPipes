@@ -89,7 +89,7 @@ public class PassiveSupplierModule implements LogisticsModule, ClientInformation
 
     @Override
     public Identifier getScreenIdentifier() {
-        return LogisticsPipes.NAMESPACE.id("screen");
+        return LogisticsPipes.NAMESPACE.id("passive_supplier");
     }
 
     @Override
