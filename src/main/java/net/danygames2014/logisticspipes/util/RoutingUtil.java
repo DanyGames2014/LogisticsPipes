@@ -3,9 +3,13 @@ package net.danygames2014.logisticspipes.util;
 import net.danygames2014.buildcraft.Buildcraft;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeBlockEntity;
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
+import net.danygames2014.logisticspipes.routing.RouteDestination;
 import net.danygames2014.logisticspipes.routing.Router;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.world.World;
+
+import java.util.LinkedList;
+import java.util.Map;
 
 public class RoutingUtil {
     /**
@@ -88,5 +92,21 @@ public class RoutingUtil {
         }
         
         return null;
+    }
+
+    public static LinkedList<Router> getRouterListFromMap(Map<Long, RouteDestination> routeMap) {
+        LinkedList<Router> routers = new LinkedList<>();
+
+        if (routeMap == null) {
+            return routers;
+        }
+
+        for (RouteDestination destination : routeMap.values()) {
+            if (destination != null && destination.router != null) {
+                routers.add(destination.router);
+            }
+        }
+
+        return routers;
     }
 }

@@ -2,9 +2,11 @@ package net.danygames2014.logisticspipes.init;
 
 import net.danygames2014.buildcraft.block.entity.ChuteBlockEntity;
 import net.danygames2014.logisticspipes.block.entity.ChassisLogisticPipeBlockEntity;
+import net.danygames2014.logisticspipes.block.entity.SupplierLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.client.gui.screen.ChassisScreen;
 import net.danygames2014.logisticspipes.client.gui.screen.PassiveSupplierScreen;
 import net.danygames2014.logisticspipes.client.gui.screen.ProviderScreen;
+import net.danygames2014.logisticspipes.client.gui.screen.SupplierScreen;
 import net.danygames2014.logisticspipes.module.PassiveSupplierModule;
 import net.danygames2014.logisticspipes.module.ProviderModule;
 import net.mine_diver.unsafeevents.listener.EventListener;
@@ -26,6 +28,7 @@ public class ScreenHandlerListener {
     @EventListener
     public void registerScreenHandlers(GuiHandlerRegistryEvent event) {
         event.register(NAMESPACE.id("chassis"), new GuiHandler((GuiHandler.ScreenFactoryNoMessage) this::openChassisScreen, ChassisLogisticPipeBlockEntity::new));
+        event.register(NAMESPACE.id("supplier"), new GuiHandler((GuiHandler.ScreenFactoryNoMessage) this::openSupplierScreen, SupplierLogisticPipeBlockEntity::new));
         event.register(NAMESPACE.id("provider"), new GuiHandler(this::openProviderScreen, () -> null));
         event.register(NAMESPACE.id("passive_supplier"), new GuiHandler(this::openPassiveSupplierScreen, () -> null));
     }
@@ -48,5 +51,9 @@ public class ScreenHandlerListener {
 
     private Screen openChassisScreen(PlayerEntity player, Inventory inventory) {
         return new ChassisScreen(player, (ChassisLogisticPipeBlockEntity) inventory);
+    }
+
+    private Screen openSupplierScreen(PlayerEntity player, Inventory inventory) {
+        return new SupplierScreen(player.inventory, ((SupplierLogisticPipeBlockEntity) inventory).getDummyInventory(), (SupplierLogisticPipeBlockEntity) inventory);
     }
 }

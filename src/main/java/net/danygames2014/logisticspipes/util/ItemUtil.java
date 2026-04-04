@@ -43,4 +43,10 @@ public class ItemUtil {
             }
         }
     }
+
+    public static ItemStack makeStack(ItemStack stack, int count){
+        ItemStack returnStack = stack.copy();
+        returnStack.count = count;
+        return  returnStack;
+    }
 }

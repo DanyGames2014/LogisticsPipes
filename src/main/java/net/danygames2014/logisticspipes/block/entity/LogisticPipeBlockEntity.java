@@ -11,10 +11,7 @@ import net.danygames2014.logisticspipes.block.pipe.ItemSendMode;
 import net.danygames2014.logisticspipes.block.pipe.LogisticsManager;
 import net.danygames2014.logisticspipes.config.Config;
 import net.danygames2014.logisticspipes.gui.hud.TestHud;
-import net.danygames2014.logisticspipes.interfaces.HUDRenderer;
-import net.danygames2014.logisticspipes.interfaces.HUDRendererProvider;
-import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
-import net.danygames2014.logisticspipes.interfaces.RoutedItem;
+import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.routing.RouteDestination;
 import net.danygames2014.logisticspipes.routing.Router;
 import net.danygames2014.logisticspipes.util.AdjacentBlockEntity;
@@ -36,7 +33,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements Router, HUDRendererProvider {
+public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements Router, HUDRendererProvider, RequestItems {
     public static int pipeCount = 0;
     public int updateOffset = 0;
 
@@ -49,6 +46,9 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     public long statLifetimeSent;
     public long statLifetimeReceived;
     public long statLifetimeRelayed;
+
+    protected int throttleTime = 20;
+    private int throttleTimeLeft = 0;
 
     protected final LinkedList<Pair3<RoutedItem, Direction, ItemSendMode>> sendQueue = new LinkedList<>();
 
@@ -122,14 +122,25 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             }
         }
 
+        if (!isEnabled()) {
+            return;
+        }
+
+        if (--throttleTimeLeft <= 0){
+            throttledUpdateEntity();
+            resetThrottle();
+        }
+
         if (getLogisticsModule() == null) {
             return;
         }
 
-        if (!isEnabled()) {
-            return;
-        }
         getLogisticsModule().tick();
+    }
+
+    public void throttledUpdateEntity(){}
+    protected void resetThrottle(){
+        throttleTimeLeft = throttleTime;
     }
 
     public Direction itemArrived(RoutedItem item){
@@ -531,5 +542,15 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         if(getLogisticsModule() != null) {
             getLogisticsModule().writeNbt(nbt, "");
         }
+    }
+
+    @Override
+    public void itemCouldNotBeSend(ItemStack item) {
+        //Override by subclasses
+    }
+
+    @Override
+    public Router getRouter() {
+        return this;
     }
 }

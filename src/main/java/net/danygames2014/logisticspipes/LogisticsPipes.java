@@ -6,6 +6,7 @@ import net.danygames2014.logisticspipes.block.LogisticPipeBlock;
 import net.danygames2014.logisticspipes.block.entity.BasicLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.entity.ChassisLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
+import net.danygames2014.logisticspipes.block.entity.SupplierLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.pipe.behavior.LogisticPipeBehavior;
 import net.danygames2014.logisticspipes.block.pipe.transporter.LogisticItemPipeTransporter;
 import net.danygames2014.logisticspipes.item.MagicWand;
@@ -40,6 +41,7 @@ public class LogisticsPipes {
     public static Block requestItemPipe;
     public static Block requestItemPipeMk2;
     public static Block providerItemPipe;
+    public static Block supplierItemPipe;
 
     public static Block chassisItemPipeMk1;
     public static Block chassisItemPipeMk2;
@@ -102,6 +104,17 @@ public class LogisticsPipes {
                 LogisticItemPipeTransporter::new,
                 BasicLogisticPipeBlockEntity::new
         ).setTranslationKey(NAMESPACE, "provider_item_pipe").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
+
+        supplierItemPipe = new LogisticPipeBlock(
+                NAMESPACE.id("supplier_item_pipe"),
+                pipeMaterial,
+                NAMESPACE.id("block/pipe/supplier_item_pipe"),
+                null,
+                PipeType.ITEM,
+                logisticPipeBehavior,
+                LogisticItemPipeTransporter::new,
+                SupplierLogisticPipeBlockEntity::new
+        ).setTranslationKey(NAMESPACE, "supplier_item_pipe").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
 
         chassisItemPipeMk1 = new LogisticPipeBlock(
                 NAMESPACE.id("chassis_item_pipe_mk1"),
