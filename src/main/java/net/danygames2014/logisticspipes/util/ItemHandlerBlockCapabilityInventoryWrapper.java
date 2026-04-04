@@ -49,7 +49,7 @@ public class ItemHandlerBlockCapabilityInventoryWrapper implements Inventory {
 
     @Override
     public void setStack(int slot, ItemStack stack) {
-        capability.setItem(stack, slot, side);
+        capability.insertItem(stack, slot, side);
     }
 
     @Override

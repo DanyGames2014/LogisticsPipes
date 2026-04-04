@@ -124,14 +124,14 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
             for (ItemIdentifier need : needed.keySet()){
                 if (needed.get(need) < 1) continue;
                 int neededCount = needed.get(need);
-                boolean success = false;
+                boolean success;
                 do{
                     success = RequestManager.request(need.makeStack(neededCount),  this, RoutingUtil.getRouterListFromMap(routingTable), null);
                     if (success || neededCount == 1){
                         break;
                     }
                     neededCount = neededCount / 2;
-                } while (requestPartials && !success);
+                } while (requestPartials);
 
                 if (success){
                     if (!requestedItems.containsKey(need)){
