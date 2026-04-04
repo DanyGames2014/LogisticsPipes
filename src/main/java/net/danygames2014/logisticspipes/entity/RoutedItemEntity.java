@@ -1,11 +1,11 @@
 package net.danygames2014.logisticspipes.entity;
 
-import net.danygames2014.buildcraft.block.entity.pipe.transporter.ItemPipeTransporter;
 import net.danygames2014.buildcraft.entity.TravellingItemEntity;
 import net.danygames2014.logisticspipes.block.entity.ChassisLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.interfaces.RequireReliableTransport;
 import net.danygames2014.logisticspipes.interfaces.RoutedItem;
 import net.danygames2014.logisticspipes.routing.Router;
+import net.danygames2014.logisticspipes.util.ItemIdentifier;
 import net.danygames2014.logisticspipes.util.RoutingUtil;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -60,7 +60,7 @@ public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem
             if(destination != null){
                 destination.itemDropped(this);
                 if(!arrived && destination.getPipe() != null && destination.getPipe() instanceof RequireReliableTransport reliableTransport){
-                    reliableTransport.itemLost(stack);
+                    reliableTransport.itemLost(ItemIdentifier.get(stack));
                 }
             }
         }

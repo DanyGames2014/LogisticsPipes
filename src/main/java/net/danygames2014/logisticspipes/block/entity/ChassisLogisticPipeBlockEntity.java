@@ -13,10 +13,7 @@ import net.danygames2014.logisticspipes.module.ChassisModule;
 import net.danygames2014.logisticspipes.request.RequestTreeNode;
 import net.danygames2014.logisticspipes.routing.LogisticsPromise;
 import net.danygames2014.logisticspipes.routing.Router;
-import net.danygames2014.logisticspipes.util.ItemHandlerBlockCapabilityInventoryWrapper;
-import net.danygames2014.logisticspipes.util.ItemUtil;
-import net.danygames2014.logisticspipes.util.SimpleInventory;
-import net.danygames2014.logisticspipes.util.SinkReply;
+import net.danygames2014.logisticspipes.util.*;
 import net.danygames2014.nyalib.capability.CapabilityHelper;
 import net.danygames2014.nyalib.capability.block.itemhandler.ItemHandlerBlockCapability;
 import net.danygames2014.uniwrench.api.WrenchMode;
@@ -44,7 +41,7 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
     private int chassisSize = 1;
 
     //HUD
-    public final LinkedList<ItemStack> displayList = new LinkedList<>();
+    public final LinkedList<ItemIdentifierStack> displayList = new LinkedList<>();
     public final List<PlayerEntity> localModeWatchers = new ArrayList<>();
 //    private HUDChassiePipe HUD;
 
@@ -353,7 +350,7 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
 
 
     @Override
-    public void canProvide(RequestTreeNode tree, Map<ItemStack, Integer> donePromisses) {
+    public void canProvide(RequestTreeNode tree, Map<ItemIdentifier, Integer> donePromisses) {
         if (!isEnabled()){
             return;
         }
@@ -380,7 +377,7 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
     }
 
     @Override
-    public int getAvailableItemCount(ItemStack item) {
+    public int getAvailableItemCount(ItemIdentifier item) {
         if (!isEnabled()){
             return 0;
         }
@@ -395,7 +392,7 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
     }
 
     @Override
-    public HashMap<ItemStack, Integer> getAllItems() {
+    public HashMap<ItemIdentifier, Integer> getAllItems() {
         if (!isEnabled()){
             return new HashMap<>();
         }
@@ -409,7 +406,7 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
     }
 
     @Override
-    public void handleSendQueueItemStackList(LinkedList<ItemStack> _allItems) {
+    public void handleSendQueueItemStackList(LinkedList<ItemIdentifierStack> _allItems) {
         displayList.clear();
         displayList.addAll(_allItems);
     }

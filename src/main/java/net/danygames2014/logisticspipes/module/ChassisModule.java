@@ -7,6 +7,7 @@ import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
 import net.danygames2014.logisticspipes.interfaces.SendRoutedItem;
 import net.danygames2014.logisticspipes.interfaces.WorldProvider;
 import net.danygames2014.logisticspipes.util.InventoryUtil;
+import net.danygames2014.logisticspipes.util.ItemIdentifier;
 import net.danygames2014.logisticspipes.util.SinkReply;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -44,7 +45,7 @@ public class ChassisModule implements LogisticsModule {
         Inventory inv = parentPipe.getInventory();
         if (inv == null) return null;
         InventoryUtil invUtil = new InventoryUtil(inv, false);
-        int roomForItem = invUtil.roomForItem(item);
+        int roomForItem = invUtil.roomForItem(ItemIdentifier.get(item));
 
         if (roomForItem < 1) return null;
 

@@ -3,6 +3,7 @@ package net.danygames2014.logisticspipes.screen;
 import net.danygames2014.logisticspipes.block.entity.ChassisLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.gui.*;
 import net.danygames2014.logisticspipes.item.ModuleItem;
+import net.danygames2014.logisticspipes.util.ItemIdentifier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.player.PlayerEntity;
@@ -91,11 +92,11 @@ public class DummyScreenHandler extends ScreenHandler {
         if (slot == null || !(slot instanceof DummySlot)) {
             ItemStack stack1 = super.onSlotClick(index, button, shift, player);
             ItemStack stack2 = slot.getStack();
-            if(stack2 != null && stack2.getItem() instanceof ModuleItem) {
-//                if(player instanceof ServerPlayerEntity serverPlayerEntity && FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-//                    serverPlayerEntity.onSlotUpdate(this, index, stack2);
+//            if(stack2 != null && stack2.getItem().id == Configs.ItemModuleId + 256) {
+//                if(player instanceof EntityPlayerMP && MainProxy.isServer(player.worldObj)) {
+//                    ((EntityPlayerMP)player).updateCraftingInventorySlot(this, index, stack2);
 //                }
-            }
+//            }
             return stack1;
         }
 
@@ -127,9 +128,9 @@ public class DummyScreenHandler extends ScreenHandler {
             return currentlyEquippedStack;
         }
 
-        ItemStack currentItem = currentlyEquippedStack;
-        ItemStack slotItem = slot.getStack();
-        if (currentItem.isItemEqual(slotItem)){
+        ItemIdentifier currentItem = ItemIdentifier.get(currentlyEquippedStack);
+        ItemIdentifier slotItem = ItemIdentifier.get(slot.getStack());
+        if (currentItem == slotItem){
             //Do manual shift-checking to play nice with NEI
             int counter = shift?10:1;
             if (button == 1 && slot.getStack().count + counter <= slot.getMaxItemCount()){

@@ -14,9 +14,7 @@ import net.danygames2014.logisticspipes.gui.hud.TestHud;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.routing.RouteDestination;
 import net.danygames2014.logisticspipes.routing.Router;
-import net.danygames2014.logisticspipes.util.AdjacentBlockEntity;
-import net.danygames2014.logisticspipes.util.RoutingUtil;
-import net.danygames2014.logisticspipes.util.WorldUtil;
+import net.danygames2014.logisticspipes.util.*;
 import net.danygames2014.logisticspipes.util.tuple.Pair;
 import net.danygames2014.logisticspipes.util.tuple.Pair3;
 import net.danygames2014.uniwrench.api.WrenchMode;
@@ -545,7 +543,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     }
 
     @Override
-    public void itemCouldNotBeSend(ItemStack item) {
+    public void itemCouldNotBeSend(ItemIdentifierStack item) {
         //Override by subclasses
     }
 

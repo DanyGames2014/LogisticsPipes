@@ -2,19 +2,20 @@ package net.danygames2014.logisticspipes.request;
 
 import net.danygames2014.logisticspipes.interfaces.RequestItems;
 import net.danygames2014.logisticspipes.routing.LogisticsPromise;
+import net.danygames2014.logisticspipes.util.ItemIdentifierStack;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RequestTreeNode {
-    public RequestTreeNode(ItemStack item, RequestItems requester) {
+    public RequestTreeNode(ItemIdentifierStack item, RequestItems requester) {
         this.request = item;
         this.target = requester;
     }
 
     protected final RequestItems target;
-    protected final ItemStack request;
+    protected final ItemIdentifierStack request;
     protected List<RequestTreeNode> subRequests = new ArrayList<>();
     protected List<LogisticsPromise> promises = new ArrayList<>();
     protected List<LogisticsPromise> extrapromises = new ArrayList<>();
@@ -28,11 +29,11 @@ public class RequestTreeNode {
     }
 
     public int getMissingItemCount() {
-        return request.count - getPromiseItemCount();
+        return request.stackSize - getPromiseItemCount();
     }
 
     public boolean addPromise(LogisticsPromise promise) {
-        if (!promise.item.isItemEqual(request)) {
+        if (promise.item != request.getItem()) {
             return false;
         }
         if (getMissingItemCount() == 0) return false;
@@ -64,7 +65,7 @@ public class RequestTreeNode {
         return getMissingItemCount() <= 0;
     }
 
-    public ItemStack getStack() {
+    public ItemIdentifierStack getStack() {
         return request;
     }
 

@@ -6,7 +6,11 @@ import net.danygames2014.logisticspipes.interfaces.RequestItems;
 import net.danygames2014.logisticspipes.interfaces.routing.CraftItems;
 import net.danygames2014.logisticspipes.routing.LogisticsPromise;
 import net.danygames2014.logisticspipes.routing.Router;
+import net.danygames2014.logisticspipes.util.ItemIdentifier;
+import net.danygames2014.logisticspipes.util.ItemIdentifierStack;
+import net.danygames2014.logisticspipes.util.ItemMessage;
 import net.danygames2014.logisticspipes.util.tuple.Pair;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
@@ -15,15 +19,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class RequestManager {
-    public static boolean request(LinkedList<ItemStack> items, RequestItems requester, LinkedList<Router> validDestinations, RequestLog log) {
+    public static boolean request(LinkedList<ItemIdentifierStack> items, RequestItems requester, LinkedList<Router> validDestinations, RequestLog log) {
         LinkedList<ProvideItems> providers = getProviders(validDestinations);
         LinkedList<CraftingTemplate> crafters = getCrafters(validDestinations);
-        LinkedList<ItemStack> messages = new LinkedList<>();
-        RequestTree tree = new RequestTree(new ItemStack(1,0, 0), requester);
-        for(ItemStack stack:items) {
+        LinkedList<ItemMessage> messages = new LinkedList<>();
+        RequestTree tree = new RequestTree(new ItemIdentifierStack(ItemIdentifier.get(Item.ITEMS[1],0,null), 0), requester);
+        for(ItemIdentifierStack stack:items) {
             RequestTree node = new RequestTree(stack, requester);
             tree.subRequests.add(node);
-            messages.add(stack);
+            messages.add(new ItemMessage(stack));
             generateRequestTree(tree, node, crafters, providers);
         }
         if(tree.isAllDone()) {
@@ -44,7 +48,7 @@ public class RequestManager {
         }
     }
 
-    public static boolean request(ItemStack item, RequestItems requester, List<Router> validDestinations, RequestLog log) {
+    public static boolean request(ItemIdentifierStack item, RequestItems requester, List<Router> validDestinations, RequestLog log) {
         LinkedList<ProvideItems> providers = getProviders(validDestinations);
         LinkedList<CraftingTemplate> crafters = getCrafters(validDestinations);
         RequestTree tree = new RequestTree(item, requester);
@@ -52,7 +56,7 @@ public class RequestManager {
         if(tree.isAllDone()) {
             handleRequestTree(tree);
             if(log != null) {
-                log.handleSucessfullRequestOf(tree.getStack());
+                log.handleSucessfullRequestOf(new ItemMessage(tree.getStack()));
             }
             return true;
         } else {
@@ -119,7 +123,7 @@ public class RequestManager {
     }
 
     private static void checkExtras(RequestTree tree, RequestTreeNode treeNode) {
-        LinkedHashMap<LogisticsPromise,RequestTreeNode> map = tree.getExtrasFor(treeNode.getStack());
+        LinkedHashMap<LogisticsPromise,RequestTreeNode> map = tree.getExtrasFor(treeNode.getStack().getItem());
         for (LogisticsPromise extraPromise : map.keySet()){
             if(treeNode.isDone()) {
                 break;
@@ -135,20 +139,20 @@ public class RequestManager {
         boolean handled = false;
         for(CraftingTemplate template:crafters) {
             if(template.getResultStack().getItem() != treeNode.getStack().getItem()) continue;
-            List<Pair<ItemStack,RequestItems>> stacks = new ArrayList<Pair<ItemStack,RequestItems>>();
+            List<Pair<ItemIdentifierStack,RequestItems>> stacks = new ArrayList<>();
             RequestTreeNode treeNodeCopy = treeNode.copy();
             while(treeNodeCopy.addPromise(template.generatePromise())) {
-                for(Pair<ItemStack,RequestItems> stack:template.getSource()) {
+                for(Pair<ItemIdentifierStack,RequestItems> stack:template.getSource()) {
                     boolean done = false;
-                    for(Pair<ItemStack,RequestItems> part:stacks) {
+                    for(Pair<ItemIdentifierStack,RequestItems> part:stacks) {
                         if(part.getValue1().getItem() == stack.getValue1().getItem() && part.getValue2() == stack.getValue2()) {
-                            part.getValue1().count += stack.getValue1().count;
+                            part.getValue1().stackSize += stack.getValue1().stackSize;
                             done = true;
                             break;
                         }
                     }
                     if(!done) {
-                        Pair<ItemStack, RequestItems> pair = new Pair<>(stack.getValue1().copy(),stack.getValue2());
+                        Pair<ItemIdentifierStack, RequestItems> pair = new Pair<>(stack.getValue1().clone(), stack.getValue2());
                         stacks.add(pair);
                     }
                 }
@@ -156,7 +160,7 @@ public class RequestManager {
             boolean failed = false;
             lastNode = new ArrayList<RequestTreeNode>();
             lastNodeTemplate = template;
-            for(Pair<ItemStack,RequestItems> stack:stacks) {
+            for(Pair<ItemIdentifierStack,RequestItems> stack:stacks) {
                 RequestTreeNode node = new RequestTreeNode(stack.getValue1(), stack.getValue2());
                 lastNode.add(node);
                 treeNode.subRequests.add(node);

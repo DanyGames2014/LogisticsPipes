@@ -1,6 +1,8 @@
 package net.danygames2014.logisticspipes.routing;
 
 import net.danygames2014.logisticspipes.interfaces.RequestItems;
+import net.danygames2014.logisticspipes.util.ItemIdentifier;
+import net.danygames2014.logisticspipes.util.ItemIdentifierStack;
 import net.danygames2014.logisticspipes.util.tuple.Pair;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -19,7 +21,7 @@ public class LogisticsOrderManager {
         this.listener = listener;
     }
 
-    private LinkedList<Pair<ItemStack, RequestItems>> orders = new LinkedList<>();
+    private LinkedList<Pair<ItemIdentifierStack, RequestItems>> orders = new LinkedList<>();
     private ChangeListener listener = null;
 
     private void listen() {
@@ -28,36 +30,36 @@ public class LogisticsOrderManager {
         }
     }
 
-    public LinkedList<ItemStack> getContentList(World world) {
+    public LinkedList<ItemIdentifierStack> getContentList(World world) {
         if (world.isRemote) return new LinkedList<>();
-        LinkedList<ItemStack> list = new LinkedList<>();
-        for (Pair<ItemStack, RequestItems> request : orders) {
+        LinkedList<ItemIdentifierStack> list = new LinkedList<>();
+        for (Pair<ItemIdentifierStack, RequestItems> request : orders) {
             addToList(request.getValue1(), list);
         }
         return list;
     }
 
-    private void addToList(ItemStack stack, LinkedList<ItemStack> list) {
-        for (ItemStack ident : list) {
+    private void addToList(ItemIdentifierStack stack, LinkedList<ItemIdentifierStack> list) {
+        for (ItemIdentifierStack ident : list) {
             if (ident.getItem().equals(stack.getItem())) {
-                ident.count += stack.count;
+                ident.stackSize += stack.stackSize;
                 return;
             }
         }
-        list.addLast(stack.copy());
+        list.addLast(stack.clone());
     }
 
     public boolean hasOrders() {
         return !orders.isEmpty();
     }
 
-    public Pair<ItemStack, RequestItems> getNextRequest() {
+    public Pair<ItemIdentifierStack, RequestItems> getNextRequest() {
         return orders.getFirst();
     }
 
     public void sendSuccessfull(int number) {
-        orders.getFirst().getValue1().count -= number;
-        if (orders.getFirst().getValue1().count <= 0) {
+        orders.getFirst().getValue1().stackSize -= number;
+        if (orders.getFirst().getValue1().stackSize <= 0) {
             orders.removeFirst();
         }
         listen();
@@ -71,16 +73,16 @@ public class LogisticsOrderManager {
         listen();
     }
 
-    public void addOrder(ItemStack stack, RequestItems requester) {
+    public void addOrder(ItemIdentifierStack stack, RequestItems requester) {
         orders.addLast(new Pair<>(stack, requester));
         listen();
     }
 
-    public int totalItemsCountInOrders(ItemStack item) {
+    public int totalItemsCountInOrders(ItemIdentifier item) {
         int itemCount = 0;
-        for (Pair<ItemStack, RequestItems> request : orders) {
-            if (!request.getValue1().isItemEqual(item)) continue;
-            itemCount += request.getValue1().count;
+        for (Pair<ItemIdentifierStack, RequestItems> request : orders) {
+            if (request.getValue1().getItem() != item) continue;
+            itemCount += request.getValue1().stackSize;
         }
         return itemCount;
     }

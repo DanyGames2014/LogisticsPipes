@@ -30,7 +30,7 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
     private SimpleInventory dummyInventory;
     private InventoryUtil dummyInvUtil;
 
-    private final HashMap<ItemStack, Integer> requestedItems = new HashMap<>();
+    private final HashMap<ItemIdentifier, Integer> requestedItems = new HashMap<>();
 
     private boolean requestPartials = false;
 
@@ -100,20 +100,20 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
             InventoryUtil invUtil = new InventoryUtil(inventory, false);
 
             //How many do I want?
-            HashMap<ItemStack, Integer> needed = dummyInvUtil.getItemsAndCount();
+            HashMap<ItemIdentifier, Integer> needed = dummyInvUtil.getItemsAndCount();
 
             //How many do I have?
-            HashMap<ItemStack, Integer> have = invUtil.getItemsAndCount();
+            HashMap<ItemIdentifier, Integer> have = invUtil.getItemsAndCount();
 
             //Reduce what I have
-            for (ItemStack item : needed.keySet()){
+            for (ItemIdentifier item : needed.keySet()){
                 if (have.containsKey(item)){
                     needed.put(item, needed.get(item) - have.get(item));
                 }
             }
 
             //Reduce what have been requested already
-            for (ItemStack item : needed.keySet()){
+            for (ItemIdentifier item : needed.keySet()){
                 if (requestedItems.containsKey(item)){
                     needed.put(item, needed.get(item) - requestedItems.get(item));
                 }
@@ -121,12 +121,12 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
             setRequestFailed(false);
 
-            for (ItemStack need : needed.keySet()){
+            for (ItemIdentifier need : needed.keySet()){
                 if (needed.get(need) < 1) continue;
                 int neededCount = needed.get(need);
                 boolean success = false;
                 do{
-                    success = RequestManager.request(ItemUtil.makeStack(need, neededCount),  this, RoutingUtil.getRouterListFromMap(routingTable), null);
+                    success = RequestManager.request(need.makeStack(neededCount),  this, RoutingUtil.getRouterListFromMap(routingTable), null);
                     if (success || neededCount == 1){
                         break;
                     }
@@ -195,14 +195,14 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
     }
 
     @Override
-    public void itemLost(ItemStack item) {
+    public void itemLost(ItemIdentifier item) {
         if (requestedItems.containsKey(item)){
             requestedItems.put(item, requestedItems.get(item) - 1);
         }
     }
 
     @Override
-    public void itemArrived(ItemStack item) {
+    public void itemArrived(ItemIdentifier item) {
         super.resetThrottle();
         if (requestedItems.containsKey(item)){
             requestedItems.put(item, requestedItems.get(item) - 1);

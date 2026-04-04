@@ -5,6 +5,7 @@ import net.danygames2014.logisticspipes.interfaces.ProvideItems;
 import net.danygames2014.logisticspipes.interfaces.RoutedItem;
 import net.danygames2014.logisticspipes.routing.RouteDestination;
 import net.danygames2014.logisticspipes.routing.Router;
+import net.danygames2014.logisticspipes.util.ItemIdentifier;
 import net.danygames2014.logisticspipes.util.RoutingUtil;
 import net.danygames2014.logisticspipes.util.SinkReply;
 import net.danygames2014.logisticspipes.util.tuple.Pair;
@@ -71,21 +72,21 @@ public class LogisticsManager implements net.danygames2014.logisticspipes.interf
 
     // TODO: implement this
     @Override
-    public LinkedList<ItemStack> getCraftableItems(World world, Set<Router> validDestinations) {
+    public LinkedList<ItemIdentifier> getCraftableItems(World world, Set<Router> validDestinations) {
         return null;
     }
 
     @Override
-    public HashMap<ItemStack, Integer> getAvailableItems(World world, Set<Router> validDestinations) {
-        HashMap<ItemStack, Integer> allAvailableItems = new HashMap<>();
+    public HashMap<ItemIdentifier, Integer> getAvailableItems(World world, Set<Router> validDestinations) {
+        HashMap<ItemIdentifier, Integer> allAvailableItems = new HashMap<>();
         for(Router r : validDestinations){
             if(r == null){
                 continue;
             }
             if(r.getPipe() instanceof ProvideItems provider){
-                HashMap<ItemStack, Integer> allItems = provider.getAllItems();
+                HashMap<ItemIdentifier, Integer> allItems = provider.getAllItems();
 
-                for (ItemStack item : allItems.keySet()){
+                for (ItemIdentifier item : allItems.keySet()){
                     if (!allAvailableItems.containsKey(item)){
                         allAvailableItems.put(item, allItems.get(item));
                     } else {

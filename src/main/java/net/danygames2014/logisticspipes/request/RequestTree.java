@@ -4,6 +4,9 @@ import net.danygames2014.logisticspipes.interfaces.ProvideItems;
 import net.danygames2014.logisticspipes.interfaces.RequestItems;
 import net.danygames2014.logisticspipes.interfaces.routing.CraftItems;
 import net.danygames2014.logisticspipes.routing.LogisticsPromise;
+import net.danygames2014.logisticspipes.util.ItemIdentifier;
+import net.danygames2014.logisticspipes.util.ItemIdentifierStack;
+import net.danygames2014.logisticspipes.util.ItemMessage;
 import net.danygames2014.logisticspipes.util.ItemUtil;
 import net.minecraft.item.ItemStack;
 
@@ -13,17 +16,17 @@ import java.util.LinkedList;
 import java.util.Map;
 
 public class RequestTree extends RequestTreeNode{
-    public RequestTree(ItemStack item, RequestItems requester) {
+    public RequestTree(ItemIdentifierStack item, RequestItems requester) {
         super(item, requester);
     }
 
-    public Map<ItemStack, Integer> getAllPromissesFor(ProvideItems provider) {
-        Map<ItemStack, Integer> result = new HashMap<>();
+    public Map<ItemIdentifier, Integer> getAllPromissesFor(ProvideItems provider) {
+        Map<ItemIdentifier, Integer> result = new HashMap<>();
         checkSubPromises(provider,this,result);
         return result;
     }
 
-    private void checkSubPromises(ProvideItems provider, RequestTreeNode node, Map<ItemStack, Integer> result) {
+    private void checkSubPromises(ProvideItems provider, RequestTreeNode node, Map<ItemIdentifier, Integer> result) {
         for(LogisticsPromise promise: node.promises) {
             if(promise.sender == provider) {
                 result.put(promise.item, promise.numberOfItems);
@@ -47,13 +50,13 @@ public class RequestTree extends RequestTreeNode{
         return done;
     }
 
-    public LinkedHashMap<LogisticsPromise,RequestTreeNode> getExtrasFor(ItemStack item) {
+    public LinkedHashMap<LogisticsPromise,RequestTreeNode> getExtrasFor(ItemIdentifier item) {
         LinkedHashMap<LogisticsPromise,RequestTreeNode> extras = new LinkedHashMap<>();
         checkForExtras(item,this,extras);
         return extras;
     }
 
-    private void checkForExtras(ItemStack item, RequestTreeNode node, LinkedHashMap<LogisticsPromise,RequestTreeNode> extras) {
+    private void checkForExtras(ItemIdentifier item, RequestTreeNode node, LinkedHashMap<LogisticsPromise,RequestTreeNode> extras) {
         for(LogisticsPromise extra:extrapromises) {
             if(extra.item == item) {
                 extras.put(extra, node);
@@ -92,17 +95,17 @@ public class RequestTree extends RequestTreeNode{
     }
 
     public void sendMissingMessage(RequestLog log) {
-        LinkedList<ItemStack> missing = new LinkedList<>();
+        LinkedList<ItemMessage> missing = new LinkedList<>();
         sendMissingMessage(missing, this);
-        ItemUtil.compress(missing);
+        ItemMessage.compress(missing);
         log.handleMissingItems(missing);
     }
 
-    private void sendMissingMessage(LinkedList<ItemStack> missing, RequestTreeNode node) {
+    private void sendMissingMessage(LinkedList<ItemMessage> missing, RequestTreeNode node) {
         if(!node.isDone()) {
-            ItemStack stack = node.getStack().copy();
-            stack.count = node.getMissingItemCount();
-            missing.add(stack);
+            ItemIdentifierStack stack = node.getStack().clone();
+            stack.stackSize = node.getMissingItemCount();
+            missing.add(new ItemMessage(stack));
         }
         for(RequestTreeNode subNode:node.subRequests) {
             sendMissingMessage(missing, subNode);

@@ -7,10 +7,7 @@ import net.danygames2014.logisticspipes.request.RequestTreeNode;
 import net.danygames2014.logisticspipes.routing.LogisticsOrderManager;
 import net.danygames2014.logisticspipes.routing.LogisticsPromise;
 import net.danygames2014.logisticspipes.routing.Router;
-import net.danygames2014.logisticspipes.util.CroppedInventory;
-import net.danygames2014.logisticspipes.util.InventoryUtil;
-import net.danygames2014.logisticspipes.util.SimpleInventory;
-import net.danygames2014.logisticspipes.util.SinkReply;
+import net.danygames2014.logisticspipes.util.*;
 import net.danygames2014.logisticspipes.util.tuple.Pair;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -40,8 +37,8 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
     private int y = 0;
     private int z = 0;
 
-    public LinkedList<ItemStack> displayList = new LinkedList<>();
-    public LinkedList<ItemStack> oldList = new LinkedList<>();
+    public LinkedList<ItemIdentifierStack> displayList = new LinkedList<>();
+    public LinkedList<ItemIdentifierStack> oldList = new LinkedList<>();
 
     private final List<PlayerEntity> localModeWatchers = new ArrayList<>();
 
@@ -88,8 +85,8 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
         currentTick = 0;
         checkUpdate(null);
         while (orderManager.hasOrders()) {
-            Pair<ItemStack,RequestItems> order = orderManager.getNextRequest();
-            int sent = sendItem(order.getValue1(), order.getValue1().count, order.getValue2().getRouter().getRouterId());
+            Pair<ItemIdentifierStack,RequestItems> order = orderManager.getNextRequest();
+            int sent = sendItem(order.getValue1().getItem(), order.getValue1().stackSize, order.getValue2().getRouter().getRouterId());
 
             if (sent > 0) {
                 orderManager.sendSuccessfull(sent);
@@ -101,14 +98,14 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
     }
 
     @Override
-    public void canProvide(RequestTreeNode tree, Map<ItemStack, Integer> donePromisses) {
-        int canProvide = getAvailableItemCount(tree.getStack());
-        if (donePromisses.containsKey(tree.getStack())) {
-            canProvide -= donePromisses.get(tree.getStack());
+    public void canProvide(RequestTreeNode tree, Map<ItemIdentifier, Integer> donePromisses) {
+        int canProvide = getAvailableItemCount(tree.getStack().getItem());
+        if (donePromisses.containsKey(tree.getStack().getItem())) {
+            canProvide -= donePromisses.get(tree.getStack().getItem());
         }
         if (canProvide < 1) return;
         LogisticsPromise promise = new LogisticsPromise();
-        promise.item = tree.getStack();
+        promise.item = tree.getStack().getItem();
         promise.numberOfItems = Math.min(canProvide, tree.getMissingItemCount());
         //TODO: FIX THIS CAST
         promise.sender = (ProvideItems) itemSender;
@@ -117,22 +114,22 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
 
     @Override
     public void fullFill(LogisticsPromise promise, RequestItems destination) {
-        orderManager.addOrder(new ItemStack(promise.item.getItem(), promise.numberOfItems), destination);
+        orderManager.addOrder(new ItemIdentifierStack(promise.item, promise.numberOfItems), destination);
     }
 
     @Override
-    public int getAvailableItemCount(ItemStack item) {
+    public int getAvailableItemCount(ItemIdentifier item) {
         return getTotalItemCount(item) - orderManager.totalItemsCountInOrders(item);
     }
 
     @Override
-    public HashMap<ItemStack, Integer> getAllItems() {
-        HashMap<ItemStack, Integer> allItems = new HashMap<>();
+    public HashMap<ItemIdentifier, Integer> getAllItems() {
+        HashMap<ItemIdentifier, Integer> allItems = new HashMap<>();
         if (invProvider.getInventory() == null) return allItems;
 
         InventoryUtil inv = getAdaptedUtil(invProvider.getInventory());
-        HashMap<ItemStack, Integer> currentInv = inv.getItemsAndCount();
-        for (ItemStack currItem : currentInv.keySet()){
+        HashMap<ItemIdentifier, Integer> currentInv = inv.getItemsAndCount();
+        for (ItemIdentifier currItem : currentInv.keySet()){
             if ( hasFilter() && ((isExcludeFilter && itemIsFiltered(currItem))
                                          || (!isExcludeFilter && !itemIsFiltered(currItem)))) continue;
 
@@ -144,9 +141,9 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
         }
 
         //Reduce what has been reserved.
-        Iterator<ItemStack> iterator = allItems.keySet().iterator();
+        Iterator<ItemIdentifier> iterator = allItems.keySet().iterator();
         while(iterator.hasNext()){
-            ItemStack item = iterator.next();
+            ItemIdentifier item = iterator.next();
 
             int remaining = allItems.get(item) - orderManager.totalItemsCountInOrders(item);
             if (remaining < 1){
@@ -165,7 +162,7 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
         return null;
     }
 
-    protected int sendItem(ItemStack item, int maxCount, Long destination) {
+    protected int sendItem(ItemIdentifier item, int maxCount, Long destination) {
         int sent = 0;
         if (invProvider.getInventory() == null) return 0;
         InventoryUtil inv = getAdaptedUtil(invProvider.getInventory());
@@ -179,7 +176,7 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
         return sent;
     }
 
-    public int getTotalItemCount(ItemStack item) {
+    public int getTotalItemCount(ItemIdentifier item) {
 
         if (invProvider.getInventory() == null) return 0;
 
@@ -192,10 +189,10 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
     }
 
     private boolean hasFilter() {
-        return filterUtil.getItemsAndCount().size() > 0;
+        return !filterUtil.getItemsAndCount().isEmpty();
     }
 
-    public boolean itemIsFiltered(ItemStack item){
+    public boolean itemIsFiltered(ItemIdentifier item){
         return filterUtil.getItemsAndCount().containsKey(item);
     }
 
@@ -258,9 +255,9 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
 
     private void checkUpdate(PlayerEntity player) {
         displayList.clear();
-        HashMap<ItemStack, Integer> list = getAllItems();
-        for(ItemStack item :list.keySet()) {
-            displayList.add(new ItemStack(item.getItem(), list.get(item)));
+        HashMap<ItemIdentifier, Integer> list = getAllItems();
+        for(ItemIdentifier item :list.keySet()) {
+            displayList.add(new ItemIdentifierStack(item, list.get(item)));
         }
         if(!oldList.equals(displayList)) {
 //            MainProxy.sendToPlayerList(new PacketModuleInvContent(NetworkConstants.MODULE_INV_CONTENT, xCoord, yCoord, zCoord, slot, displayList).getPacket(), localModeWatchers);
@@ -299,7 +296,7 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
     }
 
     @Override
-    public void handleInvContent(LinkedList<ItemStack> list) {
+    public void handleInvContent(LinkedList<ItemIdentifierStack> list) {
         displayList.clear();
         displayList.addAll(list);
     }

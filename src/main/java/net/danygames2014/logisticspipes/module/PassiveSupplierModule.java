@@ -2,9 +2,7 @@ package net.danygames2014.logisticspipes.module;
 
 import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.interfaces.*;
-import net.danygames2014.logisticspipes.util.InventoryUtil;
-import net.danygames2014.logisticspipes.util.SimpleInventory;
-import net.danygames2014.logisticspipes.util.SinkReply;
+import net.danygames2014.logisticspipes.util.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -40,11 +38,11 @@ public class PassiveSupplierModule implements LogisticsModule, ClientInformation
         if (targetInventory == null) return null;
 
         InventoryUtil filterUtil = new InventoryUtil(filterInventory, false);
-        if (!filterUtil.containsItem(item)) return null;
+        if (!filterUtil.containsItem(ItemIdentifier.get(item))) return null;
 
-        int targetCount = filterUtil.getItemCount(item);
+        int targetCount = filterUtil.getItemCount(ItemIdentifier.get(item));
         InventoryUtil targetUtil = new InventoryUtil(filterInventory, false);
-        if (targetCount <= targetUtil.getItemCount(item)) return null;
+        if (targetCount <= targetUtil.getItemCount(ItemIdentifier.get(item))) return null;
 
         SinkReply reply = new SinkReply();
         reply.fixedPriority = SinkReply.FixedPriority.PassiveSupplier;
@@ -119,7 +117,7 @@ public class PassiveSupplierModule implements LogisticsModule, ClientInformation
     }
 
     @Override
-    public void handleInvContent(LinkedList<ItemStack> list) {
+    public void handleInvContent(LinkedList<ItemIdentifierStack> list) {
         filterInventory.handleItemStackList(list);
     }
 

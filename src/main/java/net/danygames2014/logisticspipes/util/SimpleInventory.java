@@ -135,14 +135,14 @@ public class SimpleInventory implements Inventory, SaveState {
         }
     }
 
-    public void handleItemStackList(LinkedList<ItemStack> _allItems) {
+    public void handleItemStackList(LinkedList<ItemIdentifierStack> _allItems) {
         int i=0;
-        for(ItemStack stack : _allItems) {
+        for(ItemIdentifierStack stack : _allItems) {
             if(contents.length <= i) break;
             if(stack == null) {
                 contents[i] = null;
             } else {
-                contents[i] = stack.copy();
+                contents[i] = stack.makeNormalStack();
             }
             i++;
         }
