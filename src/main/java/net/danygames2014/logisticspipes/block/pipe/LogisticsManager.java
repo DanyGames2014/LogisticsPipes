@@ -12,9 +12,7 @@ import net.danygames2014.logisticspipes.util.tuple.Pair;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Set;
+import java.util.*;
 
 public class LogisticsManager implements net.danygames2014.logisticspipes.interfaces.LogisticsManager {
     private static final LogisticsManager INSTANCE = new LogisticsManager();
@@ -102,11 +100,17 @@ public class LogisticsManager implements net.danygames2014.logisticspipes.interf
         Long potentialDestination = null;
         SinkReply bestReply = null;
 
-        for(RouteDestination candidateRouteDestination : sourceRouter.getRoutingTable().values()){
-            Router candidateRouter = candidateRouteDestination.router;
-            if(excludeSource && candidateRouter.getRouterId() == sourceRouter.getRouterId()){
-                continue;
-            }
+        List<Router> candidates = new ArrayList<>();
+
+        if (!excludeSource) {
+            candidates.add(sourceRouter);
+        }
+
+        for (RouteDestination rd : sourceRouter.getRoutingTable().values()) {
+            candidates.add(rd.router);
+        }
+
+        for(Router candidateRouter : candidates){
             LogisticsModule module = candidateRouter.getPipe().getLogisticsModule();
             if(candidateRouter.getPipe() == null || !candidateRouter.getPipe().isEnabled()){
                 continue;

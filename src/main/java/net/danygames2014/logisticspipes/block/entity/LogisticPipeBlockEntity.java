@@ -147,6 +147,10 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             statSessionReceived++;
         }
 
+        if(this instanceof RequireReliableTransport reliableTransport){
+            reliableTransport.itemArrived(ItemIdentifier.get(item.getItemStack()));
+        }
+
         LinkedList<AdjacentBlockEntity> adjacentEntities = getConnectedEntities();
         LinkedList<Direction> possibleDirections = new LinkedList<>();
 
@@ -206,7 +210,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         }
 
         //If the destination is unknown / unroutable
-        if(item.getDestination() != null && !routingTable.containsKey((long)item.getDestination())){
+        if(item.getDestination() != null && item.getDestination() != getRouterId() && !routingTable.containsKey((long)item.getDestination())){
             item = LogisticsManager.getInstance().destinationUnreachable(world, item, getRouterId());
         }
 
