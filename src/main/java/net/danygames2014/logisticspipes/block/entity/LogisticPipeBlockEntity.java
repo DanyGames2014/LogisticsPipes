@@ -413,6 +413,12 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         }
     }
 
+    // TODO: propagateRoute
+    // This should propagate route to this router across the entire network in order to facilitate item transfer to this router
+    // On the subsequent routers we can either run full learnRoutesFromNeighbors or only learn this specific route as we only really need that route
+    // We should also know how to invalidate it if a better route becomes available
+    // Maybe add a timeout on routes ? Or just learn routes form neighbors periodically
+    
     private final Queue<SearchNode> queue = new LinkedList<>();
     private final Long2IntOpenHashMap visited = new Long2IntOpenHashMap();
     private static final Direction[] DIRECTIONS = Direction.values();
@@ -423,7 +429,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
         // Clear old local data before a fresh scan
         this.neighborTable.clear();
-        this.routingTable.clear();
+        this.routingTable.clear(); // TODO: Dont
 
         queue.clear();
         visited.clear();
@@ -461,6 +467,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
                 continue;
             }
             
+            // TODO: change this to always update the neighbor table even if no routing table update is not needed
             // If we find a router, check if the route is better than an existing one
             if (blockEntity instanceof Router router) {
                 RouteDestination existing = routingTable.get(pos);
@@ -469,6 +476,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
                 // If we find a better route to a router, add it to the table
                 if (currentMetric == -1 || current.metric < currentMetric) {
                     this.neighborTable.put(pos, current.firstDir.getId());
+                    // TODO: We should still add the route to routing table because it kinda works like a MAB too
                     this.routingTable.put(pos, new RouteDestination(pos, router, current.metric));
                 }
 
@@ -490,6 +498,8 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
                 }
             }
         }
+        
+        // TODO: clear out routing entries that go thru neighbors which are no longer available
     }
 
     public void debugPrint(PlayerEntity player) {
