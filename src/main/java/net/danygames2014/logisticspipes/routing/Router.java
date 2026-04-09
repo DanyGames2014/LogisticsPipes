@@ -8,16 +8,20 @@ import net.modificationstation.stationapi.api.util.math.Direction;
 
 public interface Router {
     long getRouterId();
-    LogisticPipeBlockEntity getPipe();
-    void itemDropped(RoutedItemEntity routedItemEntity);
+
+    LogisticsNetwork getNetwork();
 
     Long2IntOpenHashMap getNeighborTable();
+
+    Long2ObjectOpenHashMap<RouteDestination> getRoutingTable();
 
     void learnRoutesFromNeighbors();
 
     void learnRoutesToTargetFromNeighbors(long targetRouterId);
 
+    void itemDropped(RoutedItemEntity routedItemEntity);
+
     boolean isRoutedExit(Direction direction);
 
-    Long2ObjectOpenHashMap<RouteDestination> getRoutingTable();
+    LogisticPipeBlockEntity getPipe();
 }

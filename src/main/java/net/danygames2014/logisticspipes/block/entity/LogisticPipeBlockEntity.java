@@ -13,6 +13,7 @@ import net.danygames2014.logisticspipes.block.pipe.LogisticsManager;
 import net.danygames2014.logisticspipes.config.Config;
 import net.danygames2014.logisticspipes.gui.hud.TestHud;
 import net.danygames2014.logisticspipes.interfaces.*;
+import net.danygames2014.logisticspipes.routing.LogisticsNetwork;
 import net.danygames2014.logisticspipes.routing.LogisticsNetworkManager;
 import net.danygames2014.logisticspipes.routing.RouteDestination;
 import net.danygames2014.logisticspipes.routing.Router;
@@ -335,13 +336,18 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     }
 
     @Override
-    public Long2ObjectOpenHashMap<RouteDestination> getRoutingTable() {
-        return routingTable;
+    public LogisticsNetwork getNetwork() {
+        return LogisticsNetworkManager.fetchNetwork(world, this); 
     }
 
     @Override
     public Long2IntOpenHashMap getNeighborTable() {
         return neighborTable;
+    }
+
+    @Override
+    public Long2ObjectOpenHashMap<RouteDestination> getRoutingTable() {
+        return routingTable;
     }
 
     // Routing
@@ -411,13 +417,8 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         }
     }
 
-    // TODO: propagateRoute
-    // This should propagate route to this router across the entire network in order to facilitate item transfer to this router
-    // On the subsequent routers we can either run full learnRoutesFromNeighbors or only learn this specific route as we only really need that route
-    // We should also know how to invalidate it if a better route becomes available
-    // Maybe add a timeout on routes ? Or just learn routes form neighbors periodically
-    // Could just learn routes fdrom NEighbors
-    
+    // TODO: When sending items only re-advertise if topology changed
+    // TODO: callback from LogistricsNetworkManager to see if topology changed
     public void advertiseRouter() {
         // Contains routers to be explored
         ObjectArrayFIFOQueue<Router> open = new ObjectArrayFIFOQueue<>();
