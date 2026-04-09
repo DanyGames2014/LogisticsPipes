@@ -2,6 +2,8 @@ package net.danygames2014.logisticspipes.block.entity;
 
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayFIFOQueue;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.danygames2014.buildcraft.block.PipeBlock;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeBlockEntity;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeConnectionType;
@@ -358,20 +360,38 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         }
     }
     
+    @Override
     public void learnRoutesFromNeighbors() {
         for (long routerId : neighborTable.keySet()) {
             Router router = RoutingUtil.getRouter(world, routerId);
-
-            if (router == null) {
+            int metricToRouter = routingTable.containsKey(routerId) ? routingTable.get(routerId).metric : -1;
+            
+            if (router == null || metricToRouter == -1) {
                 continue;
             }
 
-            for (RouteDestination route : router.getRoutingTable().values()) {
-                int metricToRouter = routingTable.containsKey(routerId) ? routingTable.get(routerId).metric : -1;
+            for (var routingEntry : router.getRoutingTable().long2ObjectEntrySet()) {
+                long destinationId = routingEntry.getLongKey();
+                RouteDestination route = routingEntry.getValue();
+                
+                learnRoute(destinationId, routerId, router, route.metric + metricToRouter);
+            }
+        }
+    }
 
-                if (metricToRouter != -1) {
-                    learnRoute(route.routerId, routerId, router, route.metric + metricToRouter);
-                }
+    @Override
+    public void learnRoutesToTargetFromNeighbors(long targetRouterId) {
+        for (long routerId : neighborTable.keySet()) {
+            Router router = RoutingUtil.getRouter(world, routerId);
+            int metricToRouter = routingTable.containsKey(routerId) ? routingTable.get(routerId).metric : -1;
+
+            if (router == null || metricToRouter == -1) {
+                continue;
+            }
+
+            RouteDestination nextHop = router.getRoutingTable().getOrDefault(targetRouterId, null);
+            if (nextHop != null) {
+                learnRoute(targetRouterId, routerId, router, nextHop.metric + metricToRouter);
             }
         }
     }
@@ -381,8 +401,8 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             return;
         }
 
-        if (routingTable.containsKey(destinationId)) {
-            RouteDestination knownRoute = routingTable.get(destinationId);
+        RouteDestination knownRoute = routingTable.get(destinationId);
+        if (knownRoute != null) {
             if (metric < knownRoute.metric) {
                 routingTable.put(destinationId, new RouteDestination(nextHopId, nextHopRouter, metric));
             }
@@ -391,6 +411,81 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         }
     }
 
+    // TODO: propagateRoute
+    // This should propagate route to this router across the entire network in order to facilitate item transfer to this router
+    // On the subsequent routers we can either run full learnRoutesFromNeighbors or only learn this specific route as we only really need that route
+    // We should also know how to invalidate it if a better route becomes available
+    // Maybe add a timeout on routes ? Or just learn routes form neighbors periodically
+    // Could just learn routes fdrom NEighbors
+    
+    public void advertiseRouter() {
+        // Contains routers to be explored
+        ObjectArrayFIFOQueue<Router> open = new ObjectArrayFIFOQueue<>();
+
+        // Contains all the routers that have been discovered
+        ObjectOpenHashSet<Router> closed = new ObjectOpenHashSet<>();
+
+        // Initialize the starting point and add the starting router
+        open.enqueue(this);
+        
+        long targetRouterId = this.getRouterId();
+
+        while (!open.isEmpty()) {
+            Router current = open.dequeue();
+
+            // Check if this router has not already been closed
+            if (closed.contains(current)) {
+                continue;
+            }
+
+            current.learnRoutesToTargetFromNeighbors(targetRouterId);
+
+            // Discover the routers neigbors
+            Long2IntOpenHashMap neighborTable = current.getNeighborTable();
+            for (long neighborId : neighborTable.keySet()) {
+                Router neighborRouter = RoutingUtil.getRouter(world, neighborId);
+                if (!closed.contains(neighborRouter)) {
+                    open.enqueue(RoutingUtil.getRouter(world, neighborId));
+                }
+            }
+
+            closed.add(current);
+        }
+    }
+    
+    public void propagateRoutes() {
+        // Contains routers to be explored
+        ObjectArrayFIFOQueue<Router> open = new ObjectArrayFIFOQueue<>();
+
+        // Contains all the routers that have been discovered
+        ObjectOpenHashSet<Router> closed = new ObjectOpenHashSet<>();
+
+        // Initialize the starting point and add the starting router
+        open.enqueue(this);
+
+        while (!open.isEmpty()) {
+            Router current = open.dequeue();
+
+            // Check if this router has not already been closed
+            if (closed.contains(current)) {
+                continue;
+            }
+            
+            current.learnRoutesFromNeighbors();
+
+            // Discover the routers neigbors
+            Long2IntOpenHashMap neighborTable = current.getNeighborTable();
+            for (long neighborId : neighborTable.keySet()) {
+                Router neighborRouter = RoutingUtil.getRouter(world, neighborId);
+                if (!closed.contains(neighborRouter)) {
+                    open.enqueue(RoutingUtil.getRouter(world, neighborId));
+                }
+            }
+
+            closed.add(current);
+        }
+    }
+    
     public void updateNeighbors() {
         discoverNeighbors(false);
 
@@ -414,13 +509,6 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             world.setBlockDirty(x, y, z);
         }
     }
-
-    // TODO: propagateRoute
-    // This should propagate route to this router across the entire network in order to facilitate item transfer to this router
-    // On the subsequent routers we can either run full learnRoutesFromNeighbors or only learn this specific route as we only really need that route
-    // We should also know how to invalidate it if a better route becomes available
-    // Maybe add a timeout on routes ? Or just learn routes form neighbors periodically
-    // Could just learn routes fdrom NEighbors
     
     private final Queue<SearchNode> queue = new LinkedList<>();
     private final Long2IntOpenHashMap visited = new Long2IntOpenHashMap();
@@ -523,13 +611,20 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     }
 
     public void debugPrint(PlayerEntity player) {
+        System.err.println("Router " + getRouterId());
         player.sendMessage("Router " + getRouterId());
+
+        System.err.println("Neighbor Table: ");
         player.sendMessage("Neighbor Table: ");
         for (var entry : neighborTable.long2IntEntrySet()) {
+            System.err.println(entry.getLongKey() + " -> " + Direction.byId(entry.getIntValue()));
             player.sendMessage(entry.getLongKey() + " -> " + Direction.byId(entry.getIntValue()));
         }
+        
+        System.err.println("Routing Table: ");
         player.sendMessage("Routing Table: ");
         for (var entry : routingTable.long2ObjectEntrySet()) {
+            System.err.println(entry.getLongKey() + " -> " + entry.getValue());
             player.sendMessage(entry.getLongKey() + " -> " + entry.getValue());
         }
     }

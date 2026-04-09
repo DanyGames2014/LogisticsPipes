@@ -13,6 +13,10 @@ public interface Router {
 
     Long2IntOpenHashMap getNeighborTable();
 
+    void learnRoutesFromNeighbors();
+
+    void learnRoutesToTargetFromNeighbors(long targetRouterId);
+
     boolean isRoutedExit(Direction direction);
 
     Long2ObjectOpenHashMap<RouteDestination> getRoutingTable();

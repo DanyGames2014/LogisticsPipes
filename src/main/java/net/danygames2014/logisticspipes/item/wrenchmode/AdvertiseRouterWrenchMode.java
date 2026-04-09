@@ -7,15 +7,20 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.util.Identifier;
 
-public class ValidateRoutesWrenchMode extends WrenchMode {
-    public ValidateRoutesWrenchMode(Identifier identifier) {
+public class AdvertiseRouterWrenchMode extends WrenchMode {
+    public AdvertiseRouterWrenchMode(Identifier identifier) {
         super(identifier);
     }
 
     @Override
     public boolean wrenchRightClick(ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side, WrenchMode wrenchMode) {
         if (world.getBlockEntity(x,y,z) instanceof LogisticPipeBlockEntity pipe) {
-            //pipe.discoverNeighbors(64);
+            long nanoTime = System.nanoTime();
+            pipe.advertiseRouter();
+            long nanoEnd = System.nanoTime();
+
+            player.sendMessage("Advertisement took " + (nanoEnd - nanoTime) / 1000 + "us");
+            
             return true;
         }
 

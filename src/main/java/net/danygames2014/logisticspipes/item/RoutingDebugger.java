@@ -8,9 +8,10 @@ public class RoutingDebugger extends WrenchBase {
     public RoutingDebugger(Identifier identifier) {
         super(identifier);
         addWrenchMode(WrenchModeListener.discoverNeighborsWrenchMode);
-        addWrenchMode(WrenchModeListener.validateRoutesWrenchMode);
+        addWrenchMode(WrenchModeListener.advertiseRouterWrenchMode);
         addWrenchMode(WrenchModeListener.learnRoutesWrenchMode);
         addWrenchMode(WrenchModeListener.clearRoutingTableWrenchMode);
         addWrenchMode(WrenchModeListener.discoverNetworkWrenchMode);
+        addWrenchMode(WrenchModeListener.propagateRoutesWrenchMode);
     }
 }

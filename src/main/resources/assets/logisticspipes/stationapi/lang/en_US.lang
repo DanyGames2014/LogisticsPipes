@@ -7,5 +7,8 @@ item.logisticspipes.magic_wand.name=Magic Wand
 item.logisticspipes.routing_debugger.name=Routing Debugger
 
 wrenchmode.logisticspipes.discover_neighbors.name=Discover Neighbors
-wrenchmode.logisticspipes.validate_routes.name=Validate Routes
+wrenchmode.logisticspipes.advertise_router.name=Advertise Router
 wrenchmode.logisticspipes.learn_routes.name=Learn Routes from Neighbors
+wrenchmode.logisticspipes.clear_routing_table.name=Clear Routing Table
+wrenchmode.logisticspipes.discover_network.name=Discover Network Routers
+wrenchmode.logisticspipes.propagate_routes.name=Propagate Routes
