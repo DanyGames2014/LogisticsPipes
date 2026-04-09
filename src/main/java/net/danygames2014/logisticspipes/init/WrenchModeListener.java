@@ -1,9 +1,6 @@
 package net.danygames2014.logisticspipes.init;
 
-import net.danygames2014.logisticspipes.item.wrenchmode.ClearRoutingTableWrenchMode;
-import net.danygames2014.logisticspipes.item.wrenchmode.DiscoverNeighborsWrenchMode;
-import net.danygames2014.logisticspipes.item.wrenchmode.LearnRoutesWrenchMode;
-import net.danygames2014.logisticspipes.item.wrenchmode.ValidateRoutesWrenchMode;
+import net.danygames2014.logisticspipes.item.wrenchmode.*;
 import net.danygames2014.uniwrench.api.WrenchMode;
 import net.danygames2014.uniwrench.api.event.WrenchModeRegistryEvent;
 import net.mine_diver.unsafeevents.listener.EventListener;
@@ -18,6 +15,7 @@ public class WrenchModeListener {
     public static WrenchMode validateRoutesWrenchMode;
     public static WrenchMode learnRoutesWrenchMode;
     public static WrenchMode clearRoutingTableWrenchMode;
+    public static WrenchMode discoverNetworkWrenchMode;
     
     @EventListener
     public void registerWrenchModes(WrenchModeRegistryEvent event) {
@@ -25,5 +23,6 @@ public class WrenchModeListener {
         validateRoutesWrenchMode = new ValidateRoutesWrenchMode(NAMESPACE.id("validate_routes"));
         learnRoutesWrenchMode = new LearnRoutesWrenchMode(NAMESPACE.id("learn_routes"));
         clearRoutingTableWrenchMode = new ClearRoutingTableWrenchMode(NAMESPACE.id("clear_routing_table"));
+        discoverNetworkWrenchMode = new DiscoverNetworkWrenchMode(NAMESPACE.id("discover_network"));
     }   
 }

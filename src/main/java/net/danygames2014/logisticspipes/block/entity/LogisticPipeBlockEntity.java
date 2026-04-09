@@ -5,13 +5,13 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.danygames2014.buildcraft.block.PipeBlock;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeBlockEntity;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeConnectionType;
-import net.danygames2014.buildcraft.block.entity.pipe.PipeTransporter;
 import net.danygames2014.buildcraft.block.entity.pipe.transporter.ItemPipeTransporter;
 import net.danygames2014.logisticspipes.block.pipe.ItemSendMode;
 import net.danygames2014.logisticspipes.block.pipe.LogisticsManager;
 import net.danygames2014.logisticspipes.config.Config;
 import net.danygames2014.logisticspipes.gui.hud.TestHud;
 import net.danygames2014.logisticspipes.interfaces.*;
+import net.danygames2014.logisticspipes.routing.LogisticsNetworkManager;
 import net.danygames2014.logisticspipes.routing.RouteDestination;
 import net.danygames2014.logisticspipes.routing.Router;
 import net.danygames2014.logisticspipes.util.*;
@@ -26,7 +26,6 @@ import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
@@ -85,9 +84,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         super.tick();
 
         if (updateNeighbors || (world.getTime() % Config.NETWORK_CONFIG.neighborDetectionFrequency == this.updateOffset)) {
-//            long nanoTime = System.nanoTime();
-//            updateNeighbors();
-//            System.err.println("Took " + ((System.nanoTime() - nanoTime) / 1000) + "us to update neighbors on time " + world.getTime());
+            updateNeighbors();
             updateNeighbors = false;
         }
 
@@ -340,6 +337,11 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         return routingTable;
     }
 
+    @Override
+    public Long2IntOpenHashMap getNeighborTable() {
+        return neighborTable;
+    }
+
     // Routing
     public long getNextHop(long destinationId) {
         while (true) {
@@ -390,7 +392,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     }
 
     public void updateNeighbors() {
-        discoverNeighbors();
+        discoverNeighbors(false);
 
         boolean changed = false;
         for (Map.Entry<Direction, PipeConnectionType> connection : connections.entrySet()) {
@@ -418,18 +420,24 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     // On the subsequent routers we can either run full learnRoutesFromNeighbors or only learn this specific route as we only really need that route
     // We should also know how to invalidate it if a better route becomes available
     // Maybe add a timeout on routes ? Or just learn routes form neighbors periodically
+    // Could just learn routes fdrom NEighbors
     
     private final Queue<SearchNode> queue = new LinkedList<>();
     private final Long2IntOpenHashMap visited = new Long2IntOpenHashMap();
     private static final Direction[] DIRECTIONS = Direction.values();
 
-    public void discoverNeighbors() {
+    public void discoverNeighbors(boolean clearRoutingTable) {
         int maxRange = Config.NETWORK_CONFIG.neighborDetectionDistance;
         int maxMetric = maxRange * 16;
 
+        // We keep track of the neighbor hash to discover topology changes on local level
+        long prevNeighborHash = neighborTable.hashCode();
+        
         // Clear old local data before a fresh scan
         this.neighborTable.clear();
-        this.routingTable.clear(); // TODO: Dont
+        if (clearRoutingTable) {
+            this.routingTable.clear();
+        }
 
         queue.clear();
         visited.clear();
@@ -467,16 +475,16 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
                 continue;
             }
             
-            // TODO: change this to always update the neighbor table even if no routing table update is not needed
             // If we find a router, check if the route is better than an existing one
             if (blockEntity instanceof Router router) {
                 RouteDestination existing = routingTable.get(pos);
                 int currentMetric = existing != null ? existing.metric : -1;
 
-                // If we find a better route to a router, add it to the table
+                // Write this to the neighbor table
+                this.neighborTable.put(pos, current.firstDir.getId());
+                
+                // If we find a better route to a router, add it to the routing table
                 if (currentMetric == -1 || current.metric < currentMetric) {
-                    this.neighborTable.put(pos, current.firstDir.getId());
-                    // TODO: We should still add the route to routing table because it kinda works like a MAB too
                     this.routingTable.put(pos, new RouteDestination(pos, router, current.metric));
                 }
 
@@ -499,7 +507,19 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             }
         }
         
-        // TODO: clear out routing entries that go thru neighbors which are no longer available
+        // Clear out invalid routing entries
+        for (var routingEntry : routingTable.long2ObjectEntrySet()) {
+            long nextHopId = getNextHop(routingEntry.getLongKey());
+            if(nextHopId == -1 || !neighborTable.containsKey(nextHopId)) {
+                routingTable.remove(routingEntry.getLongKey());
+            }
+        }
+
+        // We take the the hash of the neighbor table after discovery to compare if the physical topology has changed 
+        long neighborHash = neighborTable.hashCode();
+        if (prevNeighborHash != neighborHash) {
+            LogisticsNetworkManager.invalidateNetwork(this);
+        }
     }
 
     public void debugPrint(PlayerEntity player) {
