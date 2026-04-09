@@ -11,7 +11,7 @@ import java.util.List;
 
 public class LogisticsNetworkManager {
     private static final ObjectArrayList<LogisticsNetwork> networks = new ObjectArrayList<>();
-    private static final Long2ObjectOpenHashMap<LogisticsNetwork> routerIdToNetworkMap = new Long2ObjectOpenHashMap<>();
+    private static final Long2ObjectOpenHashMap<LogisticsNetwork> routerIdToNetworkMap = new Long2ObjectOpenHashMap<>(128, 0.5F);
     
     static {
         routerIdToNetworkMap.defaultReturnValue(null);
