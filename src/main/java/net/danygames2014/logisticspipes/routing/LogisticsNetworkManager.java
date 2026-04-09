@@ -72,17 +72,25 @@ public class LogisticsNetworkManager {
         return closed;
     }
     
-    public static void invalidateNetwork(Router router) {
+    public static void invalidateNetwork(World world, Router router) {
         LogisticsNetwork network = routerIdToNetworkMap.get(router.getRouterId());
         
-        // If the router is not in a cached network topology, there is nothing to invalidate
+        // If the router is not in a cached network topology, we do still need to
+        // notify the routers about the change of topology
         if (network == null) {
+            ObjectOpenHashSet<Router> routers = discoverNetwork(world, router);
+            
+            for (Router routerInNetwork : routers) {
+                routerInNetwork.topologyChanged();
+            }
+            
             return;
         }
         
         // Remove all the router id -> network mappings
         for (Router routerInNetwork : network.routers) {
             routerIdToNetworkMap.remove(routerInNetwork.getRouterId());
+            routerInNetwork.topologyChanged();
         }
         
         // Remove the network from the network list

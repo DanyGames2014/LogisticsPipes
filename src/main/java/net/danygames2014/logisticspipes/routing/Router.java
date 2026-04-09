@@ -15,6 +15,8 @@ public interface Router {
 
     Long2ObjectOpenHashMap<RouteDestination> getRoutingTable();
 
+    void topologyChanged();
+
     void learnRoutesFromNeighbors();
 
     void learnRoutesToTargetFromNeighbors(long targetRouterId);

@@ -1,6 +1,7 @@
 package net.danygames2014.logisticspipes.block.entity;
 
 import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayFIFOQueue;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -58,6 +59,8 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     // Neighbor Table: Router ID -> Neighbor Direction
     public Long2IntOpenHashMap neighborTable = new Long2IntOpenHashMap(32, 0.5F);
 
+    private final Long2LongOpenHashMap nextHopCache = new Long2LongOpenHashMap(32, 0.5F);
+    
     public boolean updateNeighbors = true;
 
     // HUD Rendering
@@ -350,8 +353,22 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         return routingTable;
     }
 
+    @Override
+    public void topologyChanged() {
+        nextHopCache.clear();
+        routingTable.clear();
+    }
+
     // Routing
     public long getNextHop(long destinationId) {
+        if (!nextHopCache.containsKey(destinationId)) {
+            nextHopCache.put(destinationId, calculateNextHop(destinationId));
+        }
+        
+        return nextHopCache.get(destinationId);
+    }
+    
+    public long calculateNextHop(long destinationId) {
         while (true) {
             if (!routingTable.containsKey(destinationId)) {
                 return -1;
@@ -359,7 +376,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
                 if (routingTable.get(destinationId).routerId == destinationId) {
                     return destinationId;
                 }
-                
+
                 RouteDestination route = routingTable.get(destinationId);
                 destinationId = route.routerId;
             }
@@ -607,7 +624,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         // We take the the hash of the neighbor table after discovery to compare if the physical topology has changed 
         long neighborHash = neighborTable.hashCode();
         if (prevNeighborHash != neighborHash) {
-            LogisticsNetworkManager.invalidateNetwork(this);
+            LogisticsNetworkManager.invalidateNetwork(world, this);
         }
     }
 
