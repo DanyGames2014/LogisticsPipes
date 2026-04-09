@@ -60,6 +60,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     public Long2IntOpenHashMap neighborTable = new Long2IntOpenHashMap(32, 0.5F);
 
     private final Long2LongOpenHashMap nextHopCache = new Long2LongOpenHashMap(32, 0.5F);
+    private boolean advertiseRequired = true;
     
     public boolean updateNeighbors = true;
 
@@ -357,6 +358,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     public void topologyChanged() {
         nextHopCache.clear();
         routingTable.clear();
+        advertiseRequired = true;
     }
 
     // Routing
@@ -434,8 +436,13 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         }
     }
 
-    // TODO: When sending items only re-advertise if topology changed
-    // TODO: callback from LogistricsNetworkManager to see if topology changed
+    public void smartAdvertiseRouter() {
+        if (advertiseRequired) {
+            advertiseRouter();
+            advertiseRequired = false;
+        }
+    }
+    
     public void advertiseRouter() {
         // Contains routers to be explored
         ObjectArrayFIFOQueue<Router> open = new ObjectArrayFIFOQueue<>();
