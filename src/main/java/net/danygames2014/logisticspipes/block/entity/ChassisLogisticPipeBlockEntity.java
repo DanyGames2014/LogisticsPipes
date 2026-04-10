@@ -170,12 +170,7 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
     public void sendStack(ItemStack stack) {
         RoutedItem itemToSend = ItemUtil.createRoutedItem(stack, world);
         itemToSend.setTransportMode(RoutedItem.TransportMode.Passive);
-        ((TravellingItemEntity)itemToSend).toMiddle = true;
-        ((TravellingItemEntity)itemToSend).travelDirection = getPointedDirection().getOpposite();
-        ((TravellingItemEntity)itemToSend).lastTravelDirection = getPointedDirection().getOpposite();
-        itemToSend.setPosition(x + 0.5D + (getPointedDirection().getOffsetX() * 0.5D), y + 0.25D + (getPointedDirection().getOffsetY() * 0.25D), z + 0.5D + (getPointedDirection().getOffsetZ() * 0.5D));
         super.queueRoutedItem(itemToSend, getPointedDirection());
-        world.spawnEntity((RoutedItemEntity)itemToSend);
     }
 
     @Override
@@ -184,12 +179,7 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
         itemToSend.setSource(getRouterId());
         itemToSend.setDestination(destination);
         itemToSend.setTransportMode(RoutedItem.TransportMode.Active);
-        ((TravellingItemEntity)itemToSend).toMiddle = true;
-        ((TravellingItemEntity)itemToSend).travelDirection = getPointedDirection().getOpposite();
-        ((TravellingItemEntity)itemToSend).lastTravelDirection = getPointedDirection().getOpposite();
-        itemToSend.setPosition(x + 0.5D + (getPointedDirection().getOffsetX() * 0.5D), y + 0.25D + (getPointedDirection().getOffsetY() * 0.25D), z + 0.5D + (getPointedDirection().getOffsetZ() * 0.5D));
         super.queueRoutedItem(itemToSend, getPointedDirection());
-        world.spawnEntity((RoutedItemEntity)itemToSend);
     }
 
     @Override
@@ -198,12 +188,7 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
         itemToSend.setSource(getRouterId());
         itemToSend.setDestination(destination);
         itemToSend.setTransportMode(RoutedItem.TransportMode.Active);
-        ((TravellingItemEntity)itemToSend).toMiddle = true;
-        ((TravellingItemEntity)itemToSend).travelDirection = getPointedDirection().getOpposite();
-        ((TravellingItemEntity)itemToSend).lastTravelDirection = getPointedDirection().getOpposite();
-        itemToSend.setPosition(x + 0.5D + (getPointedDirection().getOffsetX() * 0.5D), y + 0.25D + (getPointedDirection().getOffsetY() * 0.25D), z + 0.5D + (getPointedDirection().getOffsetZ() * 0.5D));
         super.queueRoutedItem(itemToSend, getPointedDirection(), mode);
-        world.spawnEntity((RoutedItemEntity)itemToSend);
     }
 
     @Override

@@ -126,7 +126,8 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
                 int neededCount = needed.get(need);
                 boolean success;
                 do{
-                    success = RequestManager.request(need.makeStack(neededCount),  this, RoutingUtil.getRouterListFromMap(routingTable), null);
+                    // TODO: I should probably not be converting the hashset to a list
+                    success = RequestManager.request(need.makeStack(neededCount),  this, getNetwork().routers.stream().toList(), null);
                     if (success || neededCount == 1){
                         break;
                     }
@@ -134,6 +135,7 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
                 } while (requestPartials);
 
                 if (success){
+                    smartAdvertiseRouter();
                     if (!requestedItems.containsKey(need)){
                         requestedItems.put(need, neededCount);
                     }else

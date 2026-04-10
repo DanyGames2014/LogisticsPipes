@@ -282,6 +282,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             itemTransporter.receiveTravellingItem(routedItem.getTravellingItemEntity(), from.getOpposite());
             statLifetimeSent++;
             statSessionSent++;
+            ItemUtil.spawnRoutedItem(world, routedItem, x, y, z, from);
         }
     }
 
