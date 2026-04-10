@@ -103,7 +103,7 @@ public class ChassisScreen extends LogisticsBaseScreen implements ScreenIdentifi
         if (this.moduleInventory == null) return "";
         if (this.moduleInventory.getStack(slot) == null) return "";
         if (!(this.moduleInventory.getStack(slot).getItem() instanceof ModuleItem)) return "";
-        return TranslationStorage.getInstance().get(this.moduleInventory.getStack(slot).getTranslationKey());
+        return TranslationStorage.getInstance().get(this.moduleInventory.getStack(slot).getTranslationKey() + ".name");
     }
 
     @Override
