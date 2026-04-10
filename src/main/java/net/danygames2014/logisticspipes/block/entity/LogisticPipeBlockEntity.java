@@ -195,7 +195,9 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     public boolean wrenchRightClick(ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side, WrenchMode wrenchMode) {
         if(wrenchMode == WrenchMode.MODE_WRENCH && !isSneaking){
             if(getLogisticsModule() != null){
-                GuiHelper.openGUI(player, getLogisticsModule().getScreenIdentifier(), this, null);
+                GuiHelper.openGUI(player, getLogisticsModule().getScreenIdentifier(), this, null, (messagePacket) -> {
+                    messagePacket.ints = new int[]{x, y, z};
+                });
             }
             return true;
         }

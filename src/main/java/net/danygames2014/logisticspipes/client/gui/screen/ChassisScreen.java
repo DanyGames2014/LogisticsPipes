@@ -68,7 +68,7 @@ public class ChassisScreen extends LogisticsBaseScreen implements ScreenIdentifi
                 continue;
             }
             ItemStack module = moduleInventory.getStack(i);
-            ((SmallButtonWidget)buttons.get(i)).visible = module != null && pipe.getLogisticsModule().getSubModule(i) != null;
+            ((SmallButtonWidget)buttons.get(i)).visible = module != null && pipe.getLogisticsModule().getSubModule(i) != null && pipe.getLogisticsModule().getSubModule(i).getScreenIdentifier() != null;
         }
     }
 
@@ -77,7 +77,7 @@ public class ChassisScreen extends LogisticsBaseScreen implements ScreenIdentifi
         super.drawForeground();
         for(int i = 0; i < pipe.getChassisSize(); i++){
             ItemStack module = moduleInventory.getStack(i);
-            ((SmallButtonWidget)buttons.get(i)).visible = module != null && pipe.getLogisticsModule().getSubModule(i) != null;
+            ((SmallButtonWidget)buttons.get(i)).visible = module != null && pipe.getLogisticsModule().getSubModule(i) != null && pipe.getLogisticsModule().getSubModule(i).getScreenIdentifier() != null;
         }
         if (pipe.getChassisSize() > 0) {
             textRenderer.draw(getModuleName(0), 40, 14, 0x404040);

@@ -19,7 +19,7 @@ public class BasicLogisticPipeBlockEntity extends LogisticPipeBlockEntity {
 
     @Override
     public ItemSendMode getItemSendMode() {
-        return null;
+        return ItemSendMode.Normal;
     }
 
     @Override
@@ -30,6 +30,7 @@ public class BasicLogisticPipeBlockEntity extends LogisticPipeBlockEntity {
     @Override
     public void setup() {
         itemSinkModule = new ItemSinkModule();
+        itemSinkModule.registerHandler(null, null, null);
     }
 
     @Override

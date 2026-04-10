@@ -72,7 +72,7 @@ public class ItemSinkModule implements LogisticsModule, ClientInformationProvide
 
     @Override
     public Identifier getScreenIdentifier() {
-        return LogisticsPipes.NAMESPACE.id("screen");
+        return LogisticsPipes.NAMESPACE.id("item_sink");
     }
 
     @Override

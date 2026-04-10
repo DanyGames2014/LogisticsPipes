@@ -46,6 +46,9 @@ public class LogisticPipeBlock extends PipeBlock {
         if(world.getBlockEntity(x, y, z) instanceof LogisticPipeBlockEntity pipe){
             RoutedItemEntity routedItemEntity =  new RoutedItemEntity(world, new TravellingItemEntity(world, x+ 0.5D, y+ 0.5D, z+ 0.5D, new ItemStack(Block.DIAMOND_BLOCK, 1)));
             routedItemEntity.setSource(pipe.getRouterId());
+            if(pipe.routingTable.isEmpty()){
+                return false;
+            }
             routedItemEntity.setDestination(pipe.routingTable.keySet().toLongArray()[world.random.nextInt(pipe.routingTable.size())]);
             routedItemEntity.travelDirection = Direction.DOWN;
             routedItemEntity.lastTravelDirection = routedItemEntity.travelDirection;

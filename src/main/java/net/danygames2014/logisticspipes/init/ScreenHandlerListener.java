@@ -1,12 +1,11 @@
 package net.danygames2014.logisticspipes.init;
 
 import net.danygames2014.buildcraft.block.entity.ChuteBlockEntity;
+import net.danygames2014.logisticspipes.block.entity.BasicLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.entity.ChassisLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.entity.SupplierLogisticPipeBlockEntity;
-import net.danygames2014.logisticspipes.client.gui.screen.ChassisScreen;
-import net.danygames2014.logisticspipes.client.gui.screen.PassiveSupplierScreen;
-import net.danygames2014.logisticspipes.client.gui.screen.ProviderScreen;
-import net.danygames2014.logisticspipes.client.gui.screen.SupplierScreen;
+import net.danygames2014.logisticspipes.client.gui.screen.*;
+import net.danygames2014.logisticspipes.module.ItemSinkModule;
 import net.danygames2014.logisticspipes.module.PassiveSupplierModule;
 import net.danygames2014.logisticspipes.module.ProviderModule;
 import net.mine_diver.unsafeevents.listener.EventListener;
@@ -31,6 +30,7 @@ public class ScreenHandlerListener {
         event.register(NAMESPACE.id("supplier"), new GuiHandler((GuiHandler.ScreenFactoryNoMessage) this::openSupplierScreen, SupplierLogisticPipeBlockEntity::new));
         event.register(NAMESPACE.id("provider"), new GuiHandler(this::openProviderScreen, () -> null));
         event.register(NAMESPACE.id("passive_supplier"), new GuiHandler(this::openPassiveSupplierScreen, () -> null));
+        event.register(NAMESPACE.id("item_sink"), new GuiHandler(this::openItemSinkScreen, () -> null));
     }
 
     private Screen openProviderScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
@@ -45,6 +45,17 @@ public class ScreenHandlerListener {
         BlockEntity blockEntity = player.world.getBlockEntity(message.ints[0], message.ints[1], message.ints[2]);
         if(blockEntity instanceof ChassisLogisticPipeBlockEntity pipe){
             return new PassiveSupplierScreen(player.inventory, pipe, (PassiveSupplierModule) pipe.getLogisticsModule().getSubModule(message.ints[3]), Minecraft.INSTANCE.currentScreen);
+        }
+        return null;
+    }
+
+    private Screen openItemSinkScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
+        BlockEntity blockEntity = player.world.getBlockEntity(message.ints[0], message.ints[1], message.ints[2]);
+        if(blockEntity instanceof ChassisLogisticPipeBlockEntity pipe){
+            return new ItemSinkScreen(player.inventory, pipe, (ItemSinkModule) pipe.getLogisticsModule().getSubModule(message.ints[3]), Minecraft.INSTANCE.currentScreen, message.ints[3]);
+        }
+        if(blockEntity instanceof BasicLogisticPipeBlockEntity pipe){
+            return  new ItemSinkScreen(player.inventory, pipe, (ItemSinkModule) pipe.getLogisticsModule(), null, -1);
         }
         return null;
     }

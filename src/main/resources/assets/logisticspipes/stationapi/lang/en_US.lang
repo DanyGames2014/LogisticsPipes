@@ -13,6 +13,8 @@ tile.logisticspipes.chassis_item_pipe_mk5.name=Logistics Chassis Mk5
 # Modules
 item.logisticspipes.provider_module.name=Provider Module
 item.logisticspipes.passive_supplier_module.name=Passive Supplier Module
+item.logisticspipes.item_sink_module.name=ItemSink Module
+item.logisticspipes.polymorphic_item_sink_module.name=Polymorphic ItemSink Module
 
 # Debug
 item.logisticspipes.magic_wand.name=Magic Wand
