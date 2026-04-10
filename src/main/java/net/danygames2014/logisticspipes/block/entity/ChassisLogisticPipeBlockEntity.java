@@ -78,8 +78,12 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
             chassisSize = 8;
         }
 
-        moduleInventory = new SimpleInventory(getChassisSize(), "Chassis pipe", 1, this::markInventoryDirty);
-        module = new ChassisModule(getChassisSize(), this);
+        if(moduleInventory == null) {
+            moduleInventory = new SimpleInventory(getChassisSize(), "Chassis pipe", 1, this::markInventoryDirty);
+        }
+        if(module == null) {
+            module = new ChassisModule(getChassisSize(), this);
+        }
     }
 
     public Direction getPointedDirection(){
@@ -194,6 +198,15 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
+        if(nbt.contains("chassisSize")){
+            chassisSize = nbt.getInt("chassisSize");
+        }
+        if(moduleInventory == null) {
+            moduleInventory = new SimpleInventory(getChassisSize(), "Chassis pipe", 1, this::markInventoryDirty);
+        }
+        if(module == null) {
+            module = new ChassisModule(getChassisSize(), this);
+        }
         moduleInventory.readNbt(nbt, "chassis");
         markInventoryDirty();
         module.readNbt(nbt, "");
@@ -211,6 +224,7 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
         if(direction != null){
             nbt.putInt("direction", direction.getId());
         }
+        nbt.putInt("chassisSize", getChassisSize());
     }
 
     @Override

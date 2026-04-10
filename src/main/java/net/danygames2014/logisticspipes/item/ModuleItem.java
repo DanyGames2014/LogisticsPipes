@@ -69,9 +69,6 @@ public class ModuleItem extends TemplateItem {
         if(module == null){
             return;
         }
-        if(world.isRemote){
-            return;
-        }
         if(itemStack.getStationNbt().contains("moduleInformation")){
             module.readNbt(itemStack.getStationNbt().getCompound("moduleInformation"), "");
         }
