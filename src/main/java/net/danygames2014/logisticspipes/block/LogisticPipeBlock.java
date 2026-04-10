@@ -58,9 +58,4 @@ public class LogisticPipeBlock extends PipeBlock {
         }
         return false;
     }
-
-    @Override
-    public boolean wrenchRightClick(ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side, WrenchMode wrenchMode) {
-        return super.wrenchRightClick(stack, player, isSneaking, world, x, y, z, side, wrenchMode);
-    }
 }

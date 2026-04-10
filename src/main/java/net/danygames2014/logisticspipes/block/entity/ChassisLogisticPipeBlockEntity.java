@@ -107,15 +107,16 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
     }
 
     public boolean isValidDirection(Direction direction){
-        if(isRoutedExit(direction)){
+        if(isRoutedExit(direction)) {
             return false;
         }
-        Position position = new Position(x, y, z, direction);
-        position.moveForwards(1.0);
-        BlockEntity blockEntity = world.getBlockEntity((int)position.x, (int)position.y, (int)position.z);
-        if(blockEntity == null){
+        
+        BlockEntity blockEntity = world.getBlockEntity(x + direction.getOffsetX(), y + direction.getOffsetY(), z + direction.getOffsetZ());
+        
+        if(blockEntity == null) {
             return false;
         }
+        
         return connections.get(direction) != PipeConnectionType.NONE;
     }
 
@@ -132,14 +133,12 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
 
     @Override
     public boolean wrenchRightClick(ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side, WrenchMode wrenchMode) {
-        if(super.wrenchRightClick(stack, player, isSneaking, world, x, y, z, side, wrenchMode)){
-            return true;
-        }
-        if(wrenchMode == WrenchMode.MODE_WRENCH && isSneaking){
+        if(wrenchMode == WrenchMode.MODE_ROTATE){
             nextDirection();
             return true;
         }
-        return false;
+
+        return super.wrenchRightClick(stack, player, isSneaking, world, x, y, z, side, wrenchMode);
     }
 
     @Override
@@ -347,22 +346,6 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
 
         return module.sinksItem(item.getItemStack()) != null;
     }
-
-
-    // TODO: this should be wrench use
-//    @Override
-//    public boolean blockActivated(World world, int i, int j, int k,	EntityPlayer entityplayer) {
-//        if (entityplayer.getCurrentEquippedItem() == null) return super.blockActivated(world, i, j, k, entityplayer);
-//
-//        if (entityplayer.getCurrentEquippedItem().getItem() == buildcraft.BuildCraftCore.wrenchItem){
-//            if (entityplayer.isSneaking()){
-//                ((PipeLogisticsChassi)this.container.pipe).nextOrientation();
-//                return true;
-//            }
-//        }
-//        return super.blockActivated(world, i, j, k, entityplayer);
-//    }
-
 
     @Override
     public void canProvide(RequestTreeNode tree, Map<ItemIdentifier, Integer> donePromisses) {
