@@ -61,6 +61,7 @@ public class LogisticsPipes {
     public static Item advancedExtractorModuleMk2;
     public static Item advancedExtractorModuleMk3;
     public static Item terminusModule;
+    public static Item quickSortModule;
 
 
     @EventListener
@@ -198,6 +199,7 @@ public class LogisticsPipes {
         advancedExtractorModuleMk2 = new ModuleItem(NAMESPACE.id("advanced_extractor_module_mk2"), AdvancedExtractorModuleMk2::new).setTranslationKey(NAMESPACE, "advanced_extractor_module_mk2");
         advancedExtractorModuleMk3 = new ModuleItem(NAMESPACE.id("advanced_extractor_module_mk3"), AdvancedExtractorModuleMk3::new).setTranslationKey(NAMESPACE, "advanced_extractor_module_mk3");
         terminusModule = new ModuleItem(NAMESPACE.id("terminus_module"), TerminusModule::new).setTranslationKey(NAMESPACE, "terminus_module");
+        quickSortModule = new ModuleItem(NAMESPACE.id("quick_sort_module"), QuickSortModule::new).setTranslationKey(NAMESPACE, "quick_sort_module");
 
     }
 }
