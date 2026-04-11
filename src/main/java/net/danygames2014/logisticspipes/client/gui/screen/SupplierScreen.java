@@ -12,7 +12,7 @@ public class SupplierScreen extends HandledScreen {
     private Inventory dummyInventory;
     SupplierLogisticPipeBlockEntity pipe;
 
-    public SupplierScreen(Inventory playerInventory, Inventory dummyInventory, SupplierLogisticPipeBlockEntity pipe){
+    public SupplierScreen(Inventory playerInventory, Inventory dummyInventory, SupplierLogisticPipeBlockEntity pipe) {
         super(null);
 
         DummyScreenHandler dummy = new DummyScreenHandler(playerInventory, dummyInventory);
@@ -21,8 +21,8 @@ public class SupplierScreen extends HandledScreen {
         int xOffset = 72;
         int yOffset = 18;
 
-        for (int row = 0; row < 3; row++){
-            for (int column = 0; column < 3; column++){
+        for (int row = 0; row < 3; row++) {
+            for (int column = 0; column < 3; column++) {
                 dummy.addDummySlot(column + row * 3, xOffset + column * 18, yOffset + row * 18);
             }
         }
@@ -38,7 +38,7 @@ public class SupplierScreen extends HandledScreen {
 
     @Override
     protected void drawForeground() {
-        textRenderer.draw(dummyInventory.getName(), backgroundWidth / 2 - textRenderer.getWidth(dummyInventory.getName())/2, 6, 0x404040);
+        textRenderer.draw(dummyInventory.getName(), backgroundWidth / 2 - textRenderer.getWidth(dummyInventory.getName()) / 2, 6, 0x404040);
         textRenderer.draw("Inventory", 18, backgroundHeight - 102, 0x404040);
         textRenderer.draw("Partial requests:", backgroundWidth - 140, backgroundHeight - 112, 0x404040);
     }
@@ -52,6 +52,7 @@ public class SupplierScreen extends HandledScreen {
         drawTexture(j, k, 0, 0, backgroundWidth, backgroundHeight);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void init() {
         super.init();
@@ -61,9 +62,9 @@ public class SupplierScreen extends HandledScreen {
 
     @Override
     protected void buttonClicked(ButtonWidget button) {
-        if(button.id == 0){
+        if (button.id == 0) {
             pipe.setRequestingPartials(!pipe.isRequestingPartials());
-            ((ButtonWidget)buttons.get(0)).text = pipe.isRequestingPartials() ? "Yes" : "No";
+            ((ButtonWidget) buttons.get(0)).text = pipe.isRequestingPartials() ? "Yes" : "No";
         }
         super.buttonClicked(button);
     }

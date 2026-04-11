@@ -11,38 +11,37 @@ import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.template.item.TemplateItem;
 import net.modificationstation.stationapi.api.util.Identifier;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
 public class ModuleItem extends TemplateItem {
 
     private final ModuleFactory moduleFactory;
+
     public ModuleItem(Identifier identifier, ModuleFactory moduleFactory) {
         super(identifier);
         this.moduleFactory = moduleFactory;
     }
 
-    public LogisticsModule getLogisticsModule(){
+    public LogisticsModule getLogisticsModule() {
         return moduleFactory.create();
     }
 
-    public ModuleFactory getModuleFactory(){
+    public ModuleFactory getModuleFactory() {
         return moduleFactory;
     }
 
-    public static void saveInformation(ItemStack itemStack, LogisticsModule module, World world){
-        if(module == null) {
+    public static void saveInformation(ItemStack itemStack, LogisticsModule module, World world) {
+        if (module == null) {
             return;
         }
 
         NbtCompound nbt = new NbtCompound();
         module.writeNbt(nbt, "");
-        if(nbt.equals(new NbtCompound())){
+        if (nbt.equals(new NbtCompound())) {
             return;
         }
-        if(world.isRemote) {
+        if (world.isRemote) {
             NbtList list = new NbtList();
             String info1 = "Please reopen the window to see the information.";
             list.add(new NbtString(info1));
@@ -52,11 +51,11 @@ public class ModuleItem extends TemplateItem {
             return;
         }
         itemStack.getStationNbt().put("moduleInformation", nbt);
-        if(module instanceof ClientInformationProvider clientInformationProvider) {
+        if (module instanceof ClientInformationProvider clientInformationProvider) {
             List<String> information = clientInformationProvider.getClientInformation();
-            if(!information.isEmpty()){
+            if (!information.isEmpty()) {
                 NbtList list = new NbtList();
-                for(String info : information) {
+                for (String info : information) {
                     list.add(new NbtString(info));
                 }
                 itemStack.getStationNbt().put("informationList", list);
@@ -65,17 +64,17 @@ public class ModuleItem extends TemplateItem {
         }
     }
 
-    public static void readInformation(ItemStack itemStack, LogisticsModule module, World world){
-        if(module == null){
+    public static void readInformation(ItemStack itemStack, LogisticsModule module, World world) {
+        if (module == null) {
             return;
         }
-        if(itemStack.getStationNbt().contains("moduleInformation")){
+        if (itemStack.getStationNbt().contains("moduleInformation")) {
             module.readNbt(itemStack.getStationNbt().getCompound("moduleInformation"), "");
         }
     }
 
-    public static void removeInformation(ItemStack itemStack){
-        if(itemStack == null){
+    public static void removeInformation(ItemStack itemStack) {
+        if (itemStack == null) {
             return;
         }
         // lp does a more proper check here but I dont think it matters

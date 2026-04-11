@@ -14,7 +14,7 @@ public class ItemIdentifier {
     private final static LinkedList<ItemIdentifier> itemIdentifierCacheServer = new LinkedList<>();
     private final static LinkedList<ItemIdentifier> itemIdentifierCacheClient = new LinkedList<>();
 
-    private ItemIdentifier(Item item, int itemDamage, NbtCompound nbt){
+    private ItemIdentifier(Item item, int itemDamage, NbtCompound nbt) {
         this.item = item;
         this.itemDamage = itemDamage;
         this.nbt = nbt;
@@ -26,9 +26,9 @@ public class ItemIdentifier {
 
     public static boolean allowNullsForTesting;
 
-    public static ItemIdentifier get(Item item, int itemDamage, NbtCompound nbt){
-        for(ItemIdentifier itemIdentifier : FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT ? itemIdentifierCacheClient : itemIdentifierCacheServer){
-            if(itemIdentifier.item == item && itemIdentifier.itemDamage == itemDamage && nbtequal(itemIdentifier.nbt, nbt)){
+    public static ItemIdentifier get(Item item, int itemDamage, NbtCompound nbt) {
+        for (ItemIdentifier itemIdentifier : FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT ? itemIdentifierCacheClient : itemIdentifierCacheServer) {
+            if (itemIdentifier.item == item && itemIdentifier.itemDamage == itemDamage && nbtequal(itemIdentifier.nbt, nbt)) {
                 return itemIdentifier;
             }
         }
@@ -38,24 +38,24 @@ public class ItemIdentifier {
     }
 
     public static ItemIdentifier get(ItemStack stack) {
-        if(stack == null && allowNullsForTesting){
+        if (stack == null && allowNullsForTesting) {
             return null;
         }
         int itemDamage = 0;
-        if(!stack.getItem().isDamageable()){
+        if (!stack.getItem().isDamageable()) {
             itemDamage = stack.getDamage();
         }
         return get(stack.getItem(), itemDamage, stack.getStationNbt());
     }
 
     private static boolean nbtequal(NbtCompound nbt1, NbtCompound nbt2) {
-        if(nbt1 == null && nbt2 == null) {
+        if (nbt1 == null && nbt2 == null) {
             return true;
         }
-        if(nbt1 == null) {
+        if (nbt1 == null) {
             return false;
         }
-        if(nbt2 == null) {
+        if (nbt2 == null) {
             return false;
         }
         return nbt1.equals(nbt2);
@@ -71,11 +71,11 @@ public class ItemIdentifier {
         return getName(this.makeNormalStack(1));
     }
 
-    public ItemIdentifierStack makeStack(int stackSize){
+    public ItemIdentifierStack makeStack(int stackSize) {
         return new ItemIdentifierStack(this, stackSize);
     }
 
-    public ItemStack makeNormalStack(int stackSize){
+    public ItemStack makeNormalStack(int stackSize) {
         ItemStack stack = new ItemStack(this.item, stackSize, this.itemDamage);
         StationNBTSetter.cast(stack).setStationNbt(nbt);
         return stack;

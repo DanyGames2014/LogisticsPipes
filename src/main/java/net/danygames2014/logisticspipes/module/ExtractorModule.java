@@ -32,7 +32,8 @@ public class ExtractorModule implements LogisticsModule, SneakyDirectionReceiver
 
     private final List<PlayerEntity> localModeWatchers = new ArrayList<>();
 
-    public ExtractorModule(){}
+    public ExtractorModule() {
+    }
 
     @Override
     public void registerHandler(InventoryProvider invProvider, SendRoutedItem itemSender, WorldProvider world) {
@@ -46,11 +47,11 @@ public class ExtractorModule implements LogisticsModule, SneakyDirectionReceiver
         return LogisticsPipes.NAMESPACE.id("extractor");
     }
 
-    protected int ticksToAction(){
+    protected int ticksToAction() {
         return 100;
     }
 
-    protected int itemsToExtract(){
+    protected int itemsToExtract() {
         return 1;
     }
 
@@ -86,14 +87,14 @@ public class ExtractorModule implements LogisticsModule, SneakyDirectionReceiver
 
     @Override
     public void tick() {
-        if(++currentTick < ticksToAction()){
+        if (++currentTick < ticksToAction()) {
             return;
         }
         currentTick = 0;
 
         //Extract Item
         Inventory targetInventory = invProvider.getInventory();
-        if(targetInventory == null){
+        if (targetInventory == null) {
             return;
         }
         Direction extractDirection = switch (getSneakyDirection()) {
@@ -103,24 +104,24 @@ public class ExtractorModule implements LogisticsModule, SneakyDirectionReceiver
             default -> invProvider.inventoryDirection().getOpposite();
         };
 
-        if(targetInventory instanceof ItemHandlerBlockCapabilityInventoryWrapper wrapper) {
+        if (targetInventory instanceof ItemHandlerBlockCapabilityInventoryWrapper wrapper) {
             wrapper.side = extractDirection;
         }
 
         ItemStack stackToSend;
 
-        for(int i = 0; i < targetInventory.size(); i++) {
+        for (int i = 0; i < targetInventory.size(); i++) {
             stackToSend = targetInventory.getStack(i);
-            if(stackToSend == null) {
+            if (stackToSend == null) {
                 continue;
             }
-            if(!this.shouldSend(stackToSend)){
+            if (!this.shouldSend(stackToSend)) {
                 continue;
             }
 
             int count = Math.min(itemsToExtract(), stackToSend.count);
 
-            if(count <= 0) {
+            if (count <= 0) {
                 break;
             }
 
@@ -130,7 +131,7 @@ public class ExtractorModule implements LogisticsModule, SneakyDirectionReceiver
         }
     }
 
-    protected boolean shouldSend(ItemStack stack){
+    protected boolean shouldSend(ItemStack stack) {
         return LogisticsManager.getInstance().hasDestination(worldProvider.getWorld(), stack, true, itemSender.getSourceId(), true);
     }
 

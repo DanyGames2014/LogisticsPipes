@@ -14,7 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class PassiveSupplierModule implements LogisticsModule, ClientInformationProvider, HUDModuleHandler, ModuleWatchReceiver, ModuleInventoryReceive {
-    private final SimpleInventory filterInventory = new SimpleInventory(9, "Requested items",64, this::markDirty);
+    private final SimpleInventory filterInventory = new SimpleInventory(9, "Requested items", 64, this::markDirty);
     private InventoryProvider invProvider;
     private int slot = 0;
     private int x = 0;
@@ -28,7 +28,7 @@ public class PassiveSupplierModule implements LogisticsModule, ClientInformation
         this.invProvider = invProvider;
     }
 
-    public Inventory getFilterInventory(){
+    public Inventory getFilterInventory() {
         return filterInventory;
     }
 
@@ -66,7 +66,8 @@ public class PassiveSupplierModule implements LogisticsModule, ClientInformation
     }
 
     @Override
-    public void tick() {}
+    public void tick() {
+    }
 
     @Override
     public List<String> getClientInformation() {
@@ -121,7 +122,7 @@ public class PassiveSupplierModule implements LogisticsModule, ClientInformation
         filterInventory.handleItemStackList(list);
     }
 
-    void markDirty(){
+    void markDirty() {
 
     }
 }

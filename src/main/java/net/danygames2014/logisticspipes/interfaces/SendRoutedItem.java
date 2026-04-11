@@ -5,7 +5,10 @@ import net.minecraft.item.ItemStack;
 
 public interface SendRoutedItem {
     long getSourceId();
+
     void sendStack(ItemStack stack);
+
     void sendStack(ItemStack stack, long destination);
+
     void sendStack(ItemStack stack, long destination, ItemSendMode mode);
 }

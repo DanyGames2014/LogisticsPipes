@@ -11,16 +11,17 @@ public class ItemMessage {
     public int amount;
     public NbtCompound nbt;
 
-    public ItemMessage() {}
+    public ItemMessage() {
+    }
 
-    public ItemMessage(Item item, int data, int amount, NbtCompound nbt){
+    public ItemMessage(Item item, int data, int amount, NbtCompound nbt) {
         this.item = item;
         this.data = data;
         this.amount = amount;
         this.nbt = nbt;
     }
 
-    public ItemMessage(ItemIdentifier selectedItem, int requestCount){
+    public ItemMessage(ItemIdentifier selectedItem, int requestCount) {
         this(selectedItem.item, selectedItem.itemDamage, requestCount, selectedItem.nbt);
     }
 
@@ -30,7 +31,7 @@ public class ItemMessage {
 
     @Override
     public String toString() {
-        return amount + " " + ItemIdentifier.get(item,data,nbt).getFriendlyName();
+        return amount + " " + ItemIdentifier.get(item, data, nbt).getFriendlyName();
     }
 
     public ItemIdentifier getItemIdentifier() {
@@ -38,13 +39,15 @@ public class ItemMessage {
     }
 
     public static void compress(List<ItemMessage> input) {
-        for(int i=0;i<input.size();i++) {
-            for(int j=i+1;j<input.size();j++) {
+        for (int i = 0; i < input.size(); i++) {
+            for (int j = i + 1; j < input.size(); j++) {
                 ItemMessage one = input.get(i);
                 ItemMessage two = input.get(j);
-                if(one.item == two.item && one.data == two.data && one.nbt == two.nbt) {
+                if (one.item == two.item && one.data == two.data && one.nbt == two.nbt) {
                     one.amount += two.amount;
-                    input.remove(j);
+                    if (input.remove(j) != null) {
+                        j--;
+                    }
                 }
             }
         }

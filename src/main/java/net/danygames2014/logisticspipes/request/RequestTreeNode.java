@@ -3,7 +3,6 @@ package net.danygames2014.logisticspipes.request;
 import net.danygames2014.logisticspipes.interfaces.RequestItems;
 import net.danygames2014.logisticspipes.routing.LogisticsPromise;
 import net.danygames2014.logisticspipes.util.ItemIdentifierStack;
-import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +55,7 @@ public class RequestTreeNode {
     }
 
     public void usePromise(LogisticsPromise promise) {
-        if (extrapromises.contains(promise)) {
-            extrapromises.remove(promise);
-        }
+        extrapromises.remove(promise);
     }
 
     public boolean isDone() {

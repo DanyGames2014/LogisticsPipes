@@ -1,6 +1,5 @@
 package net.danygames2014.logisticspipes.init;
 
-import net.danygames2014.buildcraft.entity.*;
 import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.stationapi.api.event.entity.EntityRegister;
@@ -13,7 +12,7 @@ public class EntityListener {
     public static Namespace NAMESPACE;
 
     @EventListener
-    public void registerEntities(EntityRegister event){
+    public void registerEntities(EntityRegister event) {
         event.register(RoutedItemEntity.class, NAMESPACE.id("routed_item").toString());
     }
 

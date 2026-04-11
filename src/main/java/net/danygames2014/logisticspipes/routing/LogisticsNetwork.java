@@ -8,11 +8,12 @@ public class LogisticsNetwork {
     public LogisticsNetwork() {
         this(new ObjectOpenHashSet<>());
     }
-    
+
     public LogisticsNetwork(ObjectOpenHashSet<Router> routers) {
         this.routers = routers;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void finalize() throws Throwable {
         System.err.println("LogisticsNetwork Finalized");

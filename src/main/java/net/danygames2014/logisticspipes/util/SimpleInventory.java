@@ -128,18 +128,18 @@ public class SimpleInventory implements Inventory, SaveState {
         nbt.put(prefix + "items", nbtList);
     }
 
-    public void dropContents(World world, int x, int y, int z){
-        if(!world.isRemote){
+    public void dropContents(World world, int x, int y, int z) {
+        if (!world.isRemote) {
             ItemUtil.dropItems(world, this, x, y, z);
             Arrays.fill(contents, null);
         }
     }
 
     public void handleItemStackList(LinkedList<ItemIdentifierStack> _allItems) {
-        int i=0;
-        for(ItemIdentifierStack stack : _allItems) {
-            if(contents.length <= i) break;
-            if(stack == null) {
+        int i = 0;
+        for (ItemIdentifierStack stack : _allItems) {
+            if (contents.length <= i) break;
+            if (stack == null) {
                 contents[i] = null;
             } else {
                 contents[i] = stack.makeNormalStack();

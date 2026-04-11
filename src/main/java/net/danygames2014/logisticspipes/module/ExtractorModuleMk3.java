@@ -1,7 +1,7 @@
 package net.danygames2014.logisticspipes.module;
 
 public class ExtractorModuleMk3 extends ExtractorModuleMk2 {
-    public ExtractorModuleMk3(){
+    public ExtractorModuleMk3() {
         super();
     }
 

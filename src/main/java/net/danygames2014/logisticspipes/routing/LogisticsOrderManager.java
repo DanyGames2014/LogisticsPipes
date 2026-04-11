@@ -4,7 +4,6 @@ import net.danygames2014.logisticspipes.interfaces.RequestItems;
 import net.danygames2014.logisticspipes.util.ItemIdentifier;
 import net.danygames2014.logisticspipes.util.ItemIdentifierStack;
 import net.danygames2014.logisticspipes.util.tuple.Pair;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 import java.util.LinkedList;

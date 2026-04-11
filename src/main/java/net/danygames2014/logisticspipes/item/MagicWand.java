@@ -35,9 +35,9 @@ public class MagicWand extends TemplateItem {
         float length = boundry + world.random.nextInt(pipeWidth) / 10.0F;
         float height = world.random.nextInt(7) / 10.0F + 0.2F;
 
-        float scalemult = 1f + (float)Math.log10(4);
+        float scalemult = 1f + (float) Math.log10(4);
 
-        if(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT){
+        if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
             Minecraft.INSTANCE.particleManager.addParticle(new SparkleParticle(world, offset.getX() + length, offset.getY() + height, offset.getZ() + width, scalemult, 1f, 1f, 0f, 6 + world.random.nextInt(3)));
         }
 

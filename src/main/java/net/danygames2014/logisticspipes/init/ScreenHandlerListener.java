@@ -1,6 +1,5 @@
 package net.danygames2014.logisticspipes.init;
 
-import net.danygames2014.buildcraft.block.entity.ChuteBlockEntity;
 import net.danygames2014.logisticspipes.block.entity.BasicLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.entity.ChassisLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.entity.SupplierLogisticPipeBlockEntity;
@@ -37,7 +36,7 @@ public class ScreenHandlerListener {
 
     private Screen openProviderScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
         BlockEntity blockEntity = player.world.getBlockEntity(message.ints[0], message.ints[1], message.ints[2]);
-        if(blockEntity instanceof ChassisLogisticPipeBlockEntity pipe){
+        if (blockEntity instanceof ChassisLogisticPipeBlockEntity pipe) {
             return new ProviderScreen(player.inventory, pipe, (ProviderModule) pipe.getLogisticsModule().getSubModule(message.ints[3]), Minecraft.INSTANCE.currentScreen, message.ints[3]);
         }
         return null;
@@ -45,7 +44,7 @@ public class ScreenHandlerListener {
 
     private Screen openPassiveSupplierScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
         BlockEntity blockEntity = player.world.getBlockEntity(message.ints[0], message.ints[1], message.ints[2]);
-        if(blockEntity instanceof ChassisLogisticPipeBlockEntity pipe){
+        if (blockEntity instanceof ChassisLogisticPipeBlockEntity pipe) {
             return new PassiveSupplierScreen(player.inventory, pipe, (PassiveSupplierModule) pipe.getLogisticsModule().getSubModule(message.ints[3]), Minecraft.INSTANCE.currentScreen);
         }
         return null;
@@ -53,18 +52,18 @@ public class ScreenHandlerListener {
 
     private Screen openItemSinkScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
         BlockEntity blockEntity = player.world.getBlockEntity(message.ints[0], message.ints[1], message.ints[2]);
-        if(blockEntity instanceof ChassisLogisticPipeBlockEntity pipe){
+        if (blockEntity instanceof ChassisLogisticPipeBlockEntity pipe) {
             return new ItemSinkScreen(player.inventory, pipe, (ItemSinkModule) pipe.getLogisticsModule().getSubModule(message.ints[3]), Minecraft.INSTANCE.currentScreen, message.ints[3]);
         }
-        if(blockEntity instanceof BasicLogisticPipeBlockEntity pipe){
-            return  new ItemSinkScreen(player.inventory, pipe, (ItemSinkModule) pipe.getLogisticsModule(), null, -1);
+        if (blockEntity instanceof BasicLogisticPipeBlockEntity pipe) {
+            return new ItemSinkScreen(player.inventory, pipe, (ItemSinkModule) pipe.getLogisticsModule(), null, -1);
         }
         return null;
     }
 
     private Screen openExtractorScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
         BlockEntity blockEntity = player.world.getBlockEntity(message.ints[0], message.ints[1], message.ints[2]);
-        if(blockEntity instanceof ChassisLogisticPipeBlockEntity pipe){
+        if (blockEntity instanceof ChassisLogisticPipeBlockEntity pipe) {
             return new ExtractorScreen(player.inventory, pipe, (SneakyDirectionReceiver) pipe.getLogisticsModule().getSubModule(message.ints[3]), Minecraft.INSTANCE.currentScreen, message.ints[3]);
         }
         return null;
@@ -72,7 +71,7 @@ public class ScreenHandlerListener {
 
     private Screen openAdvancedExtractorScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
         BlockEntity blockEntity = player.world.getBlockEntity(message.ints[0], message.ints[1], message.ints[2]);
-        if(blockEntity instanceof ChassisLogisticPipeBlockEntity pipe){
+        if (blockEntity instanceof ChassisLogisticPipeBlockEntity pipe) {
             return new AdvancedExtractorScreen(player.inventory, pipe, (AdvancedExtractorModule) pipe.getLogisticsModule().getSubModule(message.ints[3]), Minecraft.INSTANCE.currentScreen, message.ints[3]);
         }
         return null;
@@ -80,7 +79,7 @@ public class ScreenHandlerListener {
 
     private Screen openTerminusScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
         BlockEntity blockEntity = player.world.getBlockEntity(message.ints[0], message.ints[1], message.ints[2]);
-        if(blockEntity instanceof ChassisLogisticPipeBlockEntity pipe){
+        if (blockEntity instanceof ChassisLogisticPipeBlockEntity pipe) {
             return new TerminusScreen(player.inventory, pipe, (TerminusModule) pipe.getLogisticsModule().getSubModule(message.ints[3]), Minecraft.INSTANCE.currentScreen);
         }
         return null;

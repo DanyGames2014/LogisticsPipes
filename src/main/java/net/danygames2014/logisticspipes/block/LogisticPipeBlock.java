@@ -8,7 +8,6 @@ import net.danygames2014.buildcraft.entity.TravellingItemEntity;
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
 import net.danygames2014.logisticspipes.init.TextureListener;
-import net.danygames2014.uniwrench.api.WrenchMode;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
@@ -25,10 +24,10 @@ public class LogisticPipeBlock extends PipeBlock {
 
     @Override
     public Identifier getTextureIdentifierForSide(PipeBlockEntity pipe, @Nullable Direction direction, @Nullable PipeConnectionType connectionType) {
-        if(connectionType == PipeConnectionType.NORMAL && direction != null){
+        if (connectionType == PipeConnectionType.NORMAL && direction != null) {
             return TextureListener.notRoutedStatus;
         }
-        if(connectionType == PipeConnectionType.ALTERNATE && direction != null){
+        if (connectionType == PipeConnectionType.ALTERNATE && direction != null) {
             return TextureListener.routedStatus;
         }
         return super.getTextureIdentifierForSide(pipe, direction, connectionType);
@@ -36,23 +35,23 @@ public class LogisticPipeBlock extends PipeBlock {
 
     @Override
     public void debug(ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side) {
-        if (world.getBlockEntity(x,y,z) instanceof LogisticPipeBlockEntity pipe) {
+        if (world.getBlockEntity(x, y, z) instanceof LogisticPipeBlockEntity pipe) {
             pipe.debugPrint(player);
         }
     }
 
     @Override
     public boolean onUse(World world, int x, int y, int z, PlayerEntity player) {
-        if(world.getBlockEntity(x, y, z) instanceof LogisticPipeBlockEntity pipe){
-            RoutedItemEntity routedItemEntity =  new RoutedItemEntity(world, new TravellingItemEntity(world, x+ 0.5D, y+ 0.5D, z+ 0.5D, new ItemStack(Block.DIAMOND_BLOCK, 1)));
+        if (world.getBlockEntity(x, y, z) instanceof LogisticPipeBlockEntity pipe) {
+            RoutedItemEntity routedItemEntity = new RoutedItemEntity(world, new TravellingItemEntity(world, x + 0.5D, y + 0.5D, z + 0.5D, new ItemStack(Block.DIAMOND_BLOCK, 1)));
             routedItemEntity.setSource(pipe.getRouterId());
-            if(pipe.routingTable.isEmpty()){
+            if (pipe.routingTable.isEmpty()) {
                 return false;
             }
             routedItemEntity.setDestination(pipe.routingTable.keySet().toLongArray()[world.random.nextInt(pipe.routingTable.size())]);
             routedItemEntity.travelDirection = Direction.DOWN;
             routedItemEntity.lastTravelDirection = routedItemEntity.travelDirection;
-            ((ItemPipeTransporter)pipe.transporter).receiveTravellingItem(routedItemEntity, Direction.UP);
+            ((ItemPipeTransporter) pipe.transporter).receiveTravellingItem(routedItemEntity, Direction.UP);
             world.spawnEntity(routedItemEntity);
             return true;
         }

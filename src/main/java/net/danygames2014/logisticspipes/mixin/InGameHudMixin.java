@@ -11,14 +11,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(InGameHud.class)
 public class InGameHudMixin {
-    private long renderTicks=0;
     @Inject(method = "render", at = @At("HEAD"))
-    void renderLPHud(float tickDelta, boolean screenOpen, int mouseX, int mouseY, CallbackInfo ci){
-        if(LogisticsHUDRenderer.getInstance().displayRenderer()) {
+    void renderLPHud(float tickDelta, boolean screenOpen, int mouseX, int mouseY, CallbackInfo ci) {
+        if (LogisticsHUDRenderer.getInstance().displayRenderer()) {
             GL11.glPushMatrix();
             //Orientation
             Minecraft.INSTANCE.gameRenderer.applyCameraTransform(tickDelta);
-            LogisticsHUDRenderer.getInstance().renderWorldRelative(renderTicks, tickDelta);
+            LogisticsHUDRenderer.getInstance().renderWorldRelative(0, tickDelta);
 //            mc.entityRenderer.setupOverlayRendering();
             GL11.glPopMatrix();
             GL11.glPushMatrix();

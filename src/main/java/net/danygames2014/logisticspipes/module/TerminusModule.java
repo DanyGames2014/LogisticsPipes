@@ -49,7 +49,7 @@ public class TerminusModule implements LogisticsModule, ClientInformationProvide
     @Override
     public SinkReply sinksItem(ItemStack item) {
         InventoryUtil invUtil = new InventoryUtil(filterInventory, false);
-        if(invUtil.containsItem(ItemIdentifier.get(item))){
+        if (invUtil.containsItem(ItemIdentifier.get(item))) {
             SinkReply reply = new SinkReply();
             reply.fixedPriority = SinkReply.FixedPriority.Terminus;
             reply.isPassive = true;
@@ -115,7 +115,7 @@ public class TerminusModule implements LogisticsModule, ClientInformationProvide
         filterInventory.handleItemStackList(list);
     }
 
-    public void markDirty(){
+    public void markDirty() {
 //        MainProxy.sendToPlayerList(new PacketModuleInvContent(NetworkConstants.MODULE_INV_CONTENT, xCoord, yCoord, zCoord, slot, ItemIdentifierStack.getListFromInventory(inventory)).getPacket(), localModeWatchers);
     }
 }

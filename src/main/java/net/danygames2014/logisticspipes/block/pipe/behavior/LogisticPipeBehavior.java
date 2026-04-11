@@ -22,7 +22,7 @@ public class LogisticPipeBehavior extends PipeBehavior {
     public Direction routeItem(PipeBlockEntity blockEntity, ObjectArrayList<Direction> validOutputDirections, TravellingItemEntity item) {
         boolean forcePacket = !(item instanceof RoutedItem routedItem) || !routedItem.isDestinationValid();
         RoutedItem routedItem = ItemUtil.GetOrCreateRoutedItem(blockEntity.world, item);
-        LogisticPipeBlockEntity pipe = (LogisticPipeBlockEntity)blockEntity;
+        LogisticPipeBlockEntity pipe = (LogisticPipeBlockEntity) blockEntity;
         return pipe.getDirectionForItem(routedItem);
     }
 
@@ -73,46 +73,46 @@ public class LogisticPipeBehavior extends PipeBehavior {
 
     @Override
     public PipeConnectionType canConnectToPipe(PipeBlockEntity blockEntity, PipeBlockEntity otherBlockEntity, PipeBehavior otherPipeBehavior, Direction side) {
-        PipeConnectionType type = super.canConnectToPipe(blockEntity, otherBlockEntity, otherPipeBehavior, side); 
-        
+        PipeConnectionType type = super.canConnectToPipe(blockEntity, otherBlockEntity, otherPipeBehavior, side);
+
         // If we can't connect to the other pipe, return NONE
         if (type == PipeConnectionType.NONE) {
             return type;
         }
-        
+
         // Checks for pipes which we do not want to connect to
         if (otherPipeBehavior == Buildcraft.voidPipeBehavior) {
             return PipeConnectionType.NONE;
         }
-        
+
         if (otherPipeBehavior == Buildcraft.ironPipeBehavior) {
             return PipeConnectionType.NONE;
         }
-        
+
         if (otherPipeBehavior == Buildcraft.structurePipeBehavior) {
             return PipeConnectionType.NONE;
         }
-        
+
         if (otherPipeBehavior == Buildcraft.obsidianPipeBehavior) {
             return PipeConnectionType.NONE;
         }
-        
+
         if (otherPipeBehavior == Buildcraft.diamondPipeBehavior) {
             return PipeConnectionType.NONE;
         }
-        
+
         if (blockEntity instanceof LogisticPipeBlockEntity logisticsPipe) {
             if (logisticsPipe.neighborTable.containsValue(side.getId())) {
                 return PipeConnectionType.ALTERNATE;
             }
         }
-        
+
         return type;
     }
 
     @Override
     public boolean wrenchRightClick(PipeBlockEntity blockEntity, ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side, WrenchMode wrenchMode) {
-        if(blockEntity instanceof LogisticPipeBlockEntity pipe){
+        if (blockEntity instanceof LogisticPipeBlockEntity pipe) {
             return pipe.wrenchRightClick(stack, player, isSneaking, world, x, y, z, side, wrenchMode);
         }
         return false;

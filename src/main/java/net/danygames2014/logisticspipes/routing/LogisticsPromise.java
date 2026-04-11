@@ -2,7 +2,6 @@ package net.danygames2014.logisticspipes.routing;
 
 import net.danygames2014.logisticspipes.interfaces.ProvideItems;
 import net.danygames2014.logisticspipes.util.ItemIdentifier;
-import net.minecraft.item.ItemStack;
 
 public class LogisticsPromise {
     public ItemIdentifier item;

@@ -15,26 +15,26 @@ public class InventoryUtil {
 
     }
 
-    public int itemCount(final ItemIdentifier item){
+    public int itemCount(final ItemIdentifier item) {
         int count = 0;
-        for (int i = 0; i < inventory.size(); i++){
+        for (int i = 0; i < inventory.size(); i++) {
             ItemStack stack = inventory.getStack(i);
             if (stack == null) continue;
             if (ItemIdentifier.get(stack) == item) {
-                count += stack.count - (hideOne?1:0);
+                count += stack.count - (hideOne ? 1 : 0);
             }
         }
         return count;
     }
 
-    public HashMap<ItemIdentifier, Integer> getItemsAndCount(){
+    public HashMap<ItemIdentifier, Integer> getItemsAndCount() {
         HashMap<ItemIdentifier, Integer> items = new HashMap<>();
-        for (int i = 0; i < inventory.size(); i++){
+        for (int i = 0; i < inventory.size(); i++) {
             ItemStack stack = inventory.getStack(i);
             if (stack == null) continue;
             ItemIdentifier itemId = ItemIdentifier.get(stack);
-            int stackSize = stack.count - (hideOne?1:0);
-            if (!items.containsKey(itemId)){
+            int stackSize = stack.count - (hideOne ? 1 : 0);
+            if (!items.containsKey(itemId)) {
                 items.put(itemId, stackSize);
             } else {
                 items.put(itemId, items.get(itemId) + stackSize);
@@ -43,23 +43,23 @@ public class InventoryUtil {
         return items;
     }
 
-    public int getItemCount(ItemIdentifier item){
+    public int getItemCount(ItemIdentifier item) {
         HashMap<ItemIdentifier, Integer> itemsAndCount = getItemsAndCount();
-        if (!itemsAndCount.containsKey(item)){
+        if (!itemsAndCount.containsKey(item)) {
             return 0;
         }
         return itemsAndCount.get(item);
     }
 
-    public ItemStack getSingleItem(ItemIdentifier item){
-        for (int i = 0; i < inventory.size(); i++){
+    public ItemStack getSingleItem(ItemIdentifier item) {
+        for (int i = 0; i < inventory.size(); i++) {
             ItemStack stack = inventory.getStack(i);
             if (stack == null) continue;
             if (hideOne && stack.count == 1) continue;
             if (ItemIdentifier.get(stack) == item) {
                 ItemStack removed = stack.split(1);
-                if (stack.count == 0){
-                    inventory.setStack(i,  null);
+                if (stack.count == 0) {
+                    inventory.setStack(i, null);
                 }
                 return removed;
             }
@@ -67,14 +67,13 @@ public class InventoryUtil {
         return null;
     }
 
-    public ItemStack getMultipleItems(ItemIdentifier item, int count){
+    public ItemStack getMultipleItems(ItemIdentifier item, int count) {
         if (itemCount(item) < count) return null;
         ItemStack stack = null;
-        for (int i = 0; i < count; i++){
-            if(stack == null){
+        for (int i = 0; i < count; i++) {
+            if (stack == null) {
                 stack = getSingleItem(item);
-            }
-            else{
+            } else {
                 stack.count += getSingleItem(item).count;
             }
         }
@@ -82,8 +81,8 @@ public class InventoryUtil {
     }
 
     //Will not hide 1 item;
-    public boolean containsItem(ItemIdentifier item){
-        for (int i = 0; i < inventory.size(); i++){
+    public boolean containsItem(ItemIdentifier item) {
+        for (int i = 0; i < inventory.size(); i++) {
             ItemStack stack = inventory.getStack(i);
             if (stack == null) continue;
             if (ItemIdentifier.get(stack) == item) return true;
@@ -92,11 +91,11 @@ public class InventoryUtil {
     }
 
     //Will not hide 1 item;
-    public int roomForItem(ItemIdentifier item){
+    public int roomForItem(ItemIdentifier item) {
         int totalRoom = 0;
-        for (int i = 0; i < inventory.size(); i++){
+        for (int i = 0; i < inventory.size(); i++) {
             ItemStack stack = inventory.getStack(i);
-            if (stack == null){
+            if (stack == null) {
                 totalRoom += Math.min(inventory.getMaxCountPerStack(), item.makeNormalStack(1).getMaxCount());
                 continue;
             }

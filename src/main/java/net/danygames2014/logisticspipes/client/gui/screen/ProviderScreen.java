@@ -9,13 +9,13 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.inventory.Inventory;
 import org.lwjgl.opengl.GL11;
 
-public class ProviderScreen extends ScreenWithPrevious{
+public class ProviderScreen extends ScreenWithPrevious {
     private final Inventory playerInventory;
     private final ProviderModule provider;
     private final LogisticPipeBlockEntity pipe;
     private final int slot;
 
-    public ProviderScreen(Inventory playerInventory, LogisticPipeBlockEntity pipe, ProviderModule provider, Screen previousScreen, int slot){
+    public ProviderScreen(Inventory playerInventory, LogisticPipeBlockEntity pipe, ProviderModule provider, Screen previousScreen, int slot) {
         super(null, pipe, previousScreen);
         this.playerInventory = playerInventory;
         this.provider = provider;
@@ -28,8 +28,8 @@ public class ProviderScreen extends ScreenWithPrevious{
         int xOffset = 72;
         int yOffset = 18;
 
-        for (int row = 0; row < 3; row++){
-            for (int column = 0; column < 3; column++){
+        for (int row = 0; row < 3; row++) {
+            for (int column = 0; column < 3; column++) {
                 dummy.addDummySlot(column + row * 3, xOffset + column * 18, yOffset + row * 18);
             }
         }
@@ -39,6 +39,7 @@ public class ProviderScreen extends ScreenWithPrevious{
         backgroundHeight = 186;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void init() {
         super.init();
@@ -49,29 +50,22 @@ public class ProviderScreen extends ScreenWithPrevious{
 
     @Override
     protected void buttonClicked(ButtonWidget button) {
-        if(button.id == 0){
+        if (button.id == 0) {
             provider.setFilterExcluded(!provider.isExcludeFilter());
-        } else if(button.id == 1) {
+        } else if (button.id == 1) {
             provider.nextExtractionMode();
         }
         super.buttonClicked(button);
     }
 
-    private String getExtractionModeString(){
-        switch(provider.getExtractionMode()){
-            case Normal:
-                return "Normal";
-            case LeaveFirst:
-                return "Leave 1st stack";
-            case LeaveLast:
-                return "Leave last stack";
-            case LeaveFirstAndLast:
-                return "Leave first & last stack";
-            case Leave1PerStack:
-                return "Leave 1 item per stack";
-            default:
-                return "Unknown!";
-        }
+    private String getExtractionModeString() {
+        return switch (provider.getExtractionMode()) {
+            case Normal -> "Normal";
+            case LeaveFirst -> "Leave 1st stack";
+            case LeaveLast -> "Leave last stack";
+            case LeaveFirstAndLast -> "Leave first & last stack";
+            case Leave1PerStack -> "Leave 1 item per stack";
+        };
     }
 
     @Override
@@ -86,12 +80,12 @@ public class ProviderScreen extends ScreenWithPrevious{
     @Override
     protected void drawForeground() {
         super.drawForeground();
-        textRenderer.draw(provider.getFilterInventory().getName(), backgroundWidth / 2 - textRenderer.getWidth(provider.getFilterInventory().getName())/2, 6, 0x404040);
+        textRenderer.draw(provider.getFilterInventory().getName(), backgroundWidth / 2 - textRenderer.getWidth(provider.getFilterInventory().getName()) / 2, 6, 0x404040);
         textRenderer.draw("Inventory", 18, backgroundHeight - 102, 0x404040);
         textRenderer.draw("Mode: " + getExtractionModeString(), 9, backgroundHeight - 112, 0x404040);
     }
 
-    String getContent(){
+    String getContent() {
         return provider.isExcludeFilter() ? "Exclude" : "Include";
     }
 }

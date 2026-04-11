@@ -14,7 +14,7 @@ public class AdvertiseRouterWrenchMode extends WrenchMode {
 
     @Override
     public boolean wrenchRightClick(ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side, WrenchMode wrenchMode) {
-        if (world.getBlockEntity(x,y,z) instanceof LogisticPipeBlockEntity pipe) {
+        if (world.getBlockEntity(x, y, z) instanceof LogisticPipeBlockEntity pipe) {
             long nanoTime = System.nanoTime();
             if (isSneaking) {
                 pipe.advertiseRouter();
@@ -24,7 +24,7 @@ public class AdvertiseRouterWrenchMode extends WrenchMode {
             long nanoEnd = System.nanoTime();
 
             player.sendMessage("Advertisement took " + (nanoEnd - nanoTime) / 1000 + "us");
-            
+
             return true;
         }
 

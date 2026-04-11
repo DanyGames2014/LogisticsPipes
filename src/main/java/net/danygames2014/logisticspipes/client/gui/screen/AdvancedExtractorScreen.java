@@ -8,11 +8,12 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.inventory.Inventory;
 import org.lwjgl.opengl.GL11;
 
-public class AdvancedExtractorScreen extends ScreenWithPrevious{
+public class AdvancedExtractorScreen extends ScreenWithPrevious {
     private final Inventory playerInventory;
     private final AdvancedExtractorModule advancedExtractor;
     private final int slot;
 
+    @SuppressWarnings("unchecked")
     @Override
     public void init() {
         super.init();
@@ -23,17 +24,17 @@ public class AdvancedExtractorScreen extends ScreenWithPrevious{
 
     @Override
     protected void buttonClicked(ButtonWidget button) {
-        if(button.id == 0){
+        if (button.id == 0) {
             advancedExtractor.setItemsIncluded(!advancedExtractor.areItemsIncluded());
-            ((ButtonWidget)buttons.get(0)).text = advancedExtractor.areItemsIncluded() ? "Included" : "Excluded";
+            ((ButtonWidget) buttons.get(0)).text = advancedExtractor.areItemsIncluded() ? "Included" : "Excluded";
 //            PacketDispatcher.sendPacketToServer(new PacketPipeInteger(NetworkConstants.ADVANCED_EXTRACTOR_MODULE_INCLUDED_SET, pipe.xCoord, pipe.yCoord, pipe.zCoord, (_advancedExtractor.areItemsIncluded() ? 1 : 0) + (slot * 10)).getPacket());
         }
-        if(button.id == 1) {
+        if (button.id == 1) {
             // TODO: change sneaky direction
         }
     }
 
-    public AdvancedExtractorScreen(Inventory playerInventory, LogisticPipeBlockEntity pipe, AdvancedExtractorModule advancedExtractor, Screen previousScreen, int slot){
+    public AdvancedExtractorScreen(Inventory playerInventory, LogisticPipeBlockEntity pipe, AdvancedExtractorModule advancedExtractor, Screen previousScreen, int slot) {
         super(null, pipe, previousScreen);
         this.advancedExtractor = advancedExtractor;
         this.slot = slot;
@@ -41,7 +42,7 @@ public class AdvancedExtractorScreen extends ScreenWithPrevious{
         dummy.addNormalSlotsForPlayerInventory(8, 60);
 
         //Pipe slots
-        for(int pipeSlot = 0; pipeSlot < 9; pipeSlot++){
+        for (int pipeSlot = 0; pipeSlot < 9; pipeSlot++) {
             dummy.addDummySlot(pipeSlot, 8 + pipeSlot * 18, 18);
         }
 

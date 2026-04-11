@@ -42,7 +42,8 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
 
     private final List<PlayerEntity> localModeWatchers = new ArrayList<>();
 
-    public ProviderModule() {}
+    public ProviderModule() {
+    }
 
     @Override
     public void registerHandler(InventoryProvider invProvider, SendRoutedItem itemSender, WorldProvider world) {
@@ -85,7 +86,7 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
         currentTick = 0;
         checkUpdate(null);
         while (orderManager.hasOrders()) {
-            Pair<ItemIdentifierStack,RequestItems> order = orderManager.getNextRequest();
+            Pair<ItemIdentifierStack, RequestItems> order = orderManager.getNextRequest();
             int sent = sendItem(order.getValue1().getItem(), order.getValue1().stackSize, order.getValue2().getRouter().getRouterId());
 
             if (sent > 0) {
@@ -129,24 +130,24 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
 
         InventoryUtil inv = getAdaptedUtil(invProvider.getInventory());
         HashMap<ItemIdentifier, Integer> currentInv = inv.getItemsAndCount();
-        for (ItemIdentifier currItem : currentInv.keySet()){
-            if ( hasFilter() && ((isExcludeFilter && itemIsFiltered(currItem))
-                                         || (!isExcludeFilter && !itemIsFiltered(currItem)))) continue;
+        for (ItemIdentifier currItem : currentInv.keySet()) {
+            if (hasFilter() && ((isExcludeFilter && itemIsFiltered(currItem))
+                    || (!isExcludeFilter && !itemIsFiltered(currItem)))) continue;
 
-            if (!allItems.containsKey(currItem)){
+            if (!allItems.containsKey(currItem)) {
                 allItems.put(currItem, currentInv.get(currItem));
-            }else {
+            } else {
                 allItems.put(currItem, allItems.get(currItem) + currentInv.get(currItem));
             }
         }
 
         //Reduce what has been reserved.
         Iterator<ItemIdentifier> iterator = allItems.keySet().iterator();
-        while(iterator.hasNext()){
+        while (iterator.hasNext()) {
             ItemIdentifier item = iterator.next();
 
             int remaining = allItems.get(item) - orderManager.totalItemsCountInOrders(item);
-            if (remaining < 1){
+            if (remaining < 1) {
                 iterator.remove();
             } else {
                 allItems.put(item, remaining);
@@ -166,7 +167,7 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
         int sent = 0;
         if (invProvider.getInventory() == null) return 0;
         InventoryUtil inv = getAdaptedUtil(invProvider.getInventory());
-        if (inv.itemCount(item)> 0){
+        if (inv.itemCount(item) > 0) {
             ItemStack removed = inv.getSingleItem(item);
             itemSender.sendStack(removed, destination);
             sent++;
@@ -181,8 +182,8 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
         if (invProvider.getInventory() == null) return 0;
 
         if (!filterUtil.getItemsAndCount().isEmpty()
-                    && ((this.isExcludeFilter && filterUtil.getItemsAndCount().containsKey(item))
-                                || ((!this.isExcludeFilter) && !filterUtil.getItemsAndCount().containsKey(item)))) return 0;
+                && ((this.isExcludeFilter && filterUtil.getItemsAndCount().containsKey(item))
+                || ((!this.isExcludeFilter) && !filterUtil.getItemsAndCount().containsKey(item)))) return 0;
 
         InventoryUtil inv = getAdaptedUtil(invProvider.getInventory());
         return inv.itemCount(item);
@@ -192,12 +193,12 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
         return !filterUtil.getItemsAndCount().isEmpty();
     }
 
-    public boolean itemIsFiltered(ItemIdentifier item){
+    public boolean itemIsFiltered(ItemIdentifier item) {
         return filterUtil.getItemsAndCount().containsKey(item);
     }
 
-    public InventoryUtil getAdaptedUtil(Inventory base){
-        switch(extractionMode){
+    public InventoryUtil getAdaptedUtil(Inventory base) {
+        switch (extractionMode) {
             case LeaveFirst:
                 base = new CroppedInventory(base, 1, 0);
                 break;
@@ -226,7 +227,7 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
         this.isExcludeFilter = isExcludeFilter;
     }
 
-    public ExtractionMode getExtractionMode(){
+    public ExtractionMode getExtractionMode() {
         return extractionMode;
     }
 
@@ -256,15 +257,15 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
     private void checkUpdate(PlayerEntity player) {
         displayList.clear();
         HashMap<ItemIdentifier, Integer> list = getAllItems();
-        for(ItemIdentifier item :list.keySet()) {
+        for (ItemIdentifier item : list.keySet()) {
             displayList.add(new ItemIdentifierStack(item, list.get(item)));
         }
-        if(!oldList.equals(displayList)) {
+        if (!oldList.equals(displayList)) {
 //            MainProxy.sendToPlayerList(new PacketModuleInvContent(NetworkConstants.MODULE_INV_CONTENT, xCoord, yCoord, zCoord, slot, displayList).getPacket(), localModeWatchers);
             oldList.clear();
             oldList.addAll(displayList);
         }
-        if(player != null) {
+        if (player != null) {
 //            PacketDispatcher.sendPacketToPlayer(new PacketModuleInvContent(NetworkConstants.MODULE_INV_CONTENT, xCoord, yCoord, zCoord, slot, displayList).getPacket(), (Player)player);
         }
     }
@@ -301,7 +302,7 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
         displayList.addAll(list);
     }
 
-    void markDirty(){
+    void markDirty() {
 
     }
 }

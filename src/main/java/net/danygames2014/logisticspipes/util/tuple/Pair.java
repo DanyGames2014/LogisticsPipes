@@ -9,15 +9,15 @@ public class Pair<T1, T2> {
         this.value2 = value2;
     }
 
-    public T1 getValue1(){
+    public T1 getValue1() {
         return value1;
     }
 
-    public T2 getValue2(){
+    public T2 getValue2() {
         return value2;
     }
 
     public Pair<T1, T2> copy() {
-        return new Pair<T1, T2>(value1, value2);
+        return new Pair<>(value1, value2);
     }
 }

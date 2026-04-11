@@ -1,7 +1,7 @@
 package net.danygames2014.logisticspipes.routing;
 
 public class RouteDestination {
-    public long routerId;   
+    public long routerId;
     public Router router;
     public int metric;
 

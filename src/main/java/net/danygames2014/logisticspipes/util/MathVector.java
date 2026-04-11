@@ -21,7 +21,7 @@ public class MathVector {
     }
 
     public double abs() {
-        return Math.hypot(X,Math.hypot(Y, Z));
+        return Math.hypot(X, Math.hypot(Y, Z));
     }
 
     public MathVector add(MathVector vector, double factor) {
@@ -47,17 +47,18 @@ public class MathVector {
     }
 
     public MathVector getOrtogonal(Double pX, Double pY, Double pZ) {
-        if((pX != null && pY != null && pZ != null) || (pX == null && pY == null) || (pY == null && pZ == null) || (pX == null && pZ == null)) throw new UnsupportedOperationException("One, only one parameter needs to be null");
+        if ((pX != null && pY != null && pZ != null) || (pX == null && pY == null) || (pY == null && pZ == null) || (pX == null && pZ == null))
+            throw new UnsupportedOperationException("One, only one parameter needs to be null");
         MathVector answer = new MathVector();
-        if(pX == null) {
+        if (pX == null) {
             answer.X = (((-pY) * Y) - (pZ * Z)) / X;
             answer.Y = pY;
             answer.Z = pZ;
-        } else if(pY == null) {
+        } else if (pY == null) {
             answer.X = pX;
             answer.Y = (((-pX) * X) - (pZ * Z)) / Y;
             answer.Z = pZ;
-        } else if(pZ == null) {
+        } else if (pZ == null) {
             answer.X = pX;
             answer.Y = pY;
             answer.Z = (((-pX) * X) - (pY * Y)) / Z;

@@ -10,7 +10,7 @@ public enum ExtractionMode {
     public ExtractionMode next() {
         int next = this.ordinal() + 1;
 
-        if (next >= values().length){
+        if (next >= values().length) {
             next = 0;
         }
         return ExtractionMode.values()[next];
@@ -24,7 +24,6 @@ public enum ExtractionMode {
             case LeaveLast -> "Leave last stack";
             case LeaveFirstAndLast -> "Leave first & last stack";
             case Leave1PerStack -> "Leave 1 item per stack";
-            default -> "Unknown!";
         };
     }
 }

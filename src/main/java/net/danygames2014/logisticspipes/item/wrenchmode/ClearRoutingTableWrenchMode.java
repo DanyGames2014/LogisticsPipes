@@ -14,7 +14,7 @@ public class ClearRoutingTableWrenchMode extends WrenchMode {
 
     @Override
     public boolean wrenchRightClick(ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side, WrenchMode wrenchMode) {
-        if (world.getBlockEntity(x,y,z) instanceof LogisticPipeBlockEntity pipe) {
+        if (world.getBlockEntity(x, y, z) instanceof LogisticPipeBlockEntity pipe) {
             pipe.routingTable.clear();
             pipe.neighborTable.clear();
             return true;

@@ -8,6 +8,7 @@ import net.minecraft.item.ItemStack;
 public class ModuleSlot extends RestrictedSlot {
     private ChassisLogisticPipeBlockEntity pipe;
     private int moduleIndex;
+
     public ModuleSlot(Inventory inventory, int index, int x, int y, ChassisLogisticPipeBlockEntity pipe) {
         super(inventory, index, x, y, ModuleSlot::isStackAllowed);
         this.pipe = pipe;

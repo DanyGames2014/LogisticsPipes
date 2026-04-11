@@ -7,6 +7,7 @@ import net.modificationstation.stationapi.api.util.math.Direction;
 
 /**
  * This interface describes the actions that must be available on an item that is considered routed
+ *
  * @author Krapht
  *
  */
@@ -23,13 +24,17 @@ public interface RoutedItem {
     boolean isSourceValid();
 
     void setDestination(long destination);
+
     long getSource();
+
     void setSource(long source);
 
     void setTransportMode(TransportMode transportMode);
+
     TransportMode getTransportMode();
 
     void setDoNotBuffer(boolean doNotBuffer);
+
     boolean getDoNotBuffer();
 
     boolean isDestinationValid();
@@ -39,5 +44,6 @@ public interface RoutedItem {
     TravellingItemEntity getTravellingItemEntity();
 
     RoutedItem split(World world, int itemsToTake, Direction direction);
+
     void setPosition(double x, double y, double z);
 }

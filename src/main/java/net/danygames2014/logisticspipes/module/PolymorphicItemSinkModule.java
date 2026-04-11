@@ -33,12 +33,12 @@ public class PolymorphicItemSinkModule implements LogisticsModule {
     @Override
     public SinkReply sinksItem(ItemStack item) {
         Inventory targetInventory = invProvider.getInventory();
-        if(targetInventory == null){
+        if (targetInventory == null) {
             return null;
         }
 
         InventoryUtil invUtil = new InventoryUtil(targetInventory, false);
-        if(!invUtil.containsItem(ItemIdentifier.get(item))) {
+        if (!invUtil.containsItem(ItemIdentifier.get(item))) {
             return null;
         }
 

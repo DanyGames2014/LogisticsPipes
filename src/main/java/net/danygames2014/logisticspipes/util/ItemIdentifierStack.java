@@ -18,16 +18,16 @@ public class ItemIdentifierStack {
         return new ItemIdentifierStack(ItemIdentifier.get(stack), stack.count);
     }
 
-    public ItemIdentifierStack(ItemIdentifier item, int stackSize){
+    public ItemIdentifierStack(ItemIdentifier item, int stackSize) {
         this.item = item;
         this.stackSize = stackSize;
     }
 
-    public ItemIdentifier getItem(){
+    public ItemIdentifier getItem() {
         return item;
     }
 
-    public ItemStack makeNormalStack(){
+    public ItemStack makeNormalStack() {
         ItemStack stack = new ItemStack(item.item, this.stackSize, item.itemDamage);
         StationNBTSetter.cast(stack).setStationNbt(item.nbt);
         return stack;
@@ -35,7 +35,7 @@ public class ItemIdentifierStack {
 
     @Override
     public boolean equals(Object object) {
-        if(object instanceof ItemIdentifierStack stack) {
+        if (object instanceof ItemIdentifierStack stack) {
             return stack.item.equals(this.item) && stack.stackSize == this.stackSize;
         }
         return false;
@@ -57,9 +57,9 @@ public class ItemIdentifierStack {
 
     public static LinkedList<ItemIdentifierStack> getListFromInventory(Inventory inv, boolean removeNull) {
         LinkedList<ItemIdentifierStack> list = new LinkedList<>();
-        for(int i=0;i<inv.size();i++) {
-            if(inv.getStack(i) == null) {
-                if(!removeNull) {
+        for (int i = 0; i < inv.size(); i++) {
+            if (inv.getStack(i) == null) {
+                if (!removeNull) {
                     list.add(null);
                 }
             } else {
@@ -70,20 +70,20 @@ public class ItemIdentifierStack {
     }
 
     public static LinkedList<ItemIdentifierStack> getListSendQueue(LinkedList<Pair3<RoutedItem, Direction, ItemSendMode>> _sendQueue) {
-        LinkedList<ItemIdentifierStack> list = new LinkedList<ItemIdentifierStack>();
-        for(Pair3<RoutedItem, Direction, ItemSendMode> part:_sendQueue) {
-            if(part == null) {
+        LinkedList<ItemIdentifierStack> list = new LinkedList<>();
+        for (Pair3<RoutedItem, Direction, ItemSendMode> part : _sendQueue) {
+            if (part == null) {
                 list.add(null);
             } else {
                 boolean added = false;
-                for(ItemIdentifierStack stack:list) {
-                    if(stack.getItem().equals(ItemIdentifierStack.getFromStack(part.getValue1().getItemStack()).getItem())) {
+                for (ItemIdentifierStack stack : list) {
+                    if (stack.getItem().equals(ItemIdentifierStack.getFromStack(part.getValue1().getItemStack()).getItem())) {
                         stack.stackSize += part.getValue1().getItemStack().count;
                         added = true;
                         break;
                     }
                 }
-                if(!added) {
+                if (!added) {
                     list.add(ItemIdentifierStack.getFromStack(part.getValue1().getItemStack()));
                 }
             }

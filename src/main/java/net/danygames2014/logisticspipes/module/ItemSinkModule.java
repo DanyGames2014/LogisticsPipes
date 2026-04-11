@@ -25,15 +25,15 @@ public class ItemSinkModule implements LogisticsModule, ClientInformationProvide
 
     private final List<PlayerEntity> localModeWatchers = new ArrayList<>();
 
-    public Inventory getFilterInventory(){
+    public Inventory getFilterInventory() {
         return filterInventory;
     }
 
-    public boolean isDefaultRoute(){
+    public boolean isDefaultRoute() {
         return isDefaultRoute;
     }
 
-    public void setDefaultRoute(boolean isDefaultRoute){
+    public void setDefaultRoute(boolean isDefaultRoute) {
         this.isDefaultRoute = isDefaultRoute;
 //        MainProxy.sendToPlayerList(new PacketModuleInteger(NetworkConstants.ITEM_SINK_STATUS, xCoord, yCoord, zCoord, slot, isDefaultRoute() ? 1 : 0).getPacket(), localModeWatchers);
     }
@@ -54,13 +54,13 @@ public class ItemSinkModule implements LogisticsModule, ClientInformationProvide
     @Override
     public SinkReply sinksItem(ItemStack item) {
         InventoryUtil invUtil = new InventoryUtil(filterInventory, false);
-        if (invUtil.containsItem(ItemIdentifier.get(item))){
+        if (invUtil.containsItem(ItemIdentifier.get(item))) {
             SinkReply reply = new SinkReply();
             reply.fixedPriority = SinkReply.FixedPriority.ItemSink;
             reply.isPassive = true;
             return reply;
         }
-        if (isDefaultRoute){
+        if (isDefaultRoute) {
             SinkReply reply = new SinkReply();
             reply.fixedPriority = SinkReply.FixedPriority.DefaultRoute;
             reply.isPassive = true;
@@ -93,11 +93,12 @@ public class ItemSinkModule implements LogisticsModule, ClientInformationProvide
     }
 
     @Override
-    public void tick() {}
+    public void tick() {
+    }
 
     @Override
     public List<String> getClientInformation() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         list.add("Default: " + (isDefaultRoute() ? "Yes" : "No"));
         list.add("Filter: ");
         list.add("<inventory>");

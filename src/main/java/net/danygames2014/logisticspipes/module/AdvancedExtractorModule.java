@@ -1,6 +1,5 @@
 package net.danygames2014.logisticspipes.module;
 
-import com.llamalad7.mixinextras.lib.antlr.runtime.misc.Utils;
 import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.pipe.LogisticsManager;
 import net.danygames2014.logisticspipes.interfaces.*;
@@ -46,7 +45,7 @@ public class AdvancedExtractorModule implements LogisticsModule, SneakyDirection
         return LogisticsPipes.NAMESPACE.id("advanced_extractor");
     }
 
-    public SimpleInventory getFilterInventory(){
+    public SimpleInventory getFilterInventory() {
         return filterInventory;
     }
 
@@ -94,13 +93,13 @@ public class AdvancedExtractorModule implements LogisticsModule, SneakyDirection
 
     @Override
     public void tick() {
-        if(++currentTick < ticksToAction()){
+        if (++currentTick < ticksToAction()) {
             return;
         }
         currentTick = 0;
 
         Inventory targetInventory = invProvider.getInventory();
-        if(targetInventory == null){
+        if (targetInventory == null) {
             return;
         }
         Direction extractDirection = switch (getSneakyDirection()) {
@@ -110,12 +109,12 @@ public class AdvancedExtractorModule implements LogisticsModule, SneakyDirection
             default -> invProvider.inventoryDirection().getOpposite();
         };
 
-        if(targetInventory instanceof ItemHandlerBlockCapabilityInventoryWrapper wrapper) {
+        if (targetInventory instanceof ItemHandlerBlockCapabilityInventoryWrapper wrapper) {
             wrapper.side = extractDirection;
         }
 
         ItemStack stack = checkExtract(targetInventory, true, invProvider.inventoryDirection().getOpposite());
-        if(stack == null) {
+        if (stack == null) {
             return;
         }
         itemSender.sendStack(stack);
@@ -136,7 +135,7 @@ public class AdvancedExtractorModule implements LogisticsModule, SneakyDirection
                 if (doRemove) {
                     int count = Math.min(itemsToExtract(), slot.count);
 
-                    if(count <= 0) {
+                    if (count <= 0) {
                         return null;
                     }
 
@@ -149,7 +148,7 @@ public class AdvancedExtractorModule implements LogisticsModule, SneakyDirection
     }
 
     public boolean CanExtract(ItemStack item) {
-        if(!shouldSend(item)) {
+        if (!shouldSend(item)) {
             return false;
         }
 
@@ -168,7 +167,7 @@ public class AdvancedExtractorModule implements LogisticsModule, SneakyDirection
         return !areItemsIncluded();
     }
 
-    protected boolean shouldSend(ItemStack stack){
+    protected boolean shouldSend(ItemStack stack) {
         return LogisticsManager.getInstance().hasDestination(worldProvider.getWorld(), stack, true, itemSender.getSourceId(), true);
     }
 
@@ -183,7 +182,7 @@ public class AdvancedExtractorModule implements LogisticsModule, SneakyDirection
 
     @Override
     public List<String> getClientInformation() {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         list.add(areItemsIncluded() ? "Included" : "Excluded");
         list.add("Extraction: " + sneakyDirection.name());
         list.add("Filter: ");
@@ -200,7 +199,7 @@ public class AdvancedExtractorModule implements LogisticsModule, SneakyDirection
         this.slot = slot;
     }
 
-    public void markDirty(){
+    public void markDirty() {
 //        MainProxy.sendToPlayerList(new PacketModuleInvContent(NetworkConstants.MODULE_INV_CONTENT, xCoord, yCoord, zCoord, slot, ItemIdentifierStack.getListFromInventory(inventory)).getPacket(), localModeWatchers);
     }
 

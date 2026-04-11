@@ -18,24 +18,24 @@ public class ChassisModule implements LogisticsModule {
     private final LogisticsModule[] modules;
     private final ChassisLogisticPipeBlockEntity parentPipe;
 
-    public ChassisModule(int moduleCount, ChassisLogisticPipeBlockEntity parentPipe){
+    public ChassisModule(int moduleCount, ChassisLogisticPipeBlockEntity parentPipe) {
         this.modules = new LogisticsModule[moduleCount];
         this.parentPipe = parentPipe;
     }
 
-    public void installModule(int slot, LogisticsModule module){
+    public void installModule(int slot, LogisticsModule module) {
         modules[slot] = module;
     }
 
-    public void removeModule(int slot){
+    public void removeModule(int slot) {
         modules[slot] = null;
     }
 
-    public LogisticsModule getModule(int slot){
+    public LogisticsModule getModule(int slot) {
         return modules[slot];
     }
 
-    public boolean hasModule(int slot){
+    public boolean hasModule(int slot) {
         return (modules[slot] != null);
     }
 
@@ -49,10 +49,10 @@ public class ChassisModule implements LogisticsModule {
 
         if (roomForItem < 1) return null;
 
-        for (LogisticsModule module : modules){
-            if (module != null){
+        for (LogisticsModule module : modules) {
+            if (module != null) {
                 SinkReply result = module.sinksItem(item);
-                if (result != null){
+                if (result != null) {
                     result.maxNumberOfItems = roomForItem;
                     return result;
                 }
@@ -69,10 +69,10 @@ public class ChassisModule implements LogisticsModule {
 
     @Override
     public void readNbt(NbtCompound nbt, String prefix) {
-        for (int i = 0; i < modules.length; i++){
-            if (modules[i] != null){
+        for (int i = 0; i < modules.length; i++) {
+            if (modules[i] != null) {
                 NbtCompound slot = nbt.getCompound("slot" + i);
-                if (slot != null){
+                if (slot != null) {
                     modules[i].readNbt(slot, "");
                 }
             }
@@ -81,18 +81,18 @@ public class ChassisModule implements LogisticsModule {
 
     @Override
     public void writeNbt(NbtCompound nbt, String prefix) {
-        for (int i = 0; i < modules.length; i++){
-            if (modules[i] != null){
+        for (int i = 0; i < modules.length; i++) {
+            if (modules[i] != null) {
                 NbtCompound slot = new NbtCompound();
                 modules[i].writeNbt(slot, "");
-                nbt.put("slot"+i, slot);
+                nbt.put("slot" + i, slot);
             }
         }
     }
 
     @Override
     public void tick() {
-        for (LogisticsModule module : modules){
+        for (LogisticsModule module : modules) {
             if (module == null) continue;
             module.tick();
         }

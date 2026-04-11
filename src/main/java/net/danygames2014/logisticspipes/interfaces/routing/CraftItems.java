@@ -9,6 +9,8 @@ import java.util.LinkedList;
 
 public interface CraftItems extends ProvideItems, RequestItems {
     void registerExtras(int count);
+
     void addCrafting(LinkedList<CraftingTemplate> crafters);
+
     ItemStack getCraftedItem();
 }

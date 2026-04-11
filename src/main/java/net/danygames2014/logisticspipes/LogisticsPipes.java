@@ -5,7 +5,6 @@ import net.danygames2014.buildcraft.block.material.PipeMaterial;
 import net.danygames2014.logisticspipes.block.LogisticPipeBlock;
 import net.danygames2014.logisticspipes.block.entity.BasicLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.entity.ChassisLogisticPipeBlockEntity;
-import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.entity.SupplierLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.pipe.behavior.LogisticPipeBehavior;
 import net.danygames2014.logisticspipes.block.pipe.transporter.LogisticItemPipeTransporter;
@@ -13,7 +12,6 @@ import net.danygames2014.logisticspipes.item.MagicWand;
 import net.danygames2014.logisticspipes.item.ModuleItem;
 import net.danygames2014.logisticspipes.item.RoutingDebugger;
 import net.danygames2014.logisticspipes.module.*;
-import net.danygames2014.logisticspipes.util.RoutingUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.Block;
@@ -183,8 +181,8 @@ public class LogisticsPipes {
     }
 
     @EventListener
-    public void registerItems(ItemRegistryEvent event){
-        if(FabricLoader.getInstance().isDevelopmentEnvironment()){
+    public void registerItems(ItemRegistryEvent event) {
+        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
             magicWand = new MagicWand(NAMESPACE.id("magic_wand")).setTranslationKey(NAMESPACE, "magic_wand");
         }
         routingDebugger = new RoutingDebugger(NAMESPACE.id("routing_debugger")).setTranslationKey(NAMESPACE, "routing_debugger");

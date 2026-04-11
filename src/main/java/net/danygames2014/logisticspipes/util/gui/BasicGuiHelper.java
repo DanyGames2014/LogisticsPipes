@@ -19,120 +19,119 @@ public class BasicGuiHelper {
     private static final String SMALL_SLOT = "/assets/logisticspipes/stationapi/textures/gui/slot/small_slot.png";
     private static final String BIG_SLOT = "/assets/logisticspipes/stationapi/textures/gui/slot/big_slot.png";
 
-    public static void drawGuiBackGround(Minecraft mc, int guiLeft, int guiTop, int right, int bottom, float zLevel, boolean resetColor, boolean displayTop, boolean displayLeft, boolean displayBottom, boolean displayRight){
-        if(resetColor) {
+    public static void drawGuiBackGround(Minecraft mc, int guiLeft, int guiTop, int right, int bottom, float zLevel, boolean resetColor, boolean displayTop, boolean displayLeft, boolean displayBottom, boolean displayRight) {
+        if (resetColor) {
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         }
         mc.textureManager.bindTexture(mc.textureManager.getTextureId(BACKGROUND));
 
-        if(displayTop) {
+        if (displayTop) {
             //Top Side
             Tessellator var9 = Tessellator.INSTANCE;
             var9.startQuads();
-            var9.vertex(guiLeft + 15	, guiTop + 15	, zLevel, 0.33	, 0.33);
-            var9.vertex(right - 15		, guiTop + 15	, zLevel, 0.66	, 0.33);
-            var9.vertex(right - 15		, guiTop		, zLevel, 0.66	, 0);
-            var9.vertex(guiLeft + 15	, guiTop		, zLevel, 0.33	, 0);
+            var9.vertex(guiLeft + 15, guiTop + 15, zLevel, 0.33, 0.33);
+            var9.vertex(right - 15, guiTop + 15, zLevel, 0.66, 0.33);
+            var9.vertex(right - 15, guiTop, zLevel, 0.66, 0);
+            var9.vertex(guiLeft + 15, guiTop, zLevel, 0.33, 0);
             var9.draw();
         }
 
-        if(displayLeft) {
+        if (displayLeft) {
             //Left Side
             Tessellator var9 = Tessellator.INSTANCE;
             var9.startQuads();
-            var9.vertex(guiLeft		, bottom - 15	, zLevel, 0	, 0.66);
-            var9.vertex(guiLeft + 15	, bottom - 15	, zLevel, 0.33	, 0.66);
-            var9.vertex(guiLeft + 15	, guiTop + 15	, zLevel, 0.33	, 0.33);
-            var9.vertex(guiLeft		, guiTop + 15	, zLevel, 0	, 0.33);
+            var9.vertex(guiLeft, bottom - 15, zLevel, 0, 0.66);
+            var9.vertex(guiLeft + 15, bottom - 15, zLevel, 0.33, 0.66);
+            var9.vertex(guiLeft + 15, guiTop + 15, zLevel, 0.33, 0.33);
+            var9.vertex(guiLeft, guiTop + 15, zLevel, 0, 0.33);
             var9.draw();
         }
 
-        if(displayBottom) {
+        if (displayBottom) {
             //Bottom Side
             Tessellator var9 = Tessellator.INSTANCE;
             var9.startQuads();
-            var9.vertex(guiLeft + 15	, bottom		, zLevel, 0.33	, 1);
-            var9.vertex(right - 15		, bottom		, zLevel, 0.66	, 1);
-            var9.vertex(right - 15		, bottom - 15	, zLevel, 0.66	, 0.66);
-            var9.vertex(guiLeft + 15	, bottom - 15	, zLevel, 0.33	, 0.66);
+            var9.vertex(guiLeft + 15, bottom, zLevel, 0.33, 1);
+            var9.vertex(right - 15, bottom, zLevel, 0.66, 1);
+            var9.vertex(right - 15, bottom - 15, zLevel, 0.66, 0.66);
+            var9.vertex(guiLeft + 15, bottom - 15, zLevel, 0.33, 0.66);
             var9.draw();
         }
 
-        if(displayRight) {
+        if (displayRight) {
             //Right Side
             Tessellator var9 = Tessellator.INSTANCE;
             var9.startQuads();
-            var9.vertex(right - 15	, bottom - 15		, zLevel, 0.66	, 0.66);
-            var9.vertex(right		, bottom - 15		, zLevel, 1	, 0.66);
-            var9.vertex(right		, guiTop + 15		, zLevel, 1	, 0.33);
-            var9.vertex(right - 15	, guiTop + 15		, zLevel, 0.66	, 0.33);
+            var9.vertex(right - 15, bottom - 15, zLevel, 0.66, 0.66);
+            var9.vertex(right, bottom - 15, zLevel, 1, 0.66);
+            var9.vertex(right, guiTop + 15, zLevel, 1, 0.33);
+            var9.vertex(right - 15, guiTop + 15, zLevel, 0.66, 0.33);
             var9.draw();
         }
 
-        if(displayTop && displayLeft) {
+        if (displayTop && displayLeft) {
             //Top Left
             Tessellator var9 = Tessellator.INSTANCE;
             var9.startQuads();
-            var9.vertex(guiLeft		, guiTop + 15	, zLevel, 0	, 0.33);
-            var9.vertex(guiLeft + 15	, guiTop + 15	, zLevel, 0.33	, 0.33);
-            var9.vertex(guiLeft + 15	, guiTop		, zLevel, 0.33	, 0);
-            var9.vertex(guiLeft		, guiTop		, zLevel, 0	, 0);
+            var9.vertex(guiLeft, guiTop + 15, zLevel, 0, 0.33);
+            var9.vertex(guiLeft + 15, guiTop + 15, zLevel, 0.33, 0.33);
+            var9.vertex(guiLeft + 15, guiTop, zLevel, 0.33, 0);
+            var9.vertex(guiLeft, guiTop, zLevel, 0, 0);
             var9.draw();
         }
 
-        if(displayBottom && displayLeft) {
+        if (displayBottom && displayLeft) {
             //Bottom Left
             Tessellator var9 = Tessellator.INSTANCE;
             var9.startQuads();
-            var9.vertex(guiLeft		, bottom		, zLevel, 0	, 1);
-            var9.vertex(guiLeft + 15	, bottom		, zLevel, 0.33	, 1);
-            var9.vertex(guiLeft + 15	, bottom - 15	, zLevel, 0.33	, 0.66);
-            var9.vertex(guiLeft		, bottom - 15	, zLevel, 0	, 0.66);
+            var9.vertex(guiLeft, bottom, zLevel, 0, 1);
+            var9.vertex(guiLeft + 15, bottom, zLevel, 0.33, 1);
+            var9.vertex(guiLeft + 15, bottom - 15, zLevel, 0.33, 0.66);
+            var9.vertex(guiLeft, bottom - 15, zLevel, 0, 0.66);
             var9.draw();
         }
 
-        if(displayBottom && displayRight) {
+        if (displayBottom && displayRight) {
             //Bottom Right
             Tessellator var9 = Tessellator.INSTANCE;
             var9.startQuads();
-            var9.vertex(right - 15	, bottom			, zLevel, 0.66	, 1);
-            var9.vertex(right		, bottom			, zLevel, 1	, 1);
-            var9.vertex(right		, bottom - 15		, zLevel, 1	, 0.66);
-            var9.vertex(right - 15	, bottom - 15		, zLevel, 0.66	, 0.66);
+            var9.vertex(right - 15, bottom, zLevel, 0.66, 1);
+            var9.vertex(right, bottom, zLevel, 1, 1);
+            var9.vertex(right, bottom - 15, zLevel, 1, 0.66);
+            var9.vertex(right - 15, bottom - 15, zLevel, 0.66, 0.66);
             var9.draw();
         }
 
-        if(displayTop && displayRight) {
+        if (displayTop && displayRight) {
             //Top Right
             Tessellator var9 = Tessellator.INSTANCE;
             var9.startQuads();
-            var9.vertex(right - 15	, guiTop + 15			, zLevel, 0.66	, 0.33);
-            var9.vertex(right		, guiTop + 15			, zLevel, 1	, 0.33);
-            var9.vertex(right		, guiTop				, zLevel, 1	, 0);
-            var9.vertex(right - 15	, guiTop				, zLevel, 0.66	, 0);
+            var9.vertex(right - 15, guiTop + 15, zLevel, 0.66, 0.33);
+            var9.vertex(right, guiTop + 15, zLevel, 1, 0.33);
+            var9.vertex(right, guiTop, zLevel, 1, 0);
+            var9.vertex(right - 15, guiTop, zLevel, 0.66, 0);
             var9.draw();
         }
 
         //Center
         Tessellator var9 = Tessellator.INSTANCE;
         var9.startQuads();
-        var9.vertex(guiLeft + 15	, bottom - 15		, zLevel, 0.33	, 0.66);
-        var9.vertex(right - 15		, bottom - 15		, zLevel, 0.66	, 0.66);
-        var9.vertex(right - 15		, guiTop + 15		, zLevel, 0.66	, 0.33);
-        var9.vertex(guiLeft + 15	, guiTop + 15		, zLevel, 0.33	, 0.33);
+        var9.vertex(guiLeft + 15, bottom - 15, zLevel, 0.33, 0.66);
+        var9.vertex(right - 15, bottom - 15, zLevel, 0.66, 0.66);
+        var9.vertex(right - 15, guiTop + 15, zLevel, 0.66, 0.33);
+        var9.vertex(guiLeft + 15, guiTop + 15, zLevel, 0.33, 0.33);
         var9.draw();
     }
 
-    private static void drawGradientRect(int par1, int par2, int par3, int par4, int par5, int par6, float zOffset)
-    {
-        float var7 = (float)(par5 >> 24 & 255) / 255.0F;
-        float var8 = (float)(par5 >> 16 & 255) / 255.0F;
-        float var9 = (float)(par5 >> 8 & 255) / 255.0F;
-        float var10 = (float)(par5 & 255) / 255.0F;
-        float var11 = (float)(par6 >> 24 & 255) / 255.0F;
-        float var12 = (float)(par6 >> 16 & 255) / 255.0F;
-        float var13 = (float)(par6 >> 8 & 255) / 255.0F;
-        float var14 = (float)(par6 & 255) / 255.0F;
+    private static void drawGradientRect(int par1, int par2, int par3, int par4, int par5, int par6, float zOffset) {
+        float var7 = (float) (par5 >> 24 & 255) / 255.0F;
+        float var8 = (float) (par5 >> 16 & 255) / 255.0F;
+        float var9 = (float) (par5 >> 8 & 255) / 255.0F;
+        float var10 = (float) (par5 & 255) / 255.0F;
+        float var11 = (float) (par6 >> 24 & 255) / 255.0F;
+        float var12 = (float) (par6 >> 16 & 255) / 255.0F;
+        float var13 = (float) (par6 >> 8 & 255) / 255.0F;
+        float var14 = (float) (par6 & 255) / 255.0F;
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_ALPHA_TEST);
@@ -156,20 +155,19 @@ public class BasicGuiHelper {
     /**
      * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height
      */
-    public static void drawTexturedModalRect(double par1, double par2, double par3, double par4, double par5, double par6, float zLevel)
-    {
+    public static void drawTexturedModalRect(double par1, double par2, double par3, double par4, double par5, double par6, float zLevel) {
         float var7 = 0.00390625F;
         float var8 = 0.00390625F;
         Tessellator var9 = Tessellator.INSTANCE;
         var9.startQuads();
-        var9.vertex(par1 + 0, par2 + par6, zLevel, (float)(par3 + 0) * var7, (float)(par4 + par6) * var8);
-        var9.vertex(par1 + par5, par2 + par6, zLevel, (float)(par3 + par5) * var7, (float)(par4 + par6) * var8);
-        var9.vertex(par1 + par5, par2 + 0, zLevel, (float)(par3 + par5) * var7, (float)(par4 + 0) * var8);
-        var9.vertex(par1 + 0, par2 + 0, zLevel, (float)(par3 + 0) * var7, (float)(par4 + 0) * var8);
+        var9.vertex(par1 + 0, par2 + par6, zLevel, (float) (par3 + 0) * var7, (float) (par4 + par6) * var8);
+        var9.vertex(par1 + par5, par2 + par6, zLevel, (float) (par3 + par5) * var7, (float) (par4 + par6) * var8);
+        var9.vertex(par1 + par5, par2 + 0, zLevel, (float) (par3 + par5) * var7, (float) (par4 + 0) * var8);
+        var9.vertex(par1 + 0, par2 + 0, zLevel, (float) (par3 + 0) * var7, (float) (par4 + 0) * var8);
         var9.draw();
     }
 
-    public static void renderSpriteAt(int x, int y, float zOffset, Atlas.Sprite sprite){
+    public static void renderSpriteAt(int x, int y, float zOffset, Atlas.Sprite sprite) {
         ScreenUtil.drawSprite(sprite, x, y, 16, 16, zOffset);
     }
 
@@ -179,10 +177,10 @@ public class BasicGuiHelper {
 
         Tessellator tessellator = Tessellator.INSTANCE;
         tessellator.startQuads();
-        tessellator.vertex(x		, y + 18	, 0, 0	, 1);
-        tessellator.vertex(x + 18	, y + 18	, 0, 1	, 1);
-        tessellator.vertex(x + 18	, y			, 0, 1	, 0);
-        tessellator.vertex(x		, y			, 0, 0	, 0);
+        tessellator.vertex(x, y + 18, 0, 0, 1);
+        tessellator.vertex(x + 18, y + 18, 0, 1, 1);
+        tessellator.vertex(x + 18, y, 0, 1, 0);
+        tessellator.vertex(x, y, 0, 0, 0);
         tessellator.draw();
     }
 
@@ -196,10 +194,10 @@ public class BasicGuiHelper {
 
         Tessellator tessellator = Tessellator.INSTANCE;
         tessellator.startQuads();
-        tessellator.vertex(x		, y + 18	, 0, 0	, 1);
-        tessellator.vertex(x + 18	, y + 18	, 0, 1	, 1);
-        tessellator.vertex(x + 18	, y			, 0, 1	, 0);
-        tessellator.vertex(x		, y			, 0, 0	, 0);
+        tessellator.vertex(x, y + 18, 0, 0, 1);
+        tessellator.vertex(x + 18, y + 18, 0, 1, 1);
+        tessellator.vertex(x + 18, y, 0, 1, 0);
+        tessellator.vertex(x, y, 0, 0, 0);
         tessellator.draw();
 
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -211,10 +209,10 @@ public class BasicGuiHelper {
 
         Tessellator tessellator = Tessellator.INSTANCE;
         tessellator.startQuads();
-        tessellator.vertex(x		, y + 8		, 0, 0	, 1);
-        tessellator.vertex(x + 8	, y + 8		, 0, 1	, 1);
-        tessellator.vertex(x + 8	, y			, 0, 1	, 0);
-        tessellator.vertex(x		, y			, 0, 0	, 0);
+        tessellator.vertex(x, y + 8, 0, 0, 1);
+        tessellator.vertex(x + 8, y + 8, 0, 1, 1);
+        tessellator.vertex(x + 8, y, 0, 1, 0);
+        tessellator.vertex(x, y, 0, 0, 0);
         tessellator.draw();
     }
 
@@ -224,14 +222,14 @@ public class BasicGuiHelper {
 
         Tessellator tessellator = Tessellator.INSTANCE;
         tessellator.startQuads();
-        tessellator.vertex(x		, y + 26	, 0, 0	, 1);
-        tessellator.vertex(x + 26	, y + 26	, 0, 1	, 1);
-        tessellator.vertex(x + 26	, y			, 0, 1	, 0);
-        tessellator.vertex(x		, y			, 0, 0	, 0);
+        tessellator.vertex(x, y + 26, 0, 0, 1);
+        tessellator.vertex(x + 26, y + 26, 0, 1, 1);
+        tessellator.vertex(x + 26, y, 0, 1, 0);
+        tessellator.vertex(x, y, 0, 0, 0);
         tessellator.draw();
     }
 
-    public static int ConvertEnumToColor(LogisticsBaseScreen.Colors color){
+    public static int ConvertEnumToColor(LogisticsBaseScreen.Colors color) {
         return switch (color) {
             case Black -> 0xFF000000;
             case White -> 0xFFFFFFFF;
@@ -285,9 +283,9 @@ public class BasicGuiHelper {
                 String var19 = msg.get(var18);
 
                 if (var18 == 0) {
-                    var19 = "\u00a7" + Integer.toHexString(color) + var19;
+                    var19 = "§" + Integer.toHexString(color) + var19;
                 } else {
-                    var19 = "\u00a77" + var19;
+                    var19 = "§7" + var19;
                 }
 
                 Minecraft.INSTANCE.textRenderer.drawWithShadow(var19, var11, var12, -1);

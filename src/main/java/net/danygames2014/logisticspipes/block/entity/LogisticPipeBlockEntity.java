@@ -61,7 +61,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
     private final Long2LongOpenHashMap nextHopCache = new Long2LongOpenHashMap(32, 0.5F);
     private boolean advertiseRequired = true;
-    
+
     public boolean updateNeighbors = true;
 
     // HUD Rendering
@@ -95,13 +95,13 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             updateNeighbors = false;
         }
 
-        if(!sendQueue.isEmpty()){
-            if(getItemSendMode() == ItemSendMode.Normal) {
+        if (!sendQueue.isEmpty()) {
+            if (getItemSendMode() == ItemSendMode.Normal) {
                 Pair<RoutedItem, Direction> itemToSend = sendQueue.getFirst();
                 sendRoutedItem(itemToSend.getValue1(), itemToSend.getValue2());
                 sendQueue.removeFirst();
-                for(int i = 0; i < 16 && !sendQueue.isEmpty() && sendQueue.getFirst().getValue3() == ItemSendMode.Fast; i++){
-                    if(!sendQueue.isEmpty()){
+                for (int i = 0; i < 16 && !sendQueue.isEmpty() && sendQueue.getFirst().getValue3() == ItemSendMode.Fast; i++) {
+                    if (!sendQueue.isEmpty()) {
                         itemToSend = sendQueue.getFirst();
                         sendRoutedItem(itemToSend.getValue1(), itemToSend.getValue2());
                         sendQueue.removeFirst();
@@ -109,15 +109,15 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
                 }
                 sendQueueChanged();
             } else if (getItemSendMode() == ItemSendMode.Fast) {
-                for(int i = 0; i < 16; i++) {
-                    if(!sendQueue.isEmpty()) {
+                for (int i = 0; i < 16; i++) {
+                    if (!sendQueue.isEmpty()) {
                         Pair<RoutedItem, Direction> itemToSend = sendQueue.getFirst();
                         sendRoutedItem(itemToSend.getValue1(), itemToSend.getValue2());
                         sendQueue.removeFirst();
                     }
                 }
                 sendQueueChanged();
-            } else if(getItemSendMode() == null) {
+            } else if (getItemSendMode() == null) {
                 throw new UnsupportedOperationException("getItemSendMode() can't return null. " + this.getClass().getName());
             } else {
                 throw new UnsupportedOperationException("getItemSendMode() returned unhandled value. " + getItemSendMode().name() + " in " + this.getClass().getName());
@@ -128,7 +128,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             return;
         }
 
-        if (--throttleTimeLeft <= 0){
+        if (--throttleTimeLeft <= 0) {
             throttledUpdateEntity();
             resetThrottle();
         }
@@ -140,61 +140,63 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         getLogisticsModule().tick();
     }
 
-    public void throttledUpdateEntity(){}
-    protected void resetThrottle(){
+    public void throttledUpdateEntity() {
+    }
+
+    protected void resetThrottle() {
         throttleTimeLeft = throttleTime;
     }
 
-    public Direction itemArrived(RoutedItem item){
-        if(item.getItemStack() != null) {
+    public Direction itemArrived(RoutedItem item) {
+        if (item.getItemStack() != null) {
             statLifetimeReceived++;
             statSessionReceived++;
         }
 
-        if(this instanceof RequireReliableTransport reliableTransport){
+        if (this instanceof RequireReliableTransport reliableTransport) {
             reliableTransport.itemArrived(ItemIdentifier.get(item.getItemStack()));
         }
 
         LinkedList<AdjacentBlockEntity> adjacentEntities = getConnectedEntities();
         LinkedList<Direction> possibleDirections = new LinkedList<>();
 
-        for(AdjacentBlockEntity adjacent : adjacentEntities) {
-            if(adjacent.blockEntity instanceof PipeBlockEntity){
+        for (AdjacentBlockEntity adjacent : adjacentEntities) {
+            if (adjacent.blockEntity instanceof PipeBlockEntity) {
                 continue;
             }
-            if(isLockedExit(adjacent.direction)){
+            if (isLockedExit(adjacent.direction)) {
                 continue;
             }
             possibleDirections.add(adjacent.direction);
         }
-        if(!possibleDirections.isEmpty()){
+        if (!possibleDirections.isEmpty()) {
             return possibleDirections.get(world.random.nextInt(possibleDirections.size()));
         }
 
-        for(AdjacentBlockEntity adjacent : adjacentEntities) {
-            if(neighborTable.containsValue(adjacent.direction.getId())){
+        for (AdjacentBlockEntity adjacent : adjacentEntities) {
+            if (neighborTable.containsValue(adjacent.direction.getId())) {
                 continue;
             }
-            if(isLockedExit(adjacent.direction)){
+            if (isLockedExit(adjacent.direction)) {
                 continue;
             }
             possibleDirections.add(adjacent.direction);
         }
 
-        if (possibleDirections.isEmpty()){
+        if (possibleDirections.isEmpty()) {
             return null;
         }
 
         return possibleDirections.get(world.random.nextInt(possibleDirections.size()));
     }
 
-    public boolean stillWantItem(RoutedItem item){
+    public boolean stillWantItem(RoutedItem item) {
         return true;
     }
 
     public boolean wrenchRightClick(ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side, WrenchMode wrenchMode) {
-        if(wrenchMode == WrenchMode.MODE_WRENCH && !isSneaking){
-            if(getLogisticsModule() != null){
+        if (wrenchMode == WrenchMode.MODE_WRENCH && !isSneaking) {
+            if (getLogisticsModule() != null) {
                 GuiHelper.openGUI(player, getLogisticsModule().getScreenIdentifier(), this, null, (messagePacket) -> {
                     messagePacket.ints = new int[]{x, y, z};
                 });
@@ -204,13 +206,13 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         return false;
     }
 
-    public Direction getDirectionForItem(RoutedItem item){
-        if(!item.isDestinationValid() && world.isRemote){
+    public Direction getDirectionForItem(RoutedItem item) {
+        if (!item.isDestinationValid() && world.isRemote) {
             return null;
         }
 
         //If items have no destination, see if we can get one (unless it has a source, then drop it)
-        if (!item.isDestinationValid()){
+        if (!item.isDestinationValid()) {
             if (item.isSourceValid()) {
                 return null;
             }
@@ -218,18 +220,18 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         }
 
         //If the destination is unknown / unroutable
-        if(item.isDestinationValid() && item.getDestination() != getRouterId() && !getNetwork().routers.contains(RoutingUtil.getRouter(world, item.getDestination()))){
+        if (item.isDestinationValid() && item.getDestination() != getRouterId() && !getNetwork().routers.contains(RoutingUtil.getRouter(world, item.getDestination()))) {
             item = LogisticsManager.getInstance().destinationUnreachable(world, item, getRouterId());
         }
 
         //If we still have no destination, drop it
-        if (!item.isDestinationValid()){
+        if (!item.isDestinationValid()) {
             return null;
         }
 
         //Is the destination ourself? Deliver it
-        if (item.getDestination() == getRouterId()){
-            if (!stillWantItem(item)){
+        if (item.getDestination() == getRouterId()) {
+            if (!stillWantItem(item)) {
                 return getDirectionForItem(LogisticsManager.getInstance().assignDestinationFor(world, item, getRouterId(), true));
             }
 
@@ -280,8 +282,8 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         sendQueueChanged();
     }
 
-    private void sendRoutedItem(RoutedItem routedItem, Direction from){
-        if(transporter instanceof ItemPipeTransporter itemTransporter){
+    private void sendRoutedItem(RoutedItem routedItem, Direction from) {
+        if (transporter instanceof ItemPipeTransporter itemTransporter) {
             itemTransporter.receiveTravellingItem(routedItem.getTravellingItemEntity(), from.getOpposite());
             statLifetimeSent++;
             statSessionSent++;
@@ -289,7 +291,8 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         }
     }
 
-    protected void sendQueueChanged() {}
+    protected void sendQueueChanged() {
+    }
 
     @Override
     public HUDRenderer getRenderer() {
@@ -345,7 +348,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
     @Override
     public LogisticsNetwork getNetwork() {
-        return LogisticsNetworkManager.fetchNetwork(world, this); 
+        return LogisticsNetworkManager.fetchNetwork(world, this);
     }
 
     @Override
@@ -370,10 +373,10 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         if (!nextHopCache.containsKey(destinationId)) {
             nextHopCache.put(destinationId, calculateNextHop(destinationId));
         }
-        
+
         return nextHopCache.get(destinationId);
     }
-    
+
     public long calculateNextHop(long destinationId) {
         while (true) {
             if (!routingTable.containsKey(destinationId)) {
@@ -388,13 +391,13 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             }
         }
     }
-    
+
     @Override
     public void learnRoutesFromNeighbors() {
         for (long routerId : neighborTable.keySet()) {
             Router router = RoutingUtil.getRouter(world, routerId);
             int metricToRouter = routingTable.containsKey(routerId) ? routingTable.get(routerId).metric : -1;
-            
+
             if (router == null || metricToRouter == -1) {
                 continue;
             }
@@ -402,7 +405,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             for (var routingEntry : router.getRoutingTable().long2ObjectEntrySet()) {
                 long destinationId = routingEntry.getLongKey();
                 RouteDestination route = routingEntry.getValue();
-                
+
                 learnRoute(destinationId, routerId, router, route.metric + metricToRouter);
             }
         }
@@ -447,7 +450,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             advertiseRequired = false;
         }
     }
-    
+
     @Override
     public void advertiseRouter() {
         // Contains routers to be explored
@@ -458,7 +461,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
         // Initialize the starting point and add the starting router
         open.enqueue(this);
-        
+
         long targetRouterId = this.getRouterId();
 
         while (!open.isEmpty()) {
@@ -483,7 +486,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             closed.add(current);
         }
     }
-    
+
     public void propagateRoutes() {
         // Contains routers to be explored
         ObjectArrayFIFOQueue<Router> open = new ObjectArrayFIFOQueue<>();
@@ -501,7 +504,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             if (closed.contains(current)) {
                 continue;
             }
-            
+
             current.learnRoutesFromNeighbors();
 
             // Discover the routers neigbors
@@ -516,7 +519,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             closed.add(current);
         }
     }
-    
+
     public void updateNeighbors() {
         discoverNeighbors(false);
 
@@ -540,7 +543,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             world.setBlockDirty(x, y, z);
         }
     }
-    
+
     private final Queue<SearchNode> queue = new LinkedList<>();
     private final Long2IntOpenHashMap visited = new Long2IntOpenHashMap();
     private static final Direction[] DIRECTIONS = Direction.values();
@@ -551,7 +554,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
         // We keep track of the neighbor hash to discover topology changes on local level
         long prevNeighborHash = neighborTable.hashCode();
-        
+
         // Clear old local data before a fresh scan
         this.neighborTable.clear();
         if (clearRoutingTable) {
@@ -593,7 +596,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             if (blockEntity == this) {
                 continue;
             }
-            
+
             // If we find a router, check if the route is better than an existing one
             if (blockEntity instanceof Router router) {
                 RouteDestination existing = routingTable.get(pos);
@@ -601,7 +604,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
                 // Write this to the neighbor table
                 this.neighborTable.put(pos, current.firstDir.getId());
-                
+
                 // If we find a better route to a router, add it to the routing table
                 if (currentMetric == -1 || current.metric < currentMetric) {
                     this.routingTable.put(pos, new RouteDestination(pos, router, current.metric));
@@ -625,11 +628,11 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
                 }
             }
         }
-        
+
         // Clear out invalid routing entries
         for (var routingEntry : routingTable.long2ObjectEntrySet()) {
             long nextHopId = getNextHop(routingEntry.getLongKey());
-            if(nextHopId == -1 || !neighborTable.containsKey(nextHopId)) {
+            if (nextHopId == -1 || !neighborTable.containsKey(nextHopId)) {
                 routingTable.remove(routingEntry.getLongKey());
             }
         }
@@ -651,7 +654,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             System.err.println(entry.getLongKey() + " -> " + Direction.byId(entry.getIntValue()));
             player.sendMessage(entry.getLongKey() + " -> " + Direction.byId(entry.getIntValue()));
         }
-        
+
         System.err.println("Routing Table: ");
         player.sendMessage("Routing Table: ");
         for (var entry : routingTable.long2ObjectEntrySet()) {
@@ -670,7 +673,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
     @Override
     public boolean isRoutedExit(Direction direction) {
-        if(direction == null){
+        if (direction == null) {
             return false;
         }
         return neighborTable.containsValue(direction.getId());
@@ -684,7 +687,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         statLifetimeReceived = nbt.getLong("statLifetimeReceived");
         statLifetimeRelayed = nbt.getLong("statLifetimeReplayed");
 
-        if(getLogisticsModule() != null) {
+        if (getLogisticsModule() != null) {
             getLogisticsModule().readNbt(nbt, "");
         }
     }
@@ -697,7 +700,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         nbt.putLong("statLifetimeReceived", statLifetimeReceived);
         nbt.putLong("statLifetimeReplayed", statLifetimeRelayed);
 
-        if(getLogisticsModule() != null) {
+        if (getLogisticsModule() != null) {
             getLogisticsModule().writeNbt(nbt, "");
         }
     }

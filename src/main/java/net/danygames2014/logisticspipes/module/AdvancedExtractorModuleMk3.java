@@ -1,7 +1,7 @@
 package net.danygames2014.logisticspipes.module;
 
-public class AdvancedExtractorModuleMk3 extends AdvancedExtractorModuleMk2{
-    public AdvancedExtractorModuleMk3(){
+public class AdvancedExtractorModuleMk3 extends AdvancedExtractorModuleMk2 {
+    public AdvancedExtractorModuleMk3() {
         super();
     }
 
@@ -10,7 +10,7 @@ public class AdvancedExtractorModuleMk3 extends AdvancedExtractorModuleMk2{
         return 0;
     }
 
-    protected int itemsToExtract(){
+    protected int itemsToExtract() {
         return 64;
     }
 }

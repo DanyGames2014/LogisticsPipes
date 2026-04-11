@@ -48,10 +48,10 @@ public class SparkleParticle extends Particle {
         float var10 = var9 + 0.124875F;
         float var11 = var8 / 8 / 8.0F;
         float var12 = var11 + 0.124875F;
-        float var13 = 0.1F * this.scale * ((float)(this.maxParticleAge - this.particleAge + 1) / (float)this.maxParticleAge);
-        float var14 = (float)(this.prevX + (this.x - this.prevX) * partialTicks - xOffset);
-        float var15 = (float)(this.prevY + (this.y - this.prevY) * partialTicks - yOffset);
-        float var16 = (float)(this.prevZ + (this.z - this.prevZ) * partialTicks - zOffset);
+        float var13 = 0.1F * this.scale * ((float) (this.maxParticleAge - this.particleAge + 1) / (float) this.maxParticleAge);
+        float var14 = (float) (this.prevX + (this.x - this.prevX) * partialTicks - xOffset);
+        float var15 = (float) (this.prevY + (this.y - this.prevY) * partialTicks - yOffset);
+        float var16 = (float) (this.prevZ + (this.z - this.prevZ) * partialTicks - zOffset);
         float var17 = 1.0F;
         tessellator.startQuads();
         tessellator.color(this.red * var17, this.green * var17, this.blue * var17, 1.0F);
@@ -70,8 +70,8 @@ public class SparkleParticle extends Particle {
     @Override
     public void tick() {
         PlayerEntity player = Minecraft.INSTANCE.player;
-        if(player != null){
-            if(player.getDistance(this.x, this.y, this.z) > 50){
+        if (player != null) {
+            if (player.getDistance(this.x, this.y, this.z) > 50) {
                 this.markDead();
             }
 
@@ -79,19 +79,17 @@ public class SparkleParticle extends Particle {
             this.prevY = this.y;
             this.prevZ = this.z;
 
-            if (this.particleAge++ >= this.maxParticleAge)
-            {
+            if (this.particleAge++ >= this.maxParticleAge) {
                 this.markDead();
             }
 
-            this.velocityX -=  0.05D * this.gravityStrength - 0.1D * this.gravityStrength * new Random().nextDouble();
-            this.velocityY -=  0.05D * this.gravityStrength - 0.1D * this.gravityStrength * new Random().nextDouble();
-            this.velocityZ -=  0.05D * this.gravityStrength - 0.1D * this.gravityStrength * new Random().nextDouble();
+            this.velocityX -= 0.05D * this.gravityStrength - 0.1D * this.gravityStrength * new Random().nextDouble();
+            this.velocityY -= 0.05D * this.gravityStrength - 0.1D * this.gravityStrength * new Random().nextDouble();
+            this.velocityZ -= 0.05D * this.gravityStrength - 0.1D * this.gravityStrength * new Random().nextDouble();
 
             this.move(this.velocityX, this.velocityY, this.velocityZ);
 
-            if (this.onGround)
-            {
+            if (this.onGround) {
                 this.velocityX *= 0.699999988079071D;
                 this.velocityZ *= 0.699999988079071D;
             }

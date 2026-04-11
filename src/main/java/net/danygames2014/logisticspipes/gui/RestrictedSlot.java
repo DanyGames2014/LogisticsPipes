@@ -25,7 +25,7 @@ public class RestrictedSlot extends Slot {
      */
     @Override
     public boolean canInsert(ItemStack stack) {
-        if(slotCheck == null) {
+        if (slotCheck == null) {
             return stack.itemId == itemId;
         } else {
             return slotCheck.isStackAllowed(stack);

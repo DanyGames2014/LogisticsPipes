@@ -23,7 +23,7 @@ public class ItemSinkScreen extends ScreenWithPrevious {
         dummy.addNormalSlotsForPlayerInventory(8, 60);
 
         //Pipe slots
-        for(int pipeSlot = 0; pipeSlot < 9; pipeSlot++){
+        for (int pipeSlot = 0; pipeSlot < 9; pipeSlot++) {
             dummy.addDummySlot(pipeSlot, 8 + pipeSlot * 18, 18);
         }
 
@@ -49,6 +49,7 @@ public class ItemSinkScreen extends ScreenWithPrevious {
         drawTexture(j, k, 0, 0, backgroundWidth, backgroundHeight);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void init() {
         super.init();
@@ -57,13 +58,13 @@ public class ItemSinkScreen extends ScreenWithPrevious {
         buttons.add(new StringHandlerButtonWidget(0, width / 2 + 50, height / 2 - 34, 30, 20, this::getContent));
     }
 
-    private String getContent(){
+    private String getContent() {
         return itemSink.isDefaultRoute() ? "Yes" : "No";
     }
 
     @Override
     protected void buttonClicked(ButtonWidget button) {
-        if(button.id == 0) {
+        if (button.id == 0) {
             itemSink.setDefaultRoute(!itemSink.isDefaultRoute());
             // TODO: send packet to server
         }

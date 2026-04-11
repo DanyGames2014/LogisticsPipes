@@ -9,7 +9,7 @@ public class CroppedInventory implements Inventory {
     private final int cropStart;
     private final int cropEnd;
 
-    public CroppedInventory(Inventory baseInventory, int cropStart, int cropEnd){
+    public CroppedInventory(Inventory baseInventory, int cropStart, int cropEnd) {
         if (baseInventory == null) throw new RuntimeException("PRECONDITION FAILED: baseInventory cannot be null");
         this.baseInventory = baseInventory;
         this.cropStart = cropStart;

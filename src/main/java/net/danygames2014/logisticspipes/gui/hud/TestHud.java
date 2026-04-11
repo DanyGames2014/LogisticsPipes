@@ -1,16 +1,16 @@
 package net.danygames2014.logisticspipes.gui.hud;
 
-import net.danygames2014.logisticspipes.block.LogisticPipeBlock;
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.util.gui.BasicGuiHelper;
 import net.danygames2014.logisticspipes.util.gui.hud.BasicHUDButton;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
-public class TestHud extends BasicGuiHud{
+public class TestHud extends BasicGuiHud {
 
     private final LogisticPipeBlockEntity parent;
-    public TestHud(LogisticPipeBlockEntity parent){
+
+    public TestHud(LogisticPipeBlockEntity parent) {
         this.parent = parent;
         this.buttons.add(new BasicHUDButton("this is a button", -40, -30, 80, 10) {
             @Override
@@ -42,16 +42,16 @@ public class TestHud extends BasicGuiHud{
 
     @Override
     public void renderHeadUpDisplay(double d, boolean day, Minecraft mc) {
-        if(day) {
-            GL11.glColor4b((byte)64, (byte)64, (byte)64, (byte)64);
+        if (day) {
+            GL11.glColor4b((byte) 64, (byte) 64, (byte) 64, (byte) 64);
         } else {
-            GL11.glColor4b((byte)127, (byte)127, (byte)127, (byte)64);
+            GL11.glColor4b((byte) 127, (byte) 127, (byte) 127, (byte) 64);
         }
         BasicGuiHelper.drawGuiBackGround(mc, -50, -50, 50, 50, 0, false);
-        if(day) {
-            GL11.glColor4b((byte)64, (byte)64, (byte)64, (byte)127);
+        if (day) {
+            GL11.glColor4b((byte) 64, (byte) 64, (byte) 64, (byte) 127);
         } else {
-            GL11.glColor4b((byte)127, (byte)127, (byte)127, (byte)127);
+            GL11.glColor4b((byte) 127, (byte) 127, (byte) 127, (byte) 127);
         }
 
         GL11.glTranslatef(0.0F, 0.0F, -0.01F);

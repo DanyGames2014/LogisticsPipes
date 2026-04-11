@@ -11,12 +11,14 @@ import net.danygames2014.logisticspipes.util.tuple.Pair;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Set;
 
 public class LogisticsManager implements net.danygames2014.logisticspipes.interfaces.LogisticsManager {
     private static final LogisticsManager INSTANCE = new LogisticsManager();
 
-    public static LogisticsManager getInstance(){
+    public static LogisticsManager getInstance() {
         return INSTANCE;
     }
 
@@ -25,7 +27,7 @@ public class LogisticsManager implements net.danygames2014.logisticspipes.interf
         Router router = RoutingUtil.getRouter(world, sourceRouterUUID);
 
         //If the source router does not exist we can't do anything with this
-        if(router == null){
+        if (router == null) {
             return item;
         }
 
@@ -33,15 +35,20 @@ public class LogisticsManager implements net.danygames2014.logisticspipes.interf
         item.setDestination(Long.MIN_VALUE);
 
         Pair<Long, SinkReply> bestReply = getBestReply(item.getItemStack(), router, excludeSource);
+
         item.setSource(sourceRouterUUID);
-        if(bestReply.getValue1() != null){
+        if (bestReply.getValue1() != null) {
             item.setDestination(bestReply.getValue1());
-            RoutingUtil.getRouter(world, bestReply.getValue1()).getPipe().smartAdvertiseRouter();
-            if(bestReply.getValue2().isPassive){
-                if(bestReply.getValue2().isDefault){
-                    item.setTransportMode(RoutedItem.TransportMode.Default);
-                } else {
-                    item.setTransportMode(RoutedItem.TransportMode.Passive);
+            Router replyRouter = RoutingUtil.getRouter(world, bestReply.getValue1());
+
+            if (replyRouter != null) {
+                replyRouter.smartAdvertiseRouter();
+                if (bestReply.getValue2().isPassive) {
+                    if (bestReply.getValue2().isDefault) {
+                        item.setTransportMode(RoutedItem.TransportMode.Default);
+                    } else {
+                        item.setTransportMode(RoutedItem.TransportMode.Passive);
+                    }
                 }
             }
         }
@@ -58,13 +65,13 @@ public class LogisticsManager implements net.danygames2014.logisticspipes.interf
         Router router = RoutingUtil.getRouter(world, sourceRouter);
 
         //If the source router does not exist we can't do anything with this
-        if(router == null){
+        if (router == null) {
             return false;
         }
         Pair<Long, SinkReply> search = getBestReply(stack, router, excludeSource);
 
         if (search.getValue2() == null) return false;
-        if(search.getValue1() != null) {
+        if (search.getValue1() != null) {
             RoutingUtil.getRouter(world, search.getValue1()).smartAdvertiseRouter();
         }
 
@@ -81,15 +88,15 @@ public class LogisticsManager implements net.danygames2014.logisticspipes.interf
     @Override
     public HashMap<ItemIdentifier, Integer> getAvailableItems(World world, Set<Router> validDestinations) {
         HashMap<ItemIdentifier, Integer> allAvailableItems = new HashMap<>();
-        for(Router r : validDestinations){
-            if(r == null){
+        for (Router r : validDestinations) {
+            if (r == null) {
                 continue;
             }
-            if(r.getPipe() instanceof ProvideItems provider){
+            if (r.getPipe() instanceof ProvideItems provider) {
                 HashMap<ItemIdentifier, Integer> allItems = provider.getAllItems();
 
-                for (ItemIdentifier item : allItems.keySet()){
-                    if (!allAvailableItems.containsKey(item)){
+                for (ItemIdentifier item : allItems.keySet()) {
+                    if (!allAvailableItems.containsKey(item)) {
                         allAvailableItems.put(item, allItems.get(item));
                     } else {
                         allAvailableItems.put(item, allAvailableItems.get(item) + allItems.get(item));
@@ -103,39 +110,40 @@ public class LogisticsManager implements net.danygames2014.logisticspipes.interf
     private Pair<Long, SinkReply> getBestReply(ItemStack item, Router sourceRouter, boolean excludeSource) {
         long potentialDestination = Long.MIN_VALUE;
         SinkReply bestReply = null;
-        for(Router candidateRouter : sourceRouter.getNetwork().routers){
+        for (Router candidateRouter : sourceRouter.getNetwork().routers) {
             LogisticsModule module = candidateRouter.getPipe().getLogisticsModule();
-            if(candidateRouter.getPipe() == null || !candidateRouter.getPipe().isEnabled()){
+            if (candidateRouter.getPipe() == null || !candidateRouter.getPipe().isEnabled()) {
                 continue;
             }
-            if(module == null){
+            if (module == null) {
                 continue;
             }
             if (excludeSource && candidateRouter.getRouterId() == sourceRouter.getRouterId()) {
                 continue;
             }
             SinkReply reply = module.sinksItem(item);
-            if(reply == null){
+            if (reply == null) {
                 continue;
             }
-            if (bestReply == null){
+            if (bestReply == null) {
                 potentialDestination = candidateRouter.getRouterId();
                 bestReply = reply;
                 continue;
             }
 
-            if(reply.fixedPriority.ordinal() > bestReply.fixedPriority.ordinal()){
+            if (reply.fixedPriority.ordinal() > bestReply.fixedPriority.ordinal()) {
                 bestReply = reply;
                 potentialDestination = candidateRouter.getRouterId();
                 continue;
             }
 
-            if (reply.fixedPriority == bestReply.fixedPriority && reply.customPriority >  bestReply.customPriority){
+            if (reply.fixedPriority == bestReply.fixedPriority && reply.customPriority > bestReply.customPriority) {
                 bestReply = reply;
                 potentialDestination = candidateRouter.getRouterId();
                 continue;
             }
         }
-            return new Pair<>(potentialDestination, bestReply);
+
+        return new Pair<>(potentialDestination, bestReply);
     }
 }

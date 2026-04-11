@@ -2,7 +2,6 @@ package net.danygames2014.logisticspipes.util;
 
 import net.danygames2014.buildcraft.Buildcraft;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeBlockEntity;
-import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.routing.RouteDestination;
 import net.danygames2014.logisticspipes.routing.Router;
 import net.minecraft.block.entity.BlockEntity;
@@ -35,17 +34,17 @@ public class RoutingUtil {
     public static int unpackY(long routerId) {
         return (int) (routerId & 0xFFFL);
     }
-    
+
     public static int getPipeMetric(World world, int x, int y, int z) {
         BlockEntity blockEntity = world.getBlockEntity(x, y, z);
-        
+
         if (blockEntity instanceof PipeBlockEntity pipe) {
             return getPipeMetric(pipe);
         }
-        
+
         return -1;
     }
-    
+
     public static int getPipeMetric(PipeBlockEntity pipe) {
         if (pipe instanceof Router) {
             return 1;
@@ -73,24 +72,24 @@ public class RoutingUtil {
 
         return -1;
     }
-    
+
     public static boolean isPipe(World world, int x, int y, int z) {
         BlockEntity blockEntity = world.getBlockEntity(x, y, z);
 
         return blockEntity instanceof PipeBlockEntity;
     }
-    
+
     public static Router getRouter(World world, long routerId) {
         int x = unpackX(routerId);
         int y = unpackY(routerId);
         int z = unpackZ(routerId);
-        
+
         BlockEntity blockEntity = world.getBlockEntity(x, y, z);
-        
+
         if (blockEntity instanceof Router router) {
             return router;
         }
-        
+
         return null;
     }
 

@@ -5,7 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import org.lwjgl.opengl.GL11;
 
-public class SubScreen extends Screen implements SubScreenController{
+public class SubScreen extends Screen implements SubScreenController {
     protected int guiLeft;
     protected int guiTop;
     protected int xCenter;
@@ -51,7 +51,7 @@ public class SubScreen extends Screen implements SubScreenController{
 
     @Override
     protected void keyPressed(char character, int keyCode) {
-        if(character == 1) {
+        if (character == 1) {
             exitScreen();
         }
     }
@@ -59,10 +59,10 @@ public class SubScreen extends Screen implements SubScreenController{
     @Override
     public void render(int mouseX, int mouseY, float delta) {
         super.render(mouseX, mouseY, delta);
-        if(subScreen != null){
+        if (subScreen != null) {
             GL11.glTranslatef(0.0F, 0.0F, 1.0F);
             GL11.glDisable(GL11.GL_DEPTH_TEST);
-            if(!subScreen.hasSubScreen()) {
+            if (!subScreen.hasSubScreen()) {
                 super.renderBackground();
             }
             subScreen.render(mouseX, mouseY, delta);
@@ -72,7 +72,7 @@ public class SubScreen extends Screen implements SubScreenController{
 
     @Override
     public void onMouseEvent() {
-        if(subScreen != null) {
+        if (subScreen != null) {
             subScreen.onMouseEvent();
         }
         this.onMouseEventSub();
@@ -84,7 +84,7 @@ public class SubScreen extends Screen implements SubScreenController{
 
     @Override
     public void onKeyboardEvent() {
-        if(subScreen != null) {
+        if (subScreen != null) {
             subScreen.onKeyboardEvent();
         } else {
             super.onKeyboardEvent();
@@ -93,7 +93,7 @@ public class SubScreen extends Screen implements SubScreenController{
 
     @Override
     public void setSubScreen(SubScreen subScreen) {
-        if(this.subScreen == null) {
+        if (this.subScreen == null) {
             this.subScreen = subScreen;
             this.subScreen.register(this);
             this.subScreen.init(this.minecraft, this.width, this.height);
@@ -104,7 +104,7 @@ public class SubScreen extends Screen implements SubScreenController{
     @Override
     public void init(Minecraft minecraft, int width, int height) {
         super.init(minecraft, width, height);
-        if(subScreen != null) {
+        if (subScreen != null) {
             subScreen.init(minecraft, width, height);
         }
     }

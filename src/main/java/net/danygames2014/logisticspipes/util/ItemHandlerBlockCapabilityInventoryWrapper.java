@@ -13,7 +13,7 @@ public class ItemHandlerBlockCapabilityInventoryWrapper implements Inventory {
     @Nullable
     public Direction side;
 
-    public ItemHandlerBlockCapabilityInventoryWrapper(ItemHandlerBlockCapability capability, @Nullable Direction side){
+    public ItemHandlerBlockCapabilityInventoryWrapper(ItemHandlerBlockCapability capability, @Nullable Direction side) {
         this.capability = capability;
         this.side = side;
     }

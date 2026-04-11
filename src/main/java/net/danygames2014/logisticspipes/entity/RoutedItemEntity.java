@@ -28,7 +28,7 @@ public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem
 
     private List<PlayerEntity> knownBy = new ArrayList<>();
 
-    public RoutedItemEntity(World world, TravellingItemEntity itemEntity){
+    public RoutedItemEntity(World world, TravellingItemEntity itemEntity) {
         super(world, itemEntity.x, itemEntity.y, itemEntity.z, itemEntity.stack);
         this.transporter = itemEntity.transporter;
         this.input = itemEntity.input;
@@ -54,7 +54,7 @@ public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem
     public long getSource() {
         return sourceRouteId;
     }
-    
+
     @Override
     public boolean isSourceValid() {
         return sourceRouteId != Long.MIN_VALUE;
@@ -70,7 +70,7 @@ public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem
     public long getDestination() {
         return destinationRouterId;
     }
-    
+
     @Override
     public boolean isDestinationValid() {
         return destinationRouterId != Long.MIN_VALUE;
@@ -78,25 +78,25 @@ public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem
 
     @Override
     public void drop() {
-        if(world.isRemote) return;
-        
-        if(isSourceValid()){
+        if (world.isRemote) return;
+
+        if (isSourceValid()) {
             Router source = RoutingUtil.getRouter(world, sourceRouteId);
-            if(source != null){
+            if (source != null) {
                 source.itemDropped(this);
             }
         }
 
-        if(isDestinationValid()){
+        if (isDestinationValid()) {
             Router destination = RoutingUtil.getRouter(world, sourceRouteId);
-            if(destination != null){
+            if (destination != null) {
                 destination.itemDropped(this);
-                if(!arrived && destination.getPipe() != null && destination.getPipe() instanceof RequireReliableTransport reliableTransport){
+                if (!arrived && destination.getPipe() != null && destination.getPipe() instanceof RequireReliableTransport reliableTransport) {
                     reliableTransport.itemLost(ItemIdentifier.get(stack));
                 }
             }
         }
-        
+
         super.drop();
     }
 
@@ -126,7 +126,7 @@ public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem
         newItem.speed = this.speed;
         newItem.stack = this.stack.split(itemsToTake);
 
-        if(transporter.blockEntity instanceof ChassisLogisticPipeBlockEntity chassis){
+        if (transporter.blockEntity instanceof ChassisLogisticPipeBlockEntity chassis) {
             chassis.queueRoutedItem(newItem, direction.getOpposite());
         }
         transporter.receiveTravellingItem(newItem, direction);
@@ -141,7 +141,7 @@ public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem
     @Override
     public void setPosition(double x, double y, double z) {
         super.setPosition(x, y, z);
-        if(knownBy != null) {
+        if (knownBy != null) {
             knownBy.clear();
         }
     }
@@ -159,10 +159,10 @@ public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        if(nbt.contains("sourceUUID")) {
+        if (nbt.contains("sourceUUID")) {
             sourceRouteId = nbt.getLong("sourceUUID");
         }
-        if(nbt.contains("destinationUUID")) {
+        if (nbt.contains("destinationUUID")) {
             destinationRouterId = nbt.getLong("destinationUUID");
         }
         arrived = nbt.getBoolean("arrived");
@@ -171,10 +171,10 @@ public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem
     @Override
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        if(isSourceValid()){
+        if (isSourceValid()) {
             nbt.putLong("sourceUUID", sourceRouteId);
         }
-        if(isDestinationValid()){
+        if (isDestinationValid()) {
             nbt.putLong("destinationUUID", destinationRouterId);
         }
         nbt.putBoolean("arrived", arrived);

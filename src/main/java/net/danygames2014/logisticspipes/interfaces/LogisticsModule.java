@@ -8,9 +8,10 @@ import net.modificationstation.stationapi.api.util.Identifier;
 public interface LogisticsModule extends SaveState {
     /**
      * Registers the Inventory and ItemSender to the module
+     *
      * @param invProvider The connected inventory
-     * @param itemSender the handler to send items into the logistics system
-     * @param world that the module is in.
+     * @param itemSender  the handler to send items into the logistics system
+     * @param world       that the module is in.
      */
     void registerHandler(InventoryProvider invProvider, SendRoutedItem itemSender, WorldProvider world);
 
@@ -27,6 +28,7 @@ public interface LogisticsModule extends SaveState {
 
     /**
      * Gives an sink answer on the given itemstack
+     *
      * @param item to sink
      * @return SinkReply wether the module sinks the item or not
      */
@@ -34,8 +36,8 @@ public interface LogisticsModule extends SaveState {
 
     /**
      * Returns submodules. Normal modules don't have submodules
+     *
      * @param slot of the requested module
-     * @return
      */
     LogisticsModule getSubModule(int slot);
 

@@ -7,7 +7,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.inventory.Inventory;
 import org.lwjgl.opengl.GL11;
 
-public class TerminusScreen extends ScreenWithPrevious{
+public class TerminusScreen extends ScreenWithPrevious {
     private final Inventory playerInventory;
     private final TerminusModule terminus;
 
@@ -18,7 +18,7 @@ public class TerminusScreen extends ScreenWithPrevious{
         dummy.addNormalSlotsForPlayerInventory(8, 60);
 
         //Pipe slots
-        for(int pipeSlot = 0; pipeSlot < 9; pipeSlot++){
+        for (int pipeSlot = 0; pipeSlot < 9; pipeSlot++) {
             dummy.addDummySlot(pipeSlot, 8 + pipeSlot * 18, 18);
         }
 

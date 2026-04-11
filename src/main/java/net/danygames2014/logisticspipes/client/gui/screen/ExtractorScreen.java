@@ -9,7 +9,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.inventory.Inventory;
 import org.lwjgl.opengl.GL11;
 
-public class ExtractorScreen extends ScreenWithPrevious{
+public class ExtractorScreen extends ScreenWithPrevious {
     private SneakyDirectionReceiver directionReceiver;
     private int slot;
 
@@ -21,6 +21,7 @@ public class ExtractorScreen extends ScreenWithPrevious{
         this.slot = slot;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void init() {
         super.init();
@@ -30,26 +31,34 @@ public class ExtractorScreen extends ScreenWithPrevious{
         buttons.add(new ButtonWidget(0, left + 73, top + 23, 20, 20, ""));
         buttons.add(new ButtonWidget(1, left + 73, top + 43, 20, 20, ""));
         buttons.add(new ButtonWidget(2, left + 73, top + 63, 20, 20, ""));
-        buttons.add(new ButtonWidget(3, left+10, top + 43, 20, 20, ""));
+        buttons.add(new ButtonWidget(3, left + 10, top + 43, 20, 20, ""));
 
         refreshButtons();
     }
 
-    private void refreshButtons(){
+    private void refreshButtons() {
         for (Object p : buttons) {
             ButtonWidget button = (ButtonWidget) p;
-            switch (button.id){
-                case 0: button.text =  isExtract(SneakyDirection.Top); break;
-                case 1: button.text =  isExtract(SneakyDirection.Side); break;
-                case 2: button.text =  isExtract(SneakyDirection.Bottom); break;
-                case 3: button.text =  isExtract(SneakyDirection.Default); break;
+            switch (button.id) {
+                case 0:
+                    button.text = isExtract(SneakyDirection.Top);
+                    break;
+                case 1:
+                    button.text = isExtract(SneakyDirection.Side);
+                    break;
+                case 2:
+                    button.text = isExtract(SneakyDirection.Bottom);
+                    break;
+                case 3:
+                    button.text = isExtract(SneakyDirection.Default);
+                    break;
             }
         }
     }
 
     @Override
     protected void buttonClicked(ButtonWidget button) {
-        switch (button.id){
+        switch (button.id) {
             case 0:
                 directionReceiver.setSneakyDirection(SneakyDirection.Top);
                 break;
@@ -82,7 +91,7 @@ public class ExtractorScreen extends ScreenWithPrevious{
         int left = width / 2 - backgroundWidth / 2;
         int top = height / 2 - backgroundHeight / 2;
 
-        textRenderer.draw("Extract orientation", backgroundWidth / 2 - textRenderer.getWidth("Extract orientation") / 2 , 10, 0x404040);
+        textRenderer.draw("Extract orientation", backgroundWidth / 2 - textRenderer.getWidth("Extract orientation") / 2, 10, 0x404040);
         textRenderer.draw("Default", 35, 50, 0x404040);
         textRenderer.draw("Top", 100, 30, 0x404040);
         textRenderer.draw("Side", 100, 50, 0x404040);
@@ -98,11 +107,11 @@ public class ExtractorScreen extends ScreenWithPrevious{
         drawTexture(j, k, 0, 0, backgroundWidth, backgroundHeight);
     }
 
-    private String getButtonText(boolean checked){
+    private String getButtonText(boolean checked) {
         return checked ? "[X]" : "[ ]";
     }
 
-    private String isExtract(SneakyDirection d){
+    private String isExtract(SneakyDirection d) {
         return getButtonText(d == directionReceiver.getSneakyDirection());
     }
 }

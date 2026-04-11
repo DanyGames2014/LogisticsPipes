@@ -5,7 +5,6 @@ import net.danygames2014.logisticspipes.interfaces.routing.CraftItems;
 import net.danygames2014.logisticspipes.routing.LogisticsPromise;
 import net.danygames2014.logisticspipes.util.ItemIdentifierStack;
 import net.danygames2014.logisticspipes.util.tuple.Pair;
-import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,11 +22,11 @@ public class CraftingTemplate {
         this.priority = priority;
     }
 
-    public void addRequirement(ItemIdentifierStack stack, RequestItems crafter){
+    public void addRequirement(ItemIdentifierStack stack, RequestItems crafter) {
         required.put(stack, crafter);
     }
 
-    public LogisticsPromise generatePromise(){
+    public LogisticsPromise generatePromise() {
         LogisticsPromise promise = new LogisticsPromise();
         promise.item = result.getItem();
         promise.numberOfItems = result.stackSize;
@@ -35,8 +34,8 @@ public class CraftingTemplate {
         return promise;
     }
 
-    public List<Pair<ItemIdentifierStack,RequestItems>> getSource() {
-        List<Pair<ItemIdentifierStack,RequestItems>> result = new ArrayList<>();
+    public List<Pair<ItemIdentifierStack, RequestItems>> getSource() {
+        List<Pair<ItemIdentifierStack, RequestItems>> result = new ArrayList<>();
         for (ItemIdentifierStack stack : required.keySet()) {
             result.add(new Pair<>(stack, required.get(stack)));
         }
@@ -47,7 +46,7 @@ public class CraftingTemplate {
         return result;
     }
 
-    public CraftItems getCrafter(){
+    public CraftItems getCrafter() {
         return crafter;
     }
 

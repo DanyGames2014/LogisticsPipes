@@ -15,10 +15,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ArsenicItemRenderer.class)
 public class ArsenicItemRendererMixin {
     @Inject(method = "render", at = @At("HEAD"))
-    void renderTag(ItemEntity item, double x, double y, double z, float rotation, float delta, CallbackInfo ci){
+    void renderTag(ItemEntity item, double x, double y, double z, float rotation, float delta, CallbackInfo ci) {
         if (item instanceof RoutedItemEntity routedItem && Minecraft.isDisplayGui() && Minecraft.INSTANCE.options.debugHud) {
             float var10 = routedItem.getDistance(Minecraft.INSTANCE.camera);
-            if (!(var10 > (float)10)) {
+            if (!(var10 > (float) 10)) {
                 String name = String.valueOf(routedItem.destinationRouterId);
                 TextRenderer var11 = Minecraft.INSTANCE.textRenderer;
                 float var12 = 1.6F;

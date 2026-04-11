@@ -16,16 +16,16 @@ public class DiscoverNetworkWrenchMode extends WrenchMode {
 
     @Override
     public boolean wrenchRightClick(ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side, WrenchMode wrenchMode) {
-        if (world.getBlockEntity(x,y,z) instanceof LogisticPipeBlockEntity pipe) {
+        if (world.getBlockEntity(x, y, z) instanceof LogisticPipeBlockEntity pipe) {
             long nanoTime = System.nanoTime();
             LogisticsNetwork network = LogisticsNetworkManager.fetchNetwork(world, pipe);
             long nanoEnd = System.nanoTime();
 
             player.sendMessage("Network fetch (" + network.routers.size() + ") took " + (nanoEnd - nanoTime) / 1000 + "us");
-            
+
             return true;
         }
-        
+
         return super.wrenchRightClick(stack, player, isSneaking, world, x, y, z, side, wrenchMode);
     }
 }

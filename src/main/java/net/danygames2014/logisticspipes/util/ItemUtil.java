@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ItemUtil {
     public static RoutedItem GetOrCreateRoutedItem(World worldObj, TravellingItemEntity itemEntity) {
-        if (!isRoutedItem(itemEntity)){
+        if (!isRoutedItem(itemEntity)) {
             RoutedItemEntity newItem = new RoutedItemEntity(worldObj, itemEntity);
             return newItem;
         }
@@ -22,17 +22,17 @@ public class ItemUtil {
         return (item instanceof RoutedItemEntity);
     }
 
-    public static RoutedItem createRoutedItem(ItemStack stack, World world){
+    public static RoutedItem createRoutedItem(ItemStack stack, World world) {
         TravellingItemEntity itemEntity = new TravellingItemEntity(world, 0, 0, 0, stack);
         return new RoutedItemEntity(world, itemEntity);
     }
 
     public static void spawnRoutedItem(World world, RoutedItem item, int x, int y, int z, Direction from) {
-        ((TravellingItemEntity)item).toMiddle = true;
-        ((TravellingItemEntity)item).travelDirection = from.getOpposite();
-        ((TravellingItemEntity)item).lastTravelDirection = from.getOpposite();
+        ((TravellingItemEntity) item).toMiddle = true;
+        ((TravellingItemEntity) item).travelDirection = from.getOpposite();
+        ((TravellingItemEntity) item).lastTravelDirection = from.getOpposite();
         item.setPosition(x + 0.5D + (from.getOffsetX() * 0.5D), y + 0.25D + (from.getOffsetY() * 0.25D), z + 0.5D + (from.getOffsetZ() * 0.5D));
-        world.spawnEntity((RoutedItemEntity)item);
+        world.spawnEntity((RoutedItemEntity) item);
     }
 
     public static void compress(List<ItemStack> input) {
@@ -44,7 +44,7 @@ public class ItemUtil {
                 ItemStack stackTwo = input.get(j);
                 if (stackTwo == null) continue;
 
-                if (stackOne.isItemEqual(stackTwo)){
+                if (stackOne.isItemEqual(stackTwo)) {
                     stackOne.count += stackTwo.count;
                     input.remove(j);
                     j--;
@@ -53,9 +53,9 @@ public class ItemUtil {
         }
     }
 
-    public static ItemStack makeStack(ItemStack stack, int count){
+    public static ItemStack makeStack(ItemStack stack, int count) {
         ItemStack returnStack = stack.copy();
         returnStack.count = count;
-        return  returnStack;
+        return returnStack;
     }
 }

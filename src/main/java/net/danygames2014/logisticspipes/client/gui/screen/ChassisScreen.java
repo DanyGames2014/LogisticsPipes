@@ -13,7 +13,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
-import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.api.util.Identifier;
 import org.lwjgl.opengl.GL11;
 
@@ -25,14 +24,14 @@ public class ChassisScreen extends LogisticsBaseScreen implements ScreenIdentifi
     private int left;
     private int top;
 
-    public ChassisScreen(PlayerEntity player, ChassisLogisticPipeBlockEntity pipe){
+    public ChassisScreen(PlayerEntity player, ChassisLogisticPipeBlockEntity pipe) {
         super(null);
         this.player = player;
         this.pipe = pipe;
         this.moduleInventory = pipe.getModuleInventory();
 
         DummyScreenHandler dummy = new DummyScreenHandler(player.inventory, moduleInventory);
-        if (pipe.getChassisSize() < 5){
+        if (pipe.getChassisSize() < 5) {
             dummy.addNormalSlotsForPlayerInventory(18, 97);
         } else {
             dummy.addNormalSlotsForPlayerInventory(18, 174);
@@ -59,25 +58,25 @@ public class ChassisScreen extends LogisticsBaseScreen implements ScreenIdentifi
     public void init() {
         super.init();
         left = width / 2 - backgroundWidth / 2;
-        top = height /2 - backgroundHeight / 2;
+        top = height / 2 - backgroundHeight / 2;
 
         buttons.clear();
         for (int i = 0; i < pipe.getChassisSize(); i++) {
             buttons.add(new SmallButtonWidget(i, left + 5, top + 12 + 20 * i, 10, 10, "!"));
-            if(moduleInventory == null){
+            if (moduleInventory == null) {
                 continue;
             }
             ItemStack module = moduleInventory.getStack(i);
-            ((SmallButtonWidget)buttons.get(i)).visible = module != null && pipe.getLogisticsModule().getSubModule(i) != null && pipe.getLogisticsModule().getSubModule(i).getScreenIdentifier() != null;
+            ((SmallButtonWidget) buttons.get(i)).visible = module != null && pipe.getLogisticsModule().getSubModule(i) != null && pipe.getLogisticsModule().getSubModule(i).getScreenIdentifier() != null;
         }
     }
 
     @Override
     protected void drawForeground() {
         super.drawForeground();
-        for(int i = 0; i < pipe.getChassisSize(); i++){
+        for (int i = 0; i < pipe.getChassisSize(); i++) {
             ItemStack module = moduleInventory.getStack(i);
-            ((SmallButtonWidget)buttons.get(i)).visible = module != null && pipe.getLogisticsModule().getSubModule(i) != null && pipe.getLogisticsModule().getSubModule(i).getScreenIdentifier() != null;
+            ((SmallButtonWidget) buttons.get(i)).visible = module != null && pipe.getLogisticsModule().getSubModule(i) != null && pipe.getLogisticsModule().getSubModule(i).getScreenIdentifier() != null;
         }
         if (pipe.getChassisSize() > 0) {
             textRenderer.draw(getModuleName(0), 40, 14, 0x404040);
@@ -99,7 +98,7 @@ public class ChassisScreen extends LogisticsBaseScreen implements ScreenIdentifi
         }
     }
 
-    private String getModuleName(int slot){
+    private String getModuleName(int slot) {
         if (this.moduleInventory == null) return "";
         if (this.moduleInventory.getStack(slot) == null) return "";
         if (!(this.moduleInventory.getStack(slot).getItem() instanceof ModuleItem)) return "";
@@ -117,9 +116,9 @@ public class ChassisScreen extends LogisticsBaseScreen implements ScreenIdentifi
 
     @Override
     protected void buttonClicked(ButtonWidget button) {
-        if(button.id >= 0 && button.id <= 7){
+        if (button.id >= 0 && button.id <= 7) {
             LogisticsModule module = pipe.getLogisticsModule().getSubModule(button.id);
-            if(module != null){
+            if (module != null) {
 //                PacketDispatcher.sendPacketToServer(new PacketPipeInteger(NetworkConstants.CHASSI_GUI_PACKET_ID,_chassiPipe.xCoord,_chassiPipe.yCoord,_chassiPipe.zCoord,guibutton.id).getPacket());
                 GuiHelper.openGUI(minecraft.player, module.getScreenIdentifier(), pipe, null, (messagePacket) -> {
                     messagePacket.ints = new int[]{pipe.getX(), pipe.getY(), pipe.getZ(), button.id};

@@ -9,8 +9,6 @@ import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
 import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
 import net.danygames2014.logisticspipes.interfaces.RequestItems;
 import net.danygames2014.logisticspipes.interfaces.RequireReliableTransport;
-import net.danygames2014.logisticspipes.interfaces.RoutedItem;
-import net.danygames2014.logisticspipes.module.ItemSinkModule;
 import net.danygames2014.logisticspipes.request.RequestManager;
 import net.danygames2014.logisticspipes.util.*;
 import net.danygames2014.nyalib.capability.CapabilityHelper;
@@ -22,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
-import net.modificationstation.stationapi.api.util.math.Direction;
 
 import java.util.HashMap;
 
@@ -47,11 +44,11 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
     }
 
     /* TRIGGER INTERFACE */
-    public boolean isRequestFailed(){
+    public boolean isRequestFailed() {
         return lastRequestFailed;
     }
 
-    public void setRequestFailed(boolean value){
+    public void setRequestFailed(boolean value) {
         lastRequestFailed = value;
     }
 
@@ -67,33 +64,33 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
     @Override
     public void throttledUpdateEntity() {
-        if(!isEnabled()){
+        if (!isEnabled()) {
             return;
         }
 
-        if(world.isRemote){
+        if (world.isRemote) {
             return;
         }
-        if(pause) {
+        if (pause) {
             return;
         }
 
-        for(AdjacentBlockEntity adjacent : WorldUtil.getAdjacentBlockEntities(world, x, y, z)){
-            if(adjacent.blockEntity instanceof PipeBlockEntity){
+        for (AdjacentBlockEntity adjacent : WorldUtil.getAdjacentBlockEntities(world, x, y, z)) {
+            if (adjacent.blockEntity instanceof PipeBlockEntity) {
                 continue;
             }
             ItemHandlerBlockCapability capability = CapabilityHelper.getCapability(adjacent.blockEntity, ItemHandlerBlockCapability.class);
-            if(capability == null){
+            if (capability == null) {
                 continue;
             }
 
             //Do not attempt to supply redstone engines
-            if(adjacent.blockEntity instanceof RedstoneEngineBlockEntity){
+            if (adjacent.blockEntity instanceof RedstoneEngineBlockEntity) {
                 continue;
             }
 
             Inventory inventory = new ItemHandlerBlockCapabilityInventoryWrapper(capability, adjacent.direction);
-            if(inventory.size() < 1) {
+            if (inventory.size() < 1) {
                 continue;
             }
 
@@ -106,43 +103,42 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
             HashMap<ItemIdentifier, Integer> have = invUtil.getItemsAndCount();
 
             //Reduce what I have
-            for (ItemIdentifier item : needed.keySet()){
-                if (have.containsKey(item)){
+            for (ItemIdentifier item : needed.keySet()) {
+                if (have.containsKey(item)) {
                     needed.put(item, needed.get(item) - have.get(item));
                 }
             }
 
             //Reduce what have been requested already
-            for (ItemIdentifier item : needed.keySet()){
-                if (requestedItems.containsKey(item)){
+            for (ItemIdentifier item : needed.keySet()) {
+                if (requestedItems.containsKey(item)) {
                     needed.put(item, needed.get(item) - requestedItems.get(item));
                 }
             }
 
             setRequestFailed(false);
 
-            for (ItemIdentifier need : needed.keySet()){
+            for (ItemIdentifier need : needed.keySet()) {
                 if (needed.get(need) < 1) continue;
                 int neededCount = needed.get(need);
                 boolean success;
-                do{
+                do {
                     // TODO: I should probably not be converting the hashset to a list
-                    success = RequestManager.request(need.makeStack(neededCount),  this, getNetwork().routers.stream().toList(), null);
-                    if (success || neededCount == 1){
+                    success = RequestManager.request(need.makeStack(neededCount), this, getNetwork().routers.stream().toList(), null);
+                    if (success || neededCount == 1) {
                         break;
                     }
                     neededCount = neededCount / 2;
                 } while (requestPartials);
 
-                if (success){
+                if (success) {
                     smartAdvertiseRouter();
-                    if (!requestedItems.containsKey(need)){
+                    if (!requestedItems.containsKey(need)) {
                         requestedItems.put(need, neededCount);
-                    }else
-                    {
+                    } else {
                         requestedItems.put(need, requestedItems.get(need) + neededCount);
                     }
-                } else{
+                } else {
                     setRequestFailed(true);
                 }
 
@@ -198,7 +194,7 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
     @Override
     public void itemLost(ItemIdentifier item) {
-        if (requestedItems.containsKey(item)){
+        if (requestedItems.containsKey(item)) {
             requestedItems.put(item, requestedItems.get(item) - 1);
         }
     }
@@ -206,22 +202,22 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
     @Override
     public void itemArrived(ItemIdentifier item) {
         super.resetThrottle();
-        if (requestedItems.containsKey(item)){
+        if (requestedItems.containsKey(item)) {
             requestedItems.put(item, requestedItems.get(item) - 1);
         }
     }
 
-    public boolean isRequestingPartials(){
+    public boolean isRequestingPartials() {
         return requestPartials;
     }
 
-    public void setRequestingPartials(boolean value){
+    public void setRequestingPartials(boolean value) {
         requestPartials = value;
     }
 
     @Override
     public boolean wrenchRightClick(ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side, WrenchMode wrenchMode) {
-        if(wrenchMode == WrenchMode.MODE_WRENCH && !isSneaking){
+        if (wrenchMode == WrenchMode.MODE_WRENCH && !isSneaking) {
             GuiHelper.openGUI(player, LogisticsPipes.NAMESPACE.id("supplier"), this, null);
             return true;
         }
