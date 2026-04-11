@@ -13,6 +13,7 @@ import net.danygames2014.logisticspipes.item.MagicWand;
 import net.danygames2014.logisticspipes.item.ModuleItem;
 import net.danygames2014.logisticspipes.item.RoutingDebugger;
 import net.danygames2014.logisticspipes.module.*;
+import net.danygames2014.logisticspipes.util.RoutingUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.Block;

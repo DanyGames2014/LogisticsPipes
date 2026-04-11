@@ -205,29 +205,30 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     }
 
     public Direction getDirectionForItem(RoutedItem item){
-        if(item.getDestination() == null && world.isRemote){
+        if(!item.isDestinationValid() && world.isRemote){
             return null;
         }
 
         //If items have no destination, see if we can get one (unless it has a source, then drop it)
-        if (item.getDestination() == null){
-            if (item.getSource() != null) return null;
+        if (!item.isDestinationValid()){
+            if (item.isSourceValid()) {
+                return null;
+            }
             item = LogisticsManager.getInstance().assignDestinationFor(world, item, getRouterId(), false);
         }
 
         //If the destination is unknown / unroutable
-        if(item.getDestination() != null && item.getDestination() != getRouterId() && !getNetwork().routers.contains((long)item.getDestination())){
+        if(item.isDestinationValid() && item.getDestination() != getRouterId() && !getNetwork().routers.contains(RoutingUtil.getRouter(world, item.getDestination()))){
             item = LogisticsManager.getInstance().destinationUnreachable(world, item, getRouterId());
         }
 
         //If we still have no destination, drop it
-        if (item.getDestination() == null){
+        if (!item.isDestinationValid()){
             return null;
         }
 
         //Is the destination ourself? Deliver it
-        if (item.getDestination().equals(getRouterId())){
-
+        if (item.getDestination() == getRouterId()){
             if (!stillWantItem(item)){
                 return getDirectionForItem(LogisticsManager.getInstance().assignDestinationFor(world, item, getRouterId(), true));
             }
@@ -439,6 +440,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         }
     }
 
+    @Override
     public void smartAdvertiseRouter() {
         if (advertiseRequired) {
             advertiseRouter();
@@ -446,6 +448,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         }
     }
     
+    @Override
     public void advertiseRouter() {
         // Contains routers to be explored
         ObjectArrayFIFOQueue<Router> open = new ObjectArrayFIFOQueue<>();

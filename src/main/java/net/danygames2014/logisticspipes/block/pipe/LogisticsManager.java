@@ -3,7 +3,6 @@ package net.danygames2014.logisticspipes.block.pipe;
 import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
 import net.danygames2014.logisticspipes.interfaces.ProvideItems;
 import net.danygames2014.logisticspipes.interfaces.RoutedItem;
-import net.danygames2014.logisticspipes.routing.RouteDestination;
 import net.danygames2014.logisticspipes.routing.Router;
 import net.danygames2014.logisticspipes.util.ItemIdentifier;
 import net.danygames2014.logisticspipes.util.RoutingUtil;
@@ -22,7 +21,7 @@ public class LogisticsManager implements net.danygames2014.logisticspipes.interf
     }
 
     @Override
-    public RoutedItem assignDestinationFor(World world, RoutedItem item, Long sourceRouterUUID, boolean excludeSource) {
+    public RoutedItem assignDestinationFor(World world, RoutedItem item, long sourceRouterUUID, boolean excludeSource) {
         Router router = RoutingUtil.getRouter(world, sourceRouterUUID);
 
         //If the source router does not exist we can't do anything with this
@@ -31,7 +30,7 @@ public class LogisticsManager implements net.danygames2014.logisticspipes.interf
         }
 
         //Wipe current destination
-        item.setDestination(null);
+        item.setDestination(Long.MIN_VALUE);
 
         Pair<Long, SinkReply> bestReply = getBestReply(item.getItemStack(), router, excludeSource);
         item.setSource(sourceRouterUUID);
@@ -50,12 +49,12 @@ public class LogisticsManager implements net.danygames2014.logisticspipes.interf
     }
 
     @Override
-    public RoutedItem destinationUnreachable(World world, RoutedItem item, Long currentRouter) {
+    public RoutedItem destinationUnreachable(World world, RoutedItem item, long currentRouter) {
         return assignDestinationFor(world, item, currentRouter, false);
     }
 
     @Override
-    public boolean hasDestination(World world, ItemStack stack, boolean allowDefault, Long sourceRouter, boolean excludeSource) {
+    public boolean hasDestination(World world, ItemStack stack, boolean allowDefault, long sourceRouter, boolean excludeSource) {
         Router router = RoutingUtil.getRouter(world, sourceRouter);
 
         //If the source router does not exist we can't do anything with this
@@ -66,7 +65,7 @@ public class LogisticsManager implements net.danygames2014.logisticspipes.interf
 
         if (search.getValue2() == null) return false;
         if(search.getValue1() != null) {
-            RoutingUtil.getRouter(world, search.getValue1()).getPipe().smartAdvertiseRouter();
+            RoutingUtil.getRouter(world, search.getValue1()).smartAdvertiseRouter();
         }
 
 
@@ -102,7 +101,7 @@ public class LogisticsManager implements net.danygames2014.logisticspipes.interf
     }
 
     private Pair<Long, SinkReply> getBestReply(ItemStack item, Router sourceRouter, boolean excludeSource) {
-        Long potentialDestination = null;
+        long potentialDestination = Long.MIN_VALUE;
         SinkReply bestReply = null;
         for(Router candidateRouter : sourceRouter.getNetwork().routers){
             LogisticsModule module = candidateRouter.getPipe().getLogisticsModule();

@@ -5,7 +5,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicItemRenderer;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +19,7 @@ public class ArsenicItemRendererMixin {
         if (item instanceof RoutedItemEntity routedItem && Minecraft.isDisplayGui() && Minecraft.INSTANCE.options.debugHud) {
             float var10 = routedItem.getDistance(Minecraft.INSTANCE.camera);
             if (!(var10 > (float)10)) {
-                String name = String.valueOf(routedItem.destinationUUID);
+                String name = String.valueOf(routedItem.destinationRouterId);
                 TextRenderer var11 = Minecraft.INSTANCE.textRenderer;
                 float var12 = 1.6F;
                 float var13 = 0.016666668F * var12;

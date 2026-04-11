@@ -162,7 +162,7 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
         return null;
     }
 
-    protected int sendItem(ItemIdentifier item, int maxCount, Long destination) {
+    protected int sendItem(ItemIdentifier item, int maxCount, long destination) {
         int sent = 0;
         if (invProvider.getInventory() == null) return 0;
         InventoryUtil inv = getAdaptedUtil(invProvider.getInventory());

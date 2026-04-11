@@ -9,9 +9,7 @@ import net.danygames2014.buildcraft.block.entity.pipe.transporter.ItemPipeTransp
 import net.danygames2014.buildcraft.entity.TravellingItemEntity;
 import net.danygames2014.buildcraft.util.MathUtil;
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
-import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
 import net.danygames2014.logisticspipes.interfaces.RoutedItem;
-import net.danygames2014.logisticspipes.routing.RouteDestination;
 import net.danygames2014.logisticspipes.util.ItemUtil;
 import net.danygames2014.uniwrench.api.WrenchMode;
 import net.minecraft.entity.player.PlayerEntity;
@@ -22,7 +20,7 @@ import net.modificationstation.stationapi.api.util.math.Direction;
 public class LogisticPipeBehavior extends PipeBehavior {
     @Override
     public Direction routeItem(PipeBlockEntity blockEntity, ObjectArrayList<Direction> validOutputDirections, TravellingItemEntity item) {
-        boolean forcePacket = !(item instanceof RoutedItem routedItem) || routedItem.getDestination() == null;
+        boolean forcePacket = !(item instanceof RoutedItem routedItem) || !routedItem.isDestinationValid();
         RoutedItem routedItem = ItemUtil.GetOrCreateRoutedItem(blockEntity.world, item);
         LogisticPipeBlockEntity pipe = (LogisticPipeBlockEntity)blockEntity;
         return pipe.getDirectionForItem(routedItem);

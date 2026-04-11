@@ -18,16 +18,21 @@ public interface RoutedItem {
         Active
     }
 
-    Long getDestination();
-    void setDestination(Long destination);
-    Long getSource();
-    void setSource(Long source);
+    long getDestination();
+
+    boolean isSourceValid();
+
+    void setDestination(long destination);
+    long getSource();
+    void setSource(long source);
 
     void setTransportMode(TransportMode transportMode);
     TransportMode getTransportMode();
 
     void setDoNotBuffer(boolean doNotBuffer);
     boolean getDoNotBuffer();
+
+    boolean isDestinationValid();
 
     ItemStack getItemStack();
 

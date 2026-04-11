@@ -21,6 +21,10 @@ public interface Router {
 
     void learnRoutesToTargetFromNeighbors(long targetRouterId);
 
+    void smartAdvertiseRouter();
+
+    void advertiseRouter();
+
     void itemDropped(RoutedItemEntity routedItemEntity);
 
     boolean isRoutedExit(Direction direction);

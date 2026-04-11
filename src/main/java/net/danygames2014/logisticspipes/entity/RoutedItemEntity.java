@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem {
-    public Long sourceUUID;
-    public Long destinationUUID;
+    public long sourceRouteId;
+    public long destinationRouterId;
 
     private boolean doNotBuffer;
 
@@ -38,7 +38,6 @@ public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem
         this.lastSpeed = itemEntity.lastSpeed;
         this.invalidTimer = itemEntity.invalidTimer;
         this.toMiddle = itemEntity.toMiddle;
-
     }
 
     public RoutedItemEntity(World world, double x, double y, double z) {
@@ -46,17 +45,50 @@ public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem
     }
 
     @Override
+    public void setSource(long source) {
+        this.sourceRouteId = source;
+        knownBy.clear();
+    }
+
+    @Override
+    public long getSource() {
+        return sourceRouteId;
+    }
+    
+    @Override
+    public boolean isSourceValid() {
+        return sourceRouteId != Long.MIN_VALUE;
+    }
+
+    @Override
+    public void setDestination(long destination) {
+        this.destinationRouterId = destination;
+        knownBy.clear();
+    }
+
+    @Override
+    public long getDestination() {
+        return destinationRouterId;
+    }
+    
+    @Override
+    public boolean isDestinationValid() {
+        return destinationRouterId != Long.MIN_VALUE;
+    }
+
+    @Override
     public void drop() {
         if(world.isRemote) return;
-        if(sourceUUID != null){
-            Router source = RoutingUtil.getRouter(world, sourceUUID);
+        
+        if(isSourceValid()){
+            Router source = RoutingUtil.getRouter(world, sourceRouteId);
             if(source != null){
                 source.itemDropped(this);
             }
         }
 
-        if(destinationUUID != null){
-            Router destination = RoutingUtil.getRouter(world, sourceUUID);
+        if(isDestinationValid()){
+            Router destination = RoutingUtil.getRouter(world, sourceRouteId);
             if(destination != null){
                 destination.itemDropped(this);
                 if(!arrived && destination.getPipe() != null && destination.getPipe() instanceof RequireReliableTransport reliableTransport){
@@ -64,34 +96,13 @@ public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem
                 }
             }
         }
+        
         super.drop();
-    }
-
-    @Override
-    public Long getDestination() {
-        return destinationUUID;
     }
 
     @Override
     public ItemStack getItemStack() {
         return stack;
-    }
-
-    @Override
-    public void setDestination(Long destination) {
-        this.destinationUUID = destination;
-        knownBy.clear();
-    }
-
-    @Override
-    public Long getSource() {
-        return sourceUUID;
-    }
-
-    @Override
-    public void setSource(Long source) {
-        this.sourceUUID = source;
-        knownBy.clear();
     }
 
     @Override
@@ -149,10 +160,10 @@ public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         if(nbt.contains("sourceUUID")) {
-            sourceUUID = nbt.getLong("sourceUUID");
+            sourceRouteId = nbt.getLong("sourceUUID");
         }
         if(nbt.contains("destinationUUID")) {
-            destinationUUID = nbt.getLong("destinationUUID");
+            destinationRouterId = nbt.getLong("destinationUUID");
         }
         arrived = nbt.getBoolean("arrived");
     }
@@ -160,11 +171,11 @@ public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem
     @Override
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        if(sourceUUID != null){
-            nbt.putLong("sourceUUID", sourceUUID);
+        if(isSourceValid()){
+            nbt.putLong("sourceUUID", sourceRouteId);
         }
-        if(destinationUUID != null){
-            nbt.putLong("destinationUUID", destinationUUID);
+        if(isDestinationValid()){
+            nbt.putLong("destinationUUID", destinationRouterId);
         }
         nbt.putBoolean("arrived", arrived);
     }
