@@ -11,9 +11,7 @@ public class WorldUtil {
     public static LinkedList<AdjacentBlockEntity> getAdjacentBlockEntities(World world, int x, int y, int z) {
         LinkedList<AdjacentBlockEntity> discoveredBlockEntities = new LinkedList<>();
         for(Direction direction : Direction.values()){
-            Position position = new Position(x, y, z, direction);
-            position.moveForwards(1);
-            BlockEntity blockEntity = world.getBlockEntity((int) position.x, (int) position.y, (int) position.z);
+            BlockEntity blockEntity = world.getBlockEntity(x + direction.getOffsetX(), y + direction.getOffsetY(), z + direction.getOffsetZ());
 
             if(blockEntity == null) continue;
             discoveredBlockEntities.add(new AdjacentBlockEntity(blockEntity, direction));
