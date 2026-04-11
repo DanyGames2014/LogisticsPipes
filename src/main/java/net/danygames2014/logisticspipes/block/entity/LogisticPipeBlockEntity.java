@@ -18,6 +18,7 @@ import net.danygames2014.logisticspipes.routing.LogisticsNetwork;
 import net.danygames2014.logisticspipes.routing.LogisticsNetworkManager;
 import net.danygames2014.logisticspipes.routing.RouteDestination;
 import net.danygames2014.logisticspipes.routing.Router;
+import net.danygames2014.logisticspipes.screen.DummyScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
 import net.danygames2014.logisticspipes.util.tuple.Pair;
 import net.danygames2014.logisticspipes.util.tuple.Pair3;
@@ -90,9 +91,11 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     public void tick() {
         super.tick();
 
-        if (updateNeighbors || (world.getTime() % Config.NETWORK_CONFIG.neighborDetectionFrequency == this.updateOffset)) {
-            updateNeighbors();
-            updateNeighbors = false;
+        if (world != null && !world.isRemote) {
+            if (updateNeighbors || (world.getTime() % Config.NETWORK_CONFIG.neighborDetectionFrequency == this.updateOffset)) {
+                updateNeighbors();
+                updateNeighbors = false;
+            }
         }
 
         if (!sendQueue.isEmpty()) {
@@ -197,7 +200,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     public boolean wrenchRightClick(ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side, WrenchMode wrenchMode) {
         if (wrenchMode == WrenchMode.MODE_WRENCH && !isSneaking) {
             if (getLogisticsModule() != null) {
-                GuiHelper.openGUI(player, getLogisticsModule().getScreenIdentifier(), this, null, (messagePacket) -> {
+                GuiHelper.openGUI(player, getLogisticsModule().getScreenIdentifier(), this, new DummyScreenHandler(player.inventory, this), (messagePacket) -> {
                     messagePacket.ints = new int[]{x, y, z};
                 });
             }
@@ -337,7 +340,9 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     public void updateConnections() {
         super.updateConnections();
 
-        updateNeighbors();
+        if (world != null && !world.isRemote) {
+            updateNeighbors();
+        }
     }
 
     // Router
