@@ -13,5 +13,6 @@ public class RoutingDebugger extends WrenchBase {
         addWrenchMode(WrenchModeListener.clearRoutingTableWrenchMode);
         addWrenchMode(WrenchModeListener.discoverNetworkWrenchMode);
         addWrenchMode(WrenchModeListener.propagateRoutesWrenchMode);
+        addWrenchMode(WrenchModeListener.discoverRoutersByMetricWrenchMode);
     }
 }

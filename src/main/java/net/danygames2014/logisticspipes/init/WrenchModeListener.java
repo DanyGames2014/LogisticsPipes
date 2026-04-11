@@ -17,6 +17,7 @@ public class WrenchModeListener {
     public static WrenchMode clearRoutingTableWrenchMode;
     public static WrenchMode discoverNetworkWrenchMode;
     public static WrenchMode propagateRoutesWrenchMode;
+    public static WrenchMode discoverRoutersByMetricWrenchMode;
 
     @EventListener
     public void registerWrenchModes(WrenchModeRegistryEvent event) {
@@ -26,5 +27,6 @@ public class WrenchModeListener {
         clearRoutingTableWrenchMode = new ClearRoutingTableWrenchMode(NAMESPACE.id("clear_routing_table"));
         discoverNetworkWrenchMode = new DiscoverNetworkWrenchMode(NAMESPACE.id("discover_network"));
         propagateRoutesWrenchMode = new PropagateRoutesWrenchMode(NAMESPACE.id("propagate_routes"));
+        discoverRoutersByMetricWrenchMode = new DiscoverRoutersByMetricWrenchMode(NAMESPACE.id("discover_routers_by_metric"));
     }
 }

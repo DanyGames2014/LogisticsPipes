@@ -17,6 +17,8 @@ public interface Router {
 
     void topologyChanged();
 
+    int getMetric(long destinationId);
+
     void learnRoutesFromNeighbors();
 
     void learnRoutesToTargetFromNeighbors(long targetRouterId);

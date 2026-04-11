@@ -369,6 +369,15 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     }
 
     // Routing
+    @Override
+    public int getMetric(long destinationId) {
+        if (routingTable.containsKey(destinationId)) {
+            return routingTable.get(destinationId).metric;
+        } else {
+            return -1;
+        }   
+    }
+    
     public long getNextHop(long destinationId) {
         if (!nextHopCache.containsKey(destinationId)) {
             nextHopCache.put(destinationId, calculateNextHop(destinationId));
