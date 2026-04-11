@@ -216,7 +216,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         }
 
         //If the destination is unknown / unroutable
-        if(item.getDestination() != null && item.getDestination() != getRouterId() && !routingTable.containsKey((long)item.getDestination())){
+        if(item.getDestination() != null && item.getDestination() != getRouterId() && !getNetwork().routers.contains((long)item.getDestination())){
             item = LogisticsManager.getInstance().destinationUnreachable(world, item, getRouterId());
         }
 

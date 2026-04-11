@@ -12,10 +12,7 @@ import net.danygames2014.logisticspipes.block.pipe.transporter.LogisticItemPipeT
 import net.danygames2014.logisticspipes.item.MagicWand;
 import net.danygames2014.logisticspipes.item.ModuleItem;
 import net.danygames2014.logisticspipes.item.RoutingDebugger;
-import net.danygames2014.logisticspipes.module.ItemSinkModule;
-import net.danygames2014.logisticspipes.module.PassiveSupplierModule;
-import net.danygames2014.logisticspipes.module.PolymorphicItemSinkModule;
-import net.danygames2014.logisticspipes.module.ProviderModule;
+import net.danygames2014.logisticspipes.module.*;
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.Block;
@@ -58,6 +55,9 @@ public class LogisticsPipes {
     public static Item passiveSupplierModule;
     public static Item itemSinkModule;
     public static Item polymorphicItemSinkModule;
+    public static Item extractorModule;
+    public static Item extractorModuleMk2;
+    public static Item extractorModuleMk3;
 
     @EventListener
     public void registerBlocks(BlockRegistryEvent event) {
@@ -187,5 +187,8 @@ public class LogisticsPipes {
         passiveSupplierModule = new ModuleItem(NAMESPACE.id("passive_supplier_module"), PassiveSupplierModule::new).setTranslationKey(NAMESPACE, "passive_supplier_module");
         itemSinkModule = new ModuleItem(NAMESPACE.id("item_sink_module"), ItemSinkModule::new).setTranslationKey(NAMESPACE, "item_sink_module");
         polymorphicItemSinkModule = new ModuleItem(NAMESPACE.id("polymorphic_item_sink_module"), PolymorphicItemSinkModule::new).setTranslationKey(NAMESPACE, "polymorphic_item_sink_module");
+        extractorModule = new ModuleItem(NAMESPACE.id("extractor_module"), ExtractorModule::new).setTranslationKey(NAMESPACE, "extractor_module");
+        extractorModuleMk2 = new ModuleItem(NAMESPACE.id("extractor_module_mk2"), ExtractorModuleMk2::new).setTranslationKey(NAMESPACE, "extractor_module_mk2");
+        extractorModuleMk3 = new ModuleItem(NAMESPACE.id("extractor_module_mk3"), ExtractorModuleMk3::new).setTranslationKey(NAMESPACE, "extractor_module_mk3");
     }
 }

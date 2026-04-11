@@ -5,6 +5,7 @@ import net.danygames2014.logisticspipes.block.entity.BasicLogisticPipeBlockEntit
 import net.danygames2014.logisticspipes.block.entity.ChassisLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.entity.SupplierLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.client.gui.screen.*;
+import net.danygames2014.logisticspipes.interfaces.SneakyDirectionReceiver;
 import net.danygames2014.logisticspipes.module.ItemSinkModule;
 import net.danygames2014.logisticspipes.module.PassiveSupplierModule;
 import net.danygames2014.logisticspipes.module.ProviderModule;
@@ -31,6 +32,7 @@ public class ScreenHandlerListener {
         event.register(NAMESPACE.id("provider"), new GuiHandler(this::openProviderScreen, () -> null));
         event.register(NAMESPACE.id("passive_supplier"), new GuiHandler(this::openPassiveSupplierScreen, () -> null));
         event.register(NAMESPACE.id("item_sink"), new GuiHandler(this::openItemSinkScreen, () -> null));
+        event.register(NAMESPACE.id("extractor"), new GuiHandler(this::openExtractorScreen, () -> null));
     }
 
     private Screen openProviderScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
@@ -56,6 +58,14 @@ public class ScreenHandlerListener {
         }
         if(blockEntity instanceof BasicLogisticPipeBlockEntity pipe){
             return  new ItemSinkScreen(player.inventory, pipe, (ItemSinkModule) pipe.getLogisticsModule(), null, -1);
+        }
+        return null;
+    }
+
+    private Screen openExtractorScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
+        BlockEntity blockEntity = player.world.getBlockEntity(message.ints[0], message.ints[1], message.ints[2]);
+        if(blockEntity instanceof ChassisLogisticPipeBlockEntity pipe){
+            return new ExtractorScreen(player.inventory, pipe, (SneakyDirectionReceiver) pipe.getLogisticsModule().getSubModule(message.ints[3]), Minecraft.INSTANCE.currentScreen, message.ints[3]);
         }
         return null;
     }

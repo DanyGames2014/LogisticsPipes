@@ -91,9 +91,7 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
     }
 
     public BlockEntity getPointedBlockEntity(){
-        Position position = new Position(x, y, z, direction);
-        position.moveForwards(1.0);
-        return world.getBlockEntity((int)position.x, (int)position.y, (int)position.z);
+        return world.getBlockEntity(x + direction.getOffsetX(), y + direction.getOffsetY(), z + direction.getOffsetZ());
     }
 
     public void nextDirection() {

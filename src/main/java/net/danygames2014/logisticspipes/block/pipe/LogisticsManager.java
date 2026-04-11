@@ -37,6 +37,7 @@ public class LogisticsManager implements net.danygames2014.logisticspipes.interf
         item.setSource(sourceRouterUUID);
         if(bestReply.getValue1() != null){
             item.setDestination(bestReply.getValue1());
+            RoutingUtil.getRouter(world, bestReply.getValue1()).getPipe().smartAdvertiseRouter();
             if(bestReply.getValue2().isPassive){
                 if(bestReply.getValue2().isDefault){
                     item.setTransportMode(RoutedItem.TransportMode.Default);
@@ -64,6 +65,10 @@ public class LogisticsManager implements net.danygames2014.logisticspipes.interf
         Pair<Long, SinkReply> search = getBestReply(stack, router, excludeSource);
 
         if (search.getValue2() == null) return false;
+        if(search.getValue1() != null) {
+            RoutingUtil.getRouter(world, search.getValue1()).getPipe().smartAdvertiseRouter();
+        }
+
 
         return (allowDefault || !search.getValue2().isDefault);
     }
@@ -99,23 +104,15 @@ public class LogisticsManager implements net.danygames2014.logisticspipes.interf
     private Pair<Long, SinkReply> getBestReply(ItemStack item, Router sourceRouter, boolean excludeSource) {
         Long potentialDestination = null;
         SinkReply bestReply = null;
-
-        List<Router> candidates = new ArrayList<>();
-
-        if (!excludeSource) {
-            candidates.add(sourceRouter);
-        }
-
-        for (RouteDestination rd : sourceRouter.getRoutingTable().values()) {
-            candidates.add(rd.router);
-        }
-
-        for(Router candidateRouter : candidates){
+        for(Router candidateRouter : sourceRouter.getNetwork().routers){
             LogisticsModule module = candidateRouter.getPipe().getLogisticsModule();
             if(candidateRouter.getPipe() == null || !candidateRouter.getPipe().isEnabled()){
                 continue;
             }
             if(module == null){
+                continue;
+            }
+            if (excludeSource && candidateRouter.getRouterId() == sourceRouter.getRouterId()) {
                 continue;
             }
             SinkReply reply = module.sinksItem(item);
