@@ -6,6 +6,7 @@ import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.modificationstation.stationapi.impl.item.StationNBTSetter;
 
 import java.util.LinkedList;
 
@@ -76,7 +77,7 @@ public class ItemIdentifier {
 
     public ItemStack makeNormalStack(int stackSize){
         ItemStack stack = new ItemStack(this.item, stackSize, this.itemDamage);
-        stack.getStationNbt().values().addAll(nbt.values());
+        StationNBTSetter.cast(stack).setStationNbt(nbt);
         return stack;
     }
 

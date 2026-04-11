@@ -15,6 +15,12 @@ item.logisticspipes.provider_module.name=Provider Module
 item.logisticspipes.passive_supplier_module.name=Passive Supplier Module
 item.logisticspipes.item_sink_module.name=ItemSink Module
 item.logisticspipes.polymorphic_item_sink_module.name=Polymorphic ItemSink Module
+item.logisticspipes.extractor_module.name=Extractor Module
+item.logisticspipes.extractor_module_mk2.name=Extractor Mk2 Module
+item.logisticspipes.extractor_module_mk3.name=Extractor Mk3 Module
+item.logisticspipes.advanced_extractor_module.name=Advanced Extractor Module
+item.logisticspipes.advanced_extractor_module_mk2.name=Advanced Extractor Mk2 Module
+item.logisticspipes.advanced_extractor_module_mk3.name=Advanced Extractor Mk3 Module
 
 # Debug
 item.logisticspipes.magic_wand.name=Magic Wand

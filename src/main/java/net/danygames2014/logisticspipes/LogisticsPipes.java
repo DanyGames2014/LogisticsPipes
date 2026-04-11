@@ -58,6 +58,10 @@ public class LogisticsPipes {
     public static Item extractorModule;
     public static Item extractorModuleMk2;
     public static Item extractorModuleMk3;
+    public static Item advancedExtractorModule;
+    public static Item advancedExtractorModuleMk2;
+    public static Item advancedExtractorModuleMk3;
+
 
     @EventListener
     public void registerBlocks(BlockRegistryEvent event) {
@@ -190,5 +194,9 @@ public class LogisticsPipes {
         extractorModule = new ModuleItem(NAMESPACE.id("extractor_module"), ExtractorModule::new).setTranslationKey(NAMESPACE, "extractor_module");
         extractorModuleMk2 = new ModuleItem(NAMESPACE.id("extractor_module_mk2"), ExtractorModuleMk2::new).setTranslationKey(NAMESPACE, "extractor_module_mk2");
         extractorModuleMk3 = new ModuleItem(NAMESPACE.id("extractor_module_mk3"), ExtractorModuleMk3::new).setTranslationKey(NAMESPACE, "extractor_module_mk3");
+        advancedExtractorModule = new ModuleItem(NAMESPACE.id("advanced_extractor_module"), AdvancedExtractorModule::new).setTranslationKey(NAMESPACE, "advanced_extractor_module");
+        advancedExtractorModuleMk2 = new ModuleItem(NAMESPACE.id("advanced_extractor_module_mk2"), AdvancedExtractorModuleMk2::new).setTranslationKey(NAMESPACE, "advanced_extractor_module_mk2");
+        advancedExtractorModuleMk3 = new ModuleItem(NAMESPACE.id("advanced_extractor_module_mk3"), AdvancedExtractorModuleMk3::new).setTranslationKey(NAMESPACE, "advanced_extractor_module_mk3");
+
     }
 }

@@ -6,6 +6,7 @@ import net.danygames2014.logisticspipes.util.tuple.Pair3;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.util.math.Direction;
+import net.modificationstation.stationapi.impl.item.StationNBTSetter;
 
 import java.util.LinkedList;
 
@@ -28,7 +29,7 @@ public class ItemIdentifierStack {
 
     public ItemStack makeNormalStack(){
         ItemStack stack = new ItemStack(item.item, this.stackSize, item.itemDamage);
-        stack.getStationNbt().values().addAll(item.nbt.values());
+        StationNBTSetter.cast(stack).setStationNbt(item.nbt);
         return stack;
     }
 

@@ -1,0 +1,236 @@
+package net.danygames2014.logisticspipes.module;
+
+import com.llamalad7.mixinextras.lib.antlr.runtime.misc.Utils;
+import net.danygames2014.logisticspipes.LogisticsPipes;
+import net.danygames2014.logisticspipes.block.pipe.LogisticsManager;
+import net.danygames2014.logisticspipes.interfaces.*;
+import net.danygames2014.logisticspipes.util.*;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.modificationstation.stationapi.api.util.Identifier;
+import net.modificationstation.stationapi.api.util.math.Direction;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+public class AdvancedExtractorModule implements LogisticsModule, SneakyDirectionReceiver, ClientInformationProvider, HUDModuleHandler, ModuleWatchReceiver, ModuleInventoryReceive {
+    protected int currentTick = 0;
+    private final SimpleInventory filterInventory = new SimpleInventory(9, "Item list", 1, this::markDirty);
+
+    private boolean itemsIncluded = true;
+    protected InventoryProvider invProvider;
+    protected SendRoutedItem itemSender;
+    protected WorldProvider worldProvider;
+    protected SneakyDirection sneakyDirection = SneakyDirection.Default;
+
+    private int slot = 0;
+    private int x = 0;
+    private int y = 0;
+    private int z = 0;
+
+    private final List<PlayerEntity> localModeWatchers = new ArrayList<>();
+
+    @Override
+    public void registerHandler(InventoryProvider invProvider, SendRoutedItem itemSender, WorldProvider world) {
+        this.invProvider = invProvider;
+        this.itemSender = itemSender;
+        this.worldProvider = world;
+    }
+
+    @Override
+    public Identifier getScreenIdentifier() {
+        return LogisticsPipes.NAMESPACE.id("advanced_extractor");
+    }
+
+    public SimpleInventory getFilterInventory(){
+        return filterInventory;
+    }
+
+    @Override
+    public SneakyDirection getSneakyDirection() {
+        return sneakyDirection;
+    }
+
+    @Override
+    public void setSneakyDirection(SneakyDirection sneakyDirection) {
+        this.sneakyDirection = sneakyDirection;
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt, String prefix) {
+        filterInventory.readNbt(nbt, prefix);
+        setItemsIncluded(nbt.getBoolean("itemsIncluded"));
+        sneakyDirection = SneakyDirection.values()[nbt.getInt("sneakydirection")];
+    }
+
+    @Override
+    public void writeNbt(NbtCompound nbt, String prefix) {
+        filterInventory.writeNbt(nbt, prefix);
+        nbt.putBoolean("itemsIncluded", areItemsIncluded());
+        nbt.putInt("sneakydirection", sneakyDirection.ordinal());
+    }
+
+    @Override
+    public SinkReply sinksItem(ItemStack item) {
+        return null;
+    }
+
+    @Override
+    public LogisticsModule getSubModule(int slot) {
+        return null;
+    }
+
+    protected int ticksToAction() {
+        return 100;
+    }
+
+    protected int itemsToExtract() {
+        return 1;
+    }
+
+    @Override
+    public void tick() {
+        if(++currentTick < ticksToAction()){
+            return;
+        }
+        currentTick = 0;
+
+        Inventory targetInventory = invProvider.getInventory();
+        if(targetInventory == null){
+            return;
+        }
+        Direction extractDirection = switch (getSneakyDirection()) {
+            case Bottom -> Direction.DOWN;
+            case Top -> Direction.UP;
+            case Side -> Direction.SOUTH;
+            default -> invProvider.inventoryDirection().getOpposite();
+        };
+
+        if(targetInventory instanceof ItemHandlerBlockCapabilityInventoryWrapper wrapper) {
+            wrapper.side = extractDirection;
+        }
+
+        ItemStack stack = checkExtract(targetInventory, true, invProvider.inventoryDirection().getOpposite());
+        if(stack == null) {
+            return;
+        }
+        itemSender.sendStack(stack);
+    }
+
+    public ItemStack checkExtract(Inventory inventory, boolean doRemove, Direction from) {
+        return checkExtractGeneric(inventory, doRemove, from);
+    }
+
+    public ItemStack checkExtractGeneric(Inventory inventory, boolean doRemove, Direction from) {
+        for (int k = 0; k < inventory.size(); k++) {
+            if ((inventory.getStack(k) == null) || (inventory.getStack(k).count <= 0)) {
+                continue;
+            }
+
+            ItemStack slot = inventory.getStack(k);
+            if ((slot != null) && (slot.count > 0) && (CanExtract(slot))) {
+                if (doRemove) {
+                    int count = Math.min(itemsToExtract(), slot.count);
+
+                    if(count <= 0) {
+                        return null;
+                    }
+
+                    return inventory.removeStack(k, itemsToExtract());
+                }
+                return slot;
+            }
+        }
+        return null;
+    }
+
+    public boolean CanExtract(ItemStack item) {
+        if(!shouldSend(item)) {
+            return false;
+        }
+
+        for (int i = 0; i < this.filterInventory.size(); i++) {
+
+            ItemStack stack = this.filterInventory.getStack(i);
+            if ((stack != null) && (stack.itemId == item.itemId)) {
+                if (Item.ITEMS[item.itemId].isDamageable()) {
+                    return areItemsIncluded();
+                }
+                if (stack.getDamage() == item.getDamage()) {
+                    return areItemsIncluded();
+                }
+            }
+        }
+        return !areItemsIncluded();
+    }
+
+    protected boolean shouldSend(ItemStack stack){
+        return LogisticsManager.getInstance().hasDestination(worldProvider.getWorld(), stack, true, itemSender.getSourceId(), true);
+    }
+
+    public boolean areItemsIncluded() {
+        return itemsIncluded;
+    }
+
+    public void setItemsIncluded(boolean flag) {
+        itemsIncluded = flag;
+//        MainProxy.sendToPlayerList(new PacketModuleInteger(NetworkConstants.ADVANCED_EXTRACTOR_MODULE_INCLUDED_RESPONSE, xCoord, yCoord, zCoord, slot, areItemsIncluded() ? 1 : 0).getPacket(), localModeWatchers);
+    }
+
+    @Override
+    public List<String> getClientInformation() {
+        List<String> list = new ArrayList<String>();
+        list.add(areItemsIncluded() ? "Included" : "Excluded");
+        list.add("Extraction: " + sneakyDirection.name());
+        list.add("Filter: ");
+        list.add("<inventory>");
+        list.add("<that>");
+        return list;
+    }
+
+    @Override
+    public void registerPosition(int x, int y, int z, int slot) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+        this.slot = slot;
+    }
+
+    public void markDirty(){
+//        MainProxy.sendToPlayerList(new PacketModuleInvContent(NetworkConstants.MODULE_INV_CONTENT, xCoord, yCoord, zCoord, slot, ItemIdentifierStack.getListFromInventory(inventory)).getPacket(), localModeWatchers);
+    }
+
+    @Override
+    public void handleInvContent(LinkedList<ItemIdentifierStack> list) {
+        filterInventory.handleItemStackList(list);
+    }
+
+    @Override
+    public void startWatching() {
+
+    }
+
+    @Override
+    public void stopWatching() {
+
+    }
+
+    @Override
+    public void startWatching(PlayerEntity player) {
+
+    }
+
+    @Override
+    public void stopWatching(PlayerEntity player) {
+
+    }
+
+    @Override
+    public HUDModuleRenderer getRenderer() {
+        return null;
+    }
+}
