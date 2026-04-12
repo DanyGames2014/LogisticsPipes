@@ -2,6 +2,7 @@ package net.danygames2014.logisticspipes.client.gui.screen;
 
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.interfaces.SneakyDirectionReceiver;
+import net.danygames2014.logisticspipes.network.ExtractorModuleDirectionC2SPacket;
 import net.danygames2014.logisticspipes.screen.handler.ExtractorScreenHandler;
 import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
 import net.danygames2014.logisticspipes.util.SneakyDirection;
@@ -9,14 +10,15 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import org.lwjgl.opengl.GL11;
 
 public class ExtractorScreen extends ScreenWithPrevious {
-    private SneakyDirectionReceiver directionReceiver;
-    private int slot;
+    private final SneakyDirectionReceiver directionReceiver;
+    private final int slot;
 
     public ExtractorScreen(PlayerEntity player, LogisticPipeBlockEntity pipe, SneakyDirectionReceiver directionReceiver, Screen previousScreen, int slot) {
-        super(player, pipe,new ExtractorScreenHandler(player, null), previousScreen);
+        super(player, pipe,new ExtractorScreenHandler(player, directionReceiver), previousScreen);
         this.directionReceiver = directionReceiver;
         this.backgroundWidth = 160;
         this.backgroundHeight = 200;
@@ -102,8 +104,9 @@ public class ExtractorScreen extends ScreenWithPrevious {
                 break;
         }
 
-//        PacketDispatcher.sendPacketToServer(new PacketPipeInteger(NetworkConstants.EXTRACTOR_MODULE_DIRECTION_SET, pipe.xCoord, pipe.yCoord, pipe.zCoord, guibutton.id + (slot * 10)).getPacket());
-
+        if (player.world.isRemote) {
+            PacketHelper.send(new ExtractorModuleDirectionC2SPacket(directionReceiver.getSneakyDirection().ordinal()));
+        }
 
         refreshButtons();
         super.buttonClicked(button);

@@ -2,11 +2,14 @@ package net.danygames2014.logisticspipes.client.gui.screen;
 
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.module.AdvancedExtractorModule;
+import net.danygames2014.logisticspipes.network.AdvancedExtractorModuleCommandC2SPacket;
 import net.danygames2014.logisticspipes.screen.handler.AdvancedExtractorScreenHandler;
 import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.World;
+import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import org.lwjgl.opengl.GL11;
 
 public class AdvancedExtractorScreen extends ScreenWithPrevious {
@@ -14,7 +17,7 @@ public class AdvancedExtractorScreen extends ScreenWithPrevious {
     private final int slot;
 
     public AdvancedExtractorScreen(PlayerEntity player, LogisticPipeBlockEntity pipe, AdvancedExtractorModule advancedExtractor, Screen previousScreen, int slot) {
-        super(player, pipe, new AdvancedExtractorScreenHandler(player, advancedExtractor.getFilterInventory()), previousScreen);
+        super(player, pipe, new AdvancedExtractorScreenHandler(player, advancedExtractor), previousScreen);
         this.advancedExtractor = advancedExtractor;
         this.slot = slot;
         this.backgroundWidth = 175;
@@ -50,10 +53,15 @@ public class AdvancedExtractorScreen extends ScreenWithPrevious {
         if (button.id == 0) {
             advancedExtractor.setItemsIncluded(!advancedExtractor.areItemsIncluded());
             ((ButtonWidget) buttons.get(0)).text = advancedExtractor.areItemsIncluded() ? "Included" : "Excluded";
-//            PacketDispatcher.sendPacketToServer(new PacketPipeInteger(NetworkConstants.ADVANCED_EXTRACTOR_MODULE_INCLUDED_SET, pipe.xCoord, pipe.yCoord, pipe.zCoord, (_advancedExtractor.areItemsIncluded() ? 1 : 0) + (slot * 10)).getPacket());
+            if (player.world.isRemote) {
+                PacketHelper.send(new AdvancedExtractorModuleCommandC2SPacket(0, advancedExtractor.areItemsIncluded() ? 1 : 0));
+            }
         }
         if (button.id == 1) {
             // TODO: change sneaky direction
+//            if (player.world.isRemote) {
+//                PacketHelper.send(new AdvancedExtractorModuleCommandC2SPacket(1, advancedExtractor.getSneakyDirection().ordinal()));
+//            }
         }
     }
 }
