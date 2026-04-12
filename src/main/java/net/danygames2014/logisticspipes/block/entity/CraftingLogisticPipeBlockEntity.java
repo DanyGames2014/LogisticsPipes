@@ -204,6 +204,7 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
                 template.addRequirement(ItemIdentifierStack.getFromStack(resourceStack), this);
             }
             else{
+                getSatelliteRouter().smartAdvertiseRouter();
                 template.addRequirement(ItemIdentifierStack.getFromStack(resourceStack), getSatelliteRouter().getPipe());
             }
 

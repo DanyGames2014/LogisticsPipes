@@ -2,12 +2,14 @@ package net.danygames2014.logisticspipes.block.entity;
 
 import net.danygames2014.buildcraft.block.PipeBlock;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeBlockEntity;
+import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.pipe.ItemSendMode;
 import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.request.RequestManager;
 import net.danygames2014.logisticspipes.routing.LogisticsNetwork;
 import net.danygames2014.logisticspipes.routing.LogisticsNetworkManager;
+import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
 import net.danygames2014.logisticspipes.util.ItemHandlerBlockCapabilityInventoryWrapper;
 import net.danygames2014.logisticspipes.util.ItemIdentifier;
 import net.danygames2014.logisticspipes.util.ItemIdentifierStack;
@@ -18,6 +20,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 import java.util.*;
@@ -45,6 +48,13 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
     @Override
     public void setup() {
         throttleTime = 40;
+    }
+
+    @Override
+    public void openModuleScreen(PlayerEntity player) {
+        GuiHelper.openGUI(player, LogisticsPipes.NAMESPACE.id("satellite"),null, new ModuleScreenHandler(player, null), (messagePacket) -> {
+            messagePacket.ints = new int[]{messagePacket.ints != null ? messagePacket.ints[0] : 0, x, y, z};
+        });
     }
 
     @Override

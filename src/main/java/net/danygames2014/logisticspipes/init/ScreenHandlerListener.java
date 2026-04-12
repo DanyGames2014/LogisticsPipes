@@ -1,9 +1,6 @@
 package net.danygames2014.logisticspipes.init;
 
-import net.danygames2014.logisticspipes.block.entity.BasicLogisticPipeBlockEntity;
-import net.danygames2014.logisticspipes.block.entity.ChassisLogisticPipeBlockEntity;
-import net.danygames2014.logisticspipes.block.entity.CraftingLogisticPipeBlockEntity;
-import net.danygames2014.logisticspipes.block.entity.SupplierLogisticPipeBlockEntity;
+import net.danygames2014.logisticspipes.block.entity.*;
 import net.danygames2014.logisticspipes.client.gui.screen.*;
 import net.danygames2014.logisticspipes.interfaces.SneakyDirectionReceiver;
 import net.danygames2014.logisticspipes.module.*;
@@ -29,6 +26,7 @@ public class ScreenHandlerListener {
         event.register(NAMESPACE.id("chassis"), new GuiHandler(this::openChassisScreen, ChassisLogisticPipeBlockEntity::new));
         event.register(NAMESPACE.id("supplier"), new GuiHandler(this::openSupplierScreen, SupplierLogisticPipeBlockEntity::new));
         event.register(NAMESPACE.id("crafting"), new GuiHandler(this::openCraftingScreen, CraftingLogisticPipeBlockEntity::new));
+        event.register(NAMESPACE.id("satellite"), new GuiHandler(this::openSatelliteScreen, SatelliteLogisticPipeBlockEntity::new));
         event.register(NAMESPACE.id("provider"), new GuiHandler(this::openProviderScreen, ProviderModule::new));
         event.register(NAMESPACE.id("passive_supplier"), new GuiHandler(this::openPassiveSupplierScreen, PassiveSupplierModule::new));
         event.register(NAMESPACE.id("item_sink"), new GuiHandler(this::openItemSinkScreen, ItemSinkModule::new));
@@ -61,6 +59,11 @@ public class ScreenHandlerListener {
     private Screen openCraftingScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
         BlockEntity blockEntity = player.world.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]);
         return new CraftingPipeScreen(player, ((CraftingLogisticPipeBlockEntity) blockEntity).getDummyInventory(), (CraftingLogisticPipeBlockEntity) blockEntity);
+    }
+
+    private Screen openSatelliteScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
+        BlockEntity blockEntity = player.world.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]);
+        return new SatelliteScreen((SatelliteLogisticPipeBlockEntity) blockEntity, player);
     }
 
     // Modules
