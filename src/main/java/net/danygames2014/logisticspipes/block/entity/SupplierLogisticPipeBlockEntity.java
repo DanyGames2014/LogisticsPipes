@@ -55,7 +55,7 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
     @Override
     public void openModuleScreen(PlayerEntity player) {
-        GuiHelper.openGUI(player, LogisticsPipes.NAMESPACE.id("supplier"), filterInventory, new SupplierScreenHandler(player, filterInventory), (messagePacket) -> {
+        GuiHelper.openGUI(player, LogisticsPipes.NAMESPACE.id("supplier"), filterInventory, new SupplierScreenHandler(player, this, filterInventory), (messagePacket) -> {
             messagePacket.ints = new int[]{messagePacket.ints != null ? messagePacket.ints[0] : 0, x, y, z};
         });
     }

@@ -3,12 +3,14 @@ package net.danygames2014.logisticspipes.client.gui.screen;
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.gui.StringHandlerButtonWidget;
 import net.danygames2014.logisticspipes.module.ItemSinkModule;
+import net.danygames2014.logisticspipes.network.DefaultRouteToggleC2SPacket;
 import net.danygames2014.logisticspipes.screen.handler.ItemSinkScreenHandler;
 import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import org.lwjgl.opengl.GL11;
 
 public class ItemSinkScreen extends ScreenWithPrevious {
@@ -16,7 +18,7 @@ public class ItemSinkScreen extends ScreenWithPrevious {
     private final int slot;
 
     public ItemSinkScreen(PlayerEntity player, LogisticPipeBlockEntity pipe, ItemSinkModule itemSink, Screen previousScreen, int slot) {
-        super(player, pipe, new ItemSinkScreenHandler(player, itemSink.getFilterInventory()), previousScreen);
+        super(player, pipe, new ItemSinkScreenHandler(player, itemSink), previousScreen);
         this.itemSink = itemSink;
         this.slot = slot;
         this.backgroundWidth = 175;
@@ -36,7 +38,7 @@ public class ItemSinkScreen extends ScreenWithPrevious {
     protected void drawForeground() {
         textRenderer.draw(itemSink.getFilterInventory().getName(), 8, 6, 0x404040);
         textRenderer.draw("Inventory", 8, backgroundHeight - 92, 0x404040);
-        textRenderer.draw("Default route:", 65, 45, 0x404040);
+        textRenderer.draw("Default route:", 65, 43, 0x404040);
     }
 
     @Override
@@ -56,7 +58,9 @@ public class ItemSinkScreen extends ScreenWithPrevious {
     protected void buttonClicked(ButtonWidget button) {
         if (button.id == 0) {
             itemSink.setDefaultRoute(!itemSink.isDefaultRoute());
-            // TODO: send packet to server
+            if (player.world.isRemote) {
+                PacketHelper.send(new DefaultRouteToggleC2SPacket(itemSink.isDefaultRoute()));
+            }
         }
     }
 }

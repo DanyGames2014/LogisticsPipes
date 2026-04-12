@@ -26,7 +26,7 @@ public class ScreenHandlerListener {
     @EventListener
     public void registerScreenHandlers(GuiHandlerRegistryEvent event) {
         event.register(NAMESPACE.id("chassis"), new GuiHandler(this::openChassisScreen, ChassisLogisticPipeBlockEntity::new));
-        event.register(NAMESPACE.id("supplier"), new GuiHandler((GuiHandler.ScreenFactoryNoMessage) this::openSupplierScreen, SupplierLogisticPipeBlockEntity::new));
+        event.register(NAMESPACE.id("supplier"), new GuiHandler(this::openSupplierScreen, SupplierLogisticPipeBlockEntity::new));
         event.register(NAMESPACE.id("provider"), new GuiHandler(this::openProviderScreen, ProviderModule::new));
         event.register(NAMESPACE.id("passive_supplier"), new GuiHandler(this::openPassiveSupplierScreen, PassiveSupplierModule::new));
         event.register(NAMESPACE.id("item_sink"), new GuiHandler(this::openItemSinkScreen, ItemSinkModule::new));
@@ -47,8 +47,13 @@ public class ScreenHandlerListener {
         return null;
     }
 
-    private Screen openSupplierScreen(PlayerEntity player, Inventory inventory) {
-        return new SupplierScreen(player, ((SupplierLogisticPipeBlockEntity) inventory));
+    private Screen openSupplierScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
+        BlockEntity blockEntity = player.world.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]);
+        if (blockEntity instanceof SupplierLogisticPipeBlockEntity pipe) {
+            return new SupplierScreen(player, pipe);
+        }
+        
+        return null;
     }
     
     // Modules

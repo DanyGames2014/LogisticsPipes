@@ -1,10 +1,12 @@
 package net.danygames2014.logisticspipes.client.gui.screen;
 
 import net.danygames2014.logisticspipes.block.entity.SupplierLogisticPipeBlockEntity;
+import net.danygames2014.logisticspipes.network.RequestPartialToggleC2SPacket;
 import net.danygames2014.logisticspipes.screen.handler.SupplierScreenHandler;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import org.lwjgl.opengl.GL11;
 
 public class SupplierScreen extends LogisticsBaseScreen {
@@ -12,7 +14,7 @@ public class SupplierScreen extends LogisticsBaseScreen {
     SupplierLogisticPipeBlockEntity pipe;
 
     public SupplierScreen(PlayerEntity player, SupplierLogisticPipeBlockEntity pipe) {
-        super(player, pipe, new SupplierScreenHandler(player, pipe.getFilterInventory()));
+        super(player, pipe, new SupplierScreenHandler(player, pipe, pipe.getFilterInventory()));
         this.pipe = pipe;
         this.dummyInventory = pipe.getFilterInventory();
         this.backgroundWidth = 194;
@@ -47,6 +49,9 @@ public class SupplierScreen extends LogisticsBaseScreen {
     protected void buttonClicked(ButtonWidget button) {
         if (button.id == 0) {
             pipe.setRequestingPartials(!pipe.isRequestingPartials());
+            if (player.world.isRemote) {
+                PacketHelper.send(new RequestPartialToggleC2SPacket(pipe.isRequestingPartials()));
+            }
             ((ButtonWidget) buttons.get(0)).text = pipe.isRequestingPartials() ? "Yes" : "No";
         }
         super.buttonClicked(button);
