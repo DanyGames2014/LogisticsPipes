@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "rpr"
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "p": {
+      "item": "logisticspipes:basic_item_pipe"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:satellite_item_pipe",
+    "count": 1
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " c ",
+    "dpc"
+  ],
+  "key": {
+    "c": {
+      "item": "buildcraft:redstone_diamond_chipset"
+    },
+    "p": {
+      "item": "logisticspipes:basic_item_pipe"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:chassis_item_pipe_mk4",
+    "count": 1
+  }
+}

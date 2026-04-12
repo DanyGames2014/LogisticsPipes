@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "grg",
+    "cdc",
+    "grg"
+  ],
+  "key": {
+    "g": {
+      "item": "minecraft:glass"
+    },
+    "r": {
+      "item": "minecraft:redstone_torch_lit"
+    },
+    "c": {
+      "item": "buildcraft:golden_gear"
+    },
+    "d": {
+      "item": "buildcraft:diamond_item_pipe"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:basic_item_pipe",
+    "count": 8
+  }
+}

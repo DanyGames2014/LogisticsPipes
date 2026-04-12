@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "lpl"
+  ],
+  "key": {
+    "l": {
+      "item": "minecraft:dye",
+      "damage": 4
+    },
+    "p": {
+      "item": "logisticspipes:basic_item_pipe"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:supplier_item_pipe",
+    "count": 1
+  }
+}

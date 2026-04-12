@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "gdg",
+    "dpd",
+    "gdg"
+  ],
+  "key": {
+    "d": {
+      "item": "minecraft:diamond_block"
+    },
+    "g": {
+      "item": "minecraft:gold_block"
+    },
+    "p": {
+      "item": "logisticspipes:basic_item_pipe"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:chassis_item_pipe_mk5",
+    "count": 1
+  }
+}

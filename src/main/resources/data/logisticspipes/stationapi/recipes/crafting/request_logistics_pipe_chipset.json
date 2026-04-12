@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "cpc"
+  ],
+  "key": {
+    "c": {
+      "item": "buildcraft:redstone_golden_chipset"
+    },
+    "p": {
+      "item": "logisticspipes:basic_item_pipe"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:request_item_pipe",
+    "count": 1
+  }
+}

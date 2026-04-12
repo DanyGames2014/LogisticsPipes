@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " c ",
+    "cpc"
+  ],
+  "key": {
+    "c": {
+      "item": "buildcraft:redstone_iron_chipset"
+    },
+    "p": {
+      "item": "logisticspipes:basic_item_pipe"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:chassis_item_pipe_mk2",
+    "count": 1
+  }
+}

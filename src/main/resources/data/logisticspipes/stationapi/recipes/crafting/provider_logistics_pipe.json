@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "g",
+    "p"
+  ],
+  "key": {
+    "g": {
+      "item": "minecraft:glowstone"
+    },
+    "p": {
+      "item": "logisticspipes:basic_item_pipe"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:provider_item_pipe",
+    "count": 1
+  }
+}
