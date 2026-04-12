@@ -49,7 +49,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     public long statLifetimeReceived;
     public long statLifetimeRelayed;
 
-    protected int throttleTime = 20;
+    public int throttleTime = 20;
     private int throttleTimeLeft = 0;
 
     protected final LinkedList<Pair3<RoutedItem, Direction, ItemSendMode>> sendQueue = new LinkedList<>();

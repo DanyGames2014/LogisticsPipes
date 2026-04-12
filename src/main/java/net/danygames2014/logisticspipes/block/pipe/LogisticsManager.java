@@ -3,6 +3,7 @@ package net.danygames2014.logisticspipes.block.pipe;
 import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
 import net.danygames2014.logisticspipes.interfaces.ProvideItems;
 import net.danygames2014.logisticspipes.interfaces.RoutedItem;
+import net.danygames2014.logisticspipes.interfaces.routing.CraftItems;
 import net.danygames2014.logisticspipes.routing.Router;
 import net.danygames2014.logisticspipes.util.ItemIdentifier;
 import net.danygames2014.logisticspipes.util.RoutingUtil;
@@ -79,10 +80,19 @@ public class LogisticsManager implements net.danygames2014.logisticspipes.interf
         return (allowDefault || !search.getValue2().isDefault);
     }
 
-    // TODO: implement this
     @Override
     public LinkedList<ItemIdentifier> getCraftableItems(World world, Set<Router> validDestinations) {
-        return null;
+        LinkedList<ItemIdentifier> craftableItems = new LinkedList<>();
+        for (Router r : validDestinations){
+            if(r == null) continue;
+            if (!(r.getPipe() instanceof CraftItems crafter)) continue;
+
+            ItemIdentifier craftedItem = crafter.getCraftedItem();
+            if (craftedItem != null && !craftableItems.contains(craftedItem)){
+                craftableItems.add(craftedItem);
+            }
+        }
+        return craftableItems;
     }
 
     @Override
