@@ -2,10 +2,12 @@ package net.danygames2014.logisticspipes.client.gui.screen;
 
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.interfaces.SneakyDirectionReceiver;
-import net.danygames2014.logisticspipes.screen.DummyScreenHandler;
+import net.danygames2014.logisticspipes.screen.handler.ExtractorScreenHandler;
+import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
 import net.danygames2014.logisticspipes.util.SneakyDirection;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import org.lwjgl.opengl.GL11;
 
@@ -13,8 +15,8 @@ public class ExtractorScreen extends ScreenWithPrevious {
     private SneakyDirectionReceiver directionReceiver;
     private int slot;
 
-    public ExtractorScreen(Inventory playerInventory, LogisticPipeBlockEntity pipe, SneakyDirectionReceiver directionReceiver, Screen previousScreen, int slot) {
-        super(new DummyScreenHandler(playerInventory, null), pipe, previousScreen);
+    public ExtractorScreen(PlayerEntity player, LogisticPipeBlockEntity pipe, SneakyDirectionReceiver directionReceiver, Screen previousScreen, int slot) {
+        super(player, pipe,new ExtractorScreenHandler(player, null), previousScreen);
         this.directionReceiver = directionReceiver;
         this.backgroundWidth = 160;
         this.backgroundHeight = 200;
@@ -34,6 +36,30 @@ public class ExtractorScreen extends ScreenWithPrevious {
         buttons.add(new ButtonWidget(3, left + 10, top + 43, 20, 20, ""));
 
         refreshButtons();
+    }
+
+    @Override
+    protected void drawForeground() {
+        refreshButtons();
+        super.drawForeground();
+
+        int left = width / 2 - backgroundWidth / 2;
+        int top = height / 2 - backgroundHeight / 2;
+
+        textRenderer.draw("Extract orientation", backgroundWidth / 2 - textRenderer.getWidth("Extract orientation") / 2, 10, 0x404040);
+        textRenderer.draw("Default", 35, 50, 0x404040);
+        textRenderer.draw("Top", 100, 30, 0x404040);
+        textRenderer.draw("Side", 100, 50, 0x404040);
+        textRenderer.draw("Bottom", 100, 70, 0x404040);
+    }
+
+    @Override
+    protected void drawBackground(float tickDelta) {
+        minecraft.textureManager.bindTexture(minecraft.textureManager.getTextureId("/assets/logisticspipes/stationapi/textures/gui/extractor.png"));
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        int j = (this.width - this.backgroundWidth) / 2;
+        int k = (this.height - this.backgroundHeight) / 2;
+        drawTexture(j, k, 0, 0, backgroundWidth, backgroundHeight);
     }
 
     private void refreshButtons() {
@@ -81,30 +107,6 @@ public class ExtractorScreen extends ScreenWithPrevious {
 
         refreshButtons();
         super.buttonClicked(button);
-    }
-
-    @Override
-    protected void drawForeground() {
-        refreshButtons();
-        super.drawForeground();
-
-        int left = width / 2 - backgroundWidth / 2;
-        int top = height / 2 - backgroundHeight / 2;
-
-        textRenderer.draw("Extract orientation", backgroundWidth / 2 - textRenderer.getWidth("Extract orientation") / 2, 10, 0x404040);
-        textRenderer.draw("Default", 35, 50, 0x404040);
-        textRenderer.draw("Top", 100, 30, 0x404040);
-        textRenderer.draw("Side", 100, 50, 0x404040);
-        textRenderer.draw("Bottom", 100, 70, 0x404040);
-    }
-
-    @Override
-    protected void drawBackground(float tickDelta) {
-        minecraft.textureManager.bindTexture(minecraft.textureManager.getTextureId("/assets/logisticspipes/stationapi/textures/gui/extractor.png"));
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        int j = (this.width - this.backgroundWidth) / 2;
-        int k = (this.height - this.backgroundHeight) / 2;
-        drawTexture(j, k, 0, 0, backgroundWidth, backgroundHeight);
     }
 
     private String getButtonText(boolean checked) {

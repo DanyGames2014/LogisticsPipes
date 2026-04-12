@@ -1,8 +1,12 @@
 package net.danygames2014.logisticspipes.interfaces;
 
 import net.danygames2014.logisticspipes.interfaces.routing.SaveState;
+import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
 import net.danygames2014.logisticspipes.util.SinkReply;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ScreenHandler;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public interface LogisticsModule extends SaveState {
@@ -25,6 +29,10 @@ public interface LogisticsModule extends SaveState {
      * @return The gui identifier of the given module;
      */
     Identifier getScreenIdentifier();
+
+    default ScreenHandler getScreenHandler(PlayerEntity player) {
+        return new ModuleScreenHandler(player, null);
+    }
 
     /**
      * Gives an sink answer on the given itemstack

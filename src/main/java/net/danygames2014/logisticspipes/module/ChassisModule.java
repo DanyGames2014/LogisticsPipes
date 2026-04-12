@@ -6,12 +6,15 @@ import net.danygames2014.logisticspipes.interfaces.InventoryProvider;
 import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
 import net.danygames2014.logisticspipes.interfaces.SendRoutedItem;
 import net.danygames2014.logisticspipes.interfaces.WorldProvider;
+import net.danygames2014.logisticspipes.screen.handler.ChassisScreenHandler;
 import net.danygames2014.logisticspipes.util.InventoryUtil;
 import net.danygames2014.logisticspipes.util.ItemIdentifier;
 import net.danygames2014.logisticspipes.util.SinkReply;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.screen.ScreenHandler;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class ChassisModule implements LogisticsModule {
@@ -111,5 +114,10 @@ public class ChassisModule implements LogisticsModule {
     @Override
     public Identifier getScreenIdentifier() {
         return LogisticsPipes.NAMESPACE.id("chassis");
+    }
+
+    @Override
+    public ScreenHandler getScreenHandler(PlayerEntity player) {
+        return new ChassisScreenHandler(player, parentPipe);
     }
 }

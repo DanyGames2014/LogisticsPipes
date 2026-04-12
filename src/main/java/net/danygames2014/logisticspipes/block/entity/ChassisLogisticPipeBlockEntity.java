@@ -12,6 +12,7 @@ import net.danygames2014.logisticspipes.module.ChassisModule;
 import net.danygames2014.logisticspipes.request.RequestTreeNode;
 import net.danygames2014.logisticspipes.routing.LogisticsPromise;
 import net.danygames2014.logisticspipes.routing.Router;
+import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
 import net.danygames2014.nyalib.capability.CapabilityHelper;
 import net.danygames2014.nyalib.capability.block.itemhandler.ItemHandlerBlockCapability;
@@ -25,6 +26,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
+import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 import java.util.*;
@@ -58,27 +60,32 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
     }
 
     @Override
-    public void init(BlockState blockState) {
-        super.init(blockState);
-        if (blockState.getBlock() == LogisticsPipes.chassisItemPipeMk1) {
+    public void init(BlockState state) {
+        super.init(state);
+        initModuleInventory(state);
+    }
+    
+    public void initModuleInventory(BlockState state) {
+        if (state.getBlock() == LogisticsPipes.chassisItemPipeMk1) {
             chassisSize = 1;
         }
-        if (blockState.getBlock() == LogisticsPipes.chassisItemPipeMk2) {
+        if (state.getBlock() == LogisticsPipes.chassisItemPipeMk2) {
             chassisSize = 2;
         }
-        if (blockState.getBlock() == LogisticsPipes.chassisItemPipeMk3) {
+        if (state.getBlock() == LogisticsPipes.chassisItemPipeMk3) {
             chassisSize = 3;
         }
-        if (blockState.getBlock() == LogisticsPipes.chassisItemPipeMk4) {
+        if (state.getBlock() == LogisticsPipes.chassisItemPipeMk4) {
             chassisSize = 4;
         }
-        if (blockState.getBlock() == LogisticsPipes.chassisItemPipeMk5) {
+        if (state.getBlock() == LogisticsPipes.chassisItemPipeMk5) {
             chassisSize = 8;
         }
 
         if (moduleInventory == null) {
             moduleInventory = new SimpleInventory(getChassisSize(), "Chassis pipe", 1, this::markInventoryDirty);
         }
+        
         if (module == null) {
             module = new ChassisModule(getChassisSize(), this);
         }

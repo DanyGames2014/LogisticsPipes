@@ -18,7 +18,7 @@ import net.danygames2014.logisticspipes.routing.LogisticsNetwork;
 import net.danygames2014.logisticspipes.routing.LogisticsNetworkManager;
 import net.danygames2014.logisticspipes.routing.RouteDestination;
 import net.danygames2014.logisticspipes.routing.Router;
-import net.danygames2014.logisticspipes.screen.DummyScreenHandler;
+import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
 import net.danygames2014.logisticspipes.util.tuple.Pair;
 import net.danygames2014.logisticspipes.util.tuple.Pair3;
@@ -85,6 +85,29 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         this.updateOffset = pipeCount % Config.NETWORK_CONFIG.neighborDetectionFrequency;
 
         setup();
+    }
+
+    // Screen Opening
+    public boolean wrenchRightClick(ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side, WrenchMode wrenchMode) {
+        if (world.isRemote) {
+            return true;
+        }
+        
+        if (wrenchMode == WrenchMode.MODE_WRENCH && !isSneaking) {
+            this.openModuleScreen(player);
+            return true;
+        }
+        
+        return false;
+    }
+    
+    public void openModuleScreen(PlayerEntity player) {
+        LogisticsModule module = getLogisticsModule();
+        if (module != null) {
+            GuiHelper.openGUI(player, module.getScreenIdentifier(), this, module.getScreenHandler(player), (messagePacket) -> {
+                messagePacket.ints = new int[]{messagePacket.ints[0], x, y, z};
+            });
+        }
     }
 
     @Override
@@ -195,18 +218,6 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
     public boolean stillWantItem(RoutedItem item) {
         return true;
-    }
-
-    public boolean wrenchRightClick(ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side, WrenchMode wrenchMode) {
-        if (wrenchMode == WrenchMode.MODE_WRENCH && !isSneaking) {
-            if (getLogisticsModule() != null) {
-                GuiHelper.openGUI(player, getLogisticsModule().getScreenIdentifier(), this, new DummyScreenHandler(player.inventory, this), (messagePacket) -> {
-                    messagePacket.ints = new int[]{x, y, z};
-                });
-            }
-            return true;
-        }
-        return false;
     }
 
     public Direction getDirectionForItem(RoutedItem item) {

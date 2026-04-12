@@ -6,49 +6,32 @@ import net.danygames2014.logisticspipes.gui.SmallButtonWidget;
 import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
 import net.danygames2014.logisticspipes.interfaces.ScreenIdentifierProvider;
 import net.danygames2014.logisticspipes.item.ModuleItem;
-import net.danygames2014.logisticspipes.screen.DummyScreenHandler;
+import net.danygames2014.logisticspipes.network.OpenModuleScreenC2SPacket;
+import net.danygames2014.logisticspipes.screen.handler.ChassisScreenHandler;
+import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
+import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
 import org.lwjgl.opengl.GL11;
 
+import java.util.Arrays;
+
 public class ChassisScreen extends LogisticsBaseScreen implements ScreenIdentifierProvider {
     ChassisLogisticPipeBlockEntity pipe;
-    PlayerEntity player;
     Inventory moduleInventory;
 
     private int left;
     private int top;
 
     public ChassisScreen(PlayerEntity player, ChassisLogisticPipeBlockEntity pipe) {
-        super(null);
-        this.player = player;
+        super(player, pipe, new ChassisScreenHandler(player, pipe));
         this.pipe = pipe;
         this.moduleInventory = pipe.getModuleInventory();
-
-        DummyScreenHandler dummy = new DummyScreenHandler(player.inventory, moduleInventory);
-        if (pipe.getChassisSize() < 5) {
-            dummy.addNormalSlotsForPlayerInventory(18, 97);
-        } else {
-            dummy.addNormalSlotsForPlayerInventory(18, 174);
-        }
-        if (pipe.getChassisSize() > 0) dummy.addModuleSlot(0, moduleInventory, 19, 9, pipe);
-        if (pipe.getChassisSize() > 1) dummy.addModuleSlot(1, moduleInventory, 19, 29, pipe);
-        if (pipe.getChassisSize() > 2) dummy.addModuleSlot(2, moduleInventory, 19, 49, pipe);
-        if (pipe.getChassisSize() > 3) dummy.addModuleSlot(3, moduleInventory, 19, 69, pipe);
-        if (pipe.getChassisSize() > 4) {
-            dummy.addModuleSlot(4, moduleInventory, 19, 89, pipe);
-            dummy.addModuleSlot(5, moduleInventory, 19, 109, pipe);
-            dummy.addModuleSlot(6, moduleInventory, 19, 129, pipe);
-            dummy.addModuleSlot(7, moduleInventory, 19, 149, pipe);
-        }
-
-        this.handler = dummy;
-
         this.backgroundWidth = 194;
         this.backgroundHeight = 256;
     }
@@ -120,10 +103,7 @@ public class ChassisScreen extends LogisticsBaseScreen implements ScreenIdentifi
             LogisticsModule module = pipe.getLogisticsModule().getSubModule(button.id);
             if (module != null) {
 //                PacketDispatcher.sendPacketToServer(new PacketPipeInteger(NetworkConstants.CHASSI_GUI_PACKET_ID,_chassiPipe.xCoord,_chassiPipe.yCoord,_chassiPipe.zCoord,guibutton.id).getPacket());
-                GuiHelper.openGUI(minecraft.player, module.getScreenIdentifier(), pipe, null, (messagePacket) -> {
-                    messagePacket.ints = new int[]{pipe.getX(), pipe.getY(), pipe.getZ(), button.id};
-                });
-
+                PacketHelper.send(new OpenModuleScreenC2SPacket(button.id));
             }
         }
     }

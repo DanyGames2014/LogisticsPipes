@@ -7,17 +7,19 @@ import net.danygames2014.logisticspipes.request.RequestTreeNode;
 import net.danygames2014.logisticspipes.routing.LogisticsOrderManager;
 import net.danygames2014.logisticspipes.routing.LogisticsPromise;
 import net.danygames2014.logisticspipes.routing.Router;
+import net.danygames2014.logisticspipes.screen.handler.ProviderScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
 import net.danygames2014.logisticspipes.util.tuple.Pair;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.screen.ScreenHandler;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.*;
 
-public class ProviderModule implements LogisticsModule, LegacyActiveModule, ClientInformationProvider, HUDModuleHandler, ModuleWatchReceiver, ModuleInventoryReceive {
+public class ProviderModule implements LogisticsModule, LegacyActiveModule, ClientInformationProvider, HUDModuleHandler, ModuleWatchReceiver, ModuleInventoryReceive, Inventory {
     protected InventoryProvider invProvider;
     protected SendRoutedItem itemSender;
 
@@ -68,6 +70,11 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
     @Override
     public Identifier getScreenIdentifier() {
         return LogisticsPipes.NAMESPACE.id("provider");
+    }
+
+    @Override
+    public ScreenHandler getScreenHandler(PlayerEntity player) {
+        return new ProviderScreenHandler(player, this);
     }
 
     @Override
@@ -302,7 +309,43 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
         displayList.addAll(list);
     }
 
-    void markDirty() {
+    // Inventory
+    @Override
+    public int size() {
+        return filterInventory.size();
+    }
 
+    @Override
+    public ItemStack getStack(int slot) {
+        return filterInventory.getStack(slot);
+    }
+
+    @Override
+    public ItemStack removeStack(int slot, int amount) {
+        return filterInventory.removeStack(slot, amount);
+    }
+
+    @Override
+    public void setStack(int slot, ItemStack stack) {
+        filterInventory.setStack(slot, stack);
+    }
+
+    @Override
+    public String getName() {
+        return filterInventory.getName();
+    }
+
+    @Override
+    public int getMaxCountPerStack() {
+        return filterInventory.getMaxCountPerStack();
+    }
+
+    public void markDirty() {
+
+    }
+
+    @Override
+    public boolean canPlayerUse(PlayerEntity player) {
+        return filterInventory.canPlayerUse(player);
     }
 }

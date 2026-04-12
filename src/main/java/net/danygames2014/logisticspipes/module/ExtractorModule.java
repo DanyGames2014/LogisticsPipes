@@ -3,6 +3,7 @@ package net.danygames2014.logisticspipes.module;
 import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.pipe.LogisticsManager;
 import net.danygames2014.logisticspipes.interfaces.*;
+import net.danygames2014.logisticspipes.screen.handler.ExtractorScreenHandler;
 import net.danygames2014.logisticspipes.util.ItemHandlerBlockCapabilityInventoryWrapper;
 import net.danygames2014.logisticspipes.util.SinkReply;
 import net.danygames2014.logisticspipes.util.SneakyDirection;
@@ -10,13 +11,14 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.screen.ScreenHandler;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExtractorModule implements LogisticsModule, SneakyDirectionReceiver, ClientInformationProvider, HUDModuleHandler, ModuleWatchReceiver {
+public class ExtractorModule implements LogisticsModule, SneakyDirectionReceiver, ClientInformationProvider, HUDModuleHandler, ModuleWatchReceiver, Inventory {
 
     private int currentTick;
 
@@ -45,6 +47,11 @@ public class ExtractorModule implements LogisticsModule, SneakyDirectionReceiver
     @Override
     public Identifier getScreenIdentifier() {
         return LogisticsPipes.NAMESPACE.id("extractor");
+    }
+
+    @Override
+    public ScreenHandler getScreenHandler(PlayerEntity player) {
+        return new ExtractorScreenHandler(player, this);
     }
 
     protected int ticksToAction() {
@@ -173,5 +180,46 @@ public class ExtractorModule implements LogisticsModule, SneakyDirectionReceiver
     @Override
     public HUDModuleRenderer getRenderer() {
         return null;
+    }
+
+    // Inventory
+    @Override
+    public int size() {
+        return 0;
+    }
+
+    @Override
+    public ItemStack getStack(int slot) {
+        return null;
+    }
+
+    @Override
+    public ItemStack removeStack(int slot, int amount) {
+        return null;
+    }
+
+    @Override
+    public void setStack(int slot, ItemStack stack) {
+
+    }
+
+    @Override
+    public String getName() {
+        return "";
+    }
+
+    @Override
+    public int getMaxCountPerStack() {
+        return 0;
+    }
+
+    @Override
+    public void markDirty() {
+
+    }
+
+    @Override
+    public boolean canPlayerUse(PlayerEntity player) {
+        return true;
     }
 }

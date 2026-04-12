@@ -1,12 +1,14 @@
 package net.danygames2014.logisticspipes.client.gui.screen;
 
+import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.gui.*;
-import net.danygames2014.logisticspipes.screen.DummyScreenHandler;
+import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
 import net.danygames2014.logisticspipes.util.gui.BasicGuiHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.platform.Lighting;
-import net.minecraft.screen.ScreenHandler;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
@@ -33,24 +35,36 @@ public class LogisticsBaseScreen extends HandledScreen implements SubScreenContr
 
     private SubScreen subScreen;
     protected List<RenderSlot> slots = new ArrayList<>();
+    
+    public PlayerEntity player;
+    public Inventory playerInventory;
+    public LogisticPipeBlockEntity blockEntity;
+    public ModuleScreenHandler moduleHandler;
 
-    public LogisticsBaseScreen(int xSize, int ySize, int xCenterOffset, int yCenterOffset) {
-        this(new DummyScreenHandler(null, null), xSize, ySize, xCenterOffset, yCenterOffset);
-    }
+//    public LogisticsBaseScreen(int xSize, int ySize, int xCenterOffset, int yCenterOffset) {
+//        this(new ModuleScreenHandler(null, null), xSize, ySize, xCenterOffset, yCenterOffset);
+//    }
 
-    public LogisticsBaseScreen(ScreenHandler container) {
-        super(container);
+    public LogisticsBaseScreen(PlayerEntity player, LogisticPipeBlockEntity blockEntity, ModuleScreenHandler handler) {
+        super(handler);
+        
+        this.player = player;
+        this.playerInventory = player.inventory;
+        this.blockEntity = blockEntity;
+        this.moduleHandler = handler;
+        this.handler = handler;
+        
         this.xCenterOffset = 0;
         this.yCenterOffset = 0;
     }
 
-    public LogisticsBaseScreen(ScreenHandler container, int xSize, int ySize, int xCenterOffset, int yCenterOffset) {
-        super(container);
-        this.backgroundWidth = xSize;
-        this.backgroundHeight = ySize;
-        this.xCenterOffset = xCenterOffset;
-        this.yCenterOffset = yCenterOffset;
-    }
+//    public LogisticsBaseScreen(ScreenHandler container, int xSize, int ySize, int xCenterOffset, int yCenterOffset) {
+//        super(container);
+//        this.backgroundWidth = xSize;
+//        this.backgroundHeight = ySize;
+//        this.xCenterOffset = xCenterOffset;
+//        this.yCenterOffset = yCenterOffset;
+//    }
 
     @Override
     public void init() {
@@ -208,16 +222,16 @@ public class LogisticsBaseScreen extends HandledScreen implements SubScreenContr
 
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) {
-        for (RenderSlot slot : slots) {
-            int mouseXOffset = mouseX - guiLeft;
-            int mouseYOffset = mouseY - guiTop;
-            int mouseXMax = mouseXOffset - slot.getSize();
-            int mouseYMax = mouseYOffset - slot.getSize();
-            if (slot.getXPos() < mouseXOffset && slot.getXPos() > mouseXMax && slot.getYPos() < mouseYOffset && slot.getYPos() > mouseYMax) {
-                slot.mouseClicked(button);
-                return;
-            }
-        }
+//        for (RenderSlot slot : slots) {
+//            int mouseXOffset = mouseX - guiLeft;
+//            int mouseYOffset = mouseY - guiTop;
+//            int mouseXMax = mouseXOffset - slot.getSize();
+//            int mouseYMax = mouseYOffset - slot.getSize();
+//            if (slot.getXPos() < mouseXOffset && slot.getXPos() > mouseXMax && slot.getYPos() < mouseYOffset && slot.getYPos() > mouseYMax) {
+//                slot.mouseClicked(button);
+//                return;
+//            }
+//        }
         super.mouseClicked(mouseX, mouseY, button);
     }
 

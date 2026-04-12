@@ -1,39 +1,30 @@
 package net.danygames2014.logisticspipes.client.gui.screen;
 
 import net.danygames2014.logisticspipes.block.entity.SupplierLogisticPipeBlockEntity;
-import net.danygames2014.logisticspipes.screen.DummyScreenHandler;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.danygames2014.logisticspipes.screen.handler.SupplierScreenHandler;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import org.lwjgl.opengl.GL11;
 
-public class SupplierScreen extends HandledScreen {
-    private Inventory playerInventory;
-    private Inventory dummyInventory;
+public class SupplierScreen extends LogisticsBaseScreen {
+    private final Inventory dummyInventory;
     SupplierLogisticPipeBlockEntity pipe;
 
-    public SupplierScreen(Inventory playerInventory, Inventory dummyInventory, SupplierLogisticPipeBlockEntity pipe) {
-        super(null);
-
-        DummyScreenHandler dummy = new DummyScreenHandler(playerInventory, dummyInventory);
-        dummy.addNormalSlotsForPlayerInventory(18, 97);
-
-        int xOffset = 72;
-        int yOffset = 18;
-
-        for (int row = 0; row < 3; row++) {
-            for (int column = 0; column < 3; column++) {
-                dummy.addDummySlot(column + row * 3, xOffset + column * 18, yOffset + row * 18);
-            }
-        }
-
-        this.handler = dummy;
-
-        this.playerInventory = playerInventory;
-        this.dummyInventory = dummyInventory;
+    public SupplierScreen(PlayerEntity player, SupplierLogisticPipeBlockEntity pipe) {
+        super(player, pipe, new SupplierScreenHandler(player, pipe.getFilterInventory()));
         this.pipe = pipe;
+        this.dummyInventory = pipe.getFilterInventory();
         this.backgroundWidth = 194;
         this.backgroundHeight = 186;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void init() {
+        super.init();
+        buttons.clear();
+        buttons.add(new ButtonWidget(0, width / 2 + 45, height / 2 - 25, 30, 20, pipe.isRequestingPartials() ? "Yes" : "No"));
     }
 
     @Override
@@ -50,14 +41,6 @@ public class SupplierScreen extends HandledScreen {
         int j = (this.width - this.backgroundWidth) / 2;
         int k = (this.height - this.backgroundHeight) / 2;
         drawTexture(j, k, 0, 0, backgroundWidth, backgroundHeight);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void init() {
-        super.init();
-        buttons.clear();
-        buttons.add(new ButtonWidget(0, width / 2 + 45, height / 2 - 25, 30, 20, pipe.isRequestingPartials() ? "Yes" : "No"));
     }
 
     @Override

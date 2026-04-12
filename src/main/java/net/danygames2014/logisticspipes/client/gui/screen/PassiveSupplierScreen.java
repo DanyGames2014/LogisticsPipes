@@ -2,28 +2,18 @@ package net.danygames2014.logisticspipes.client.gui.screen;
 
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.module.PassiveSupplierModule;
-import net.danygames2014.logisticspipes.screen.DummyScreenHandler;
+import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
+import net.danygames2014.logisticspipes.screen.handler.PassiveSupplierScreenHandler;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.inventory.Inventory;
+import net.minecraft.entity.player.PlayerEntity;
 import org.lwjgl.opengl.GL11;
 
 public class PassiveSupplierScreen extends ScreenWithPrevious {
-    private final Inventory playerInventory;
     private final PassiveSupplierModule supplier;
 
-    public PassiveSupplierScreen(Inventory playerInventory, LogisticPipeBlockEntity pipe, PassiveSupplierModule supplier, Screen previousScreen) {
-        super(null, pipe, previousScreen);
+    public PassiveSupplierScreen(PlayerEntity player, LogisticPipeBlockEntity pipe, PassiveSupplierModule supplier, Screen previousScreen) {
+        super(player, pipe, new PassiveSupplierScreenHandler(player, supplier.getFilterInventory()), previousScreen);
         this.supplier = supplier;
-        DummyScreenHandler dummy = new DummyScreenHandler(playerInventory, supplier.getFilterInventory());
-        dummy.addNormalSlotsForPlayerInventory(8, 60);
-
-        //Pipe slots
-        for (int pipeSlot = 0; pipeSlot < 9; pipeSlot++) {
-            dummy.addDummySlot(pipeSlot, 8 + pipeSlot * 18, 18);
-        }
-
-        this.handler = dummy;
-        this.playerInventory = playerInventory;
         this.backgroundWidth = 175;
         this.backgroundHeight = 142;
     }

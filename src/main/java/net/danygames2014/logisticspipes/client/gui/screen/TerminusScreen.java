@@ -2,28 +2,18 @@ package net.danygames2014.logisticspipes.client.gui.screen;
 
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.module.TerminusModule;
-import net.danygames2014.logisticspipes.screen.DummyScreenHandler;
+import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
+import net.danygames2014.logisticspipes.screen.handler.TerminusScreenHandler;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.inventory.Inventory;
+import net.minecraft.entity.player.PlayerEntity;
 import org.lwjgl.opengl.GL11;
 
 public class TerminusScreen extends ScreenWithPrevious {
-    private final Inventory playerInventory;
     private final TerminusModule terminus;
 
-    public TerminusScreen(Inventory playerInventory, LogisticPipeBlockEntity pipe, TerminusModule terminus, Screen previousScreen) {
-        super(null, pipe, previousScreen);
+    public TerminusScreen(PlayerEntity player, LogisticPipeBlockEntity pipe, TerminusModule terminus, Screen previousScreen) {
+        super(player, pipe, new TerminusScreenHandler(player, terminus.getFilterInventory()), previousScreen);
         this.terminus = terminus;
-        DummyScreenHandler dummy = new DummyScreenHandler(playerInventory, terminus.getFilterInventory());
-        dummy.addNormalSlotsForPlayerInventory(8, 60);
-
-        //Pipe slots
-        for (int pipeSlot = 0; pipeSlot < 9; pipeSlot++) {
-            dummy.addDummySlot(pipeSlot, 8 + pipeSlot * 18, 18);
-        }
-
-        this.handler = dummy;
-        this.playerInventory = playerInventory;
         this.backgroundWidth = 175;
         this.backgroundHeight = 142;
     }

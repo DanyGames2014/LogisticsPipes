@@ -10,21 +10,19 @@ import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
 import net.danygames2014.logisticspipes.interfaces.RequestItems;
 import net.danygames2014.logisticspipes.interfaces.RequireReliableTransport;
 import net.danygames2014.logisticspipes.request.RequestManager;
+import net.danygames2014.logisticspipes.screen.handler.SupplierScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
 import net.danygames2014.nyalib.capability.CapabilityHelper;
 import net.danygames2014.nyalib.capability.block.itemhandler.ItemHandlerBlockCapability;
-import net.danygames2014.uniwrench.api.WrenchMode;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
 
 import java.util.HashMap;
 
 public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity implements RequireReliableTransport, RequestItems {
-    private SimpleInventory dummyInventory;
+    private SimpleInventory filterInventory;
     private InventoryUtil dummyInvUtil;
 
     private final HashMap<ItemIdentifier, Integer> requestedItems = new HashMap<>();
@@ -43,6 +41,25 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         super(pipeBlock);
     }
 
+    @Override
+    public void setup() {
+
+    }
+
+    @Override
+    public void init() {
+        filterInventory = new SimpleInventory(9, "Items to keep stocked", 127, this::markDirty);
+        dummyInvUtil = new InventoryUtil(filterInventory, false);
+        throttleTime = 100;
+    }
+
+    @Override
+    public void openModuleScreen(PlayerEntity player) {
+        GuiHelper.openGUI(player, LogisticsPipes.NAMESPACE.id("supplier"), filterInventory, new SupplierScreenHandler(player, filterInventory), (messagePacket) -> {
+            messagePacket.ints = new int[]{messagePacket.ints[0], x, y, z};
+        });
+    }
+    
     /* TRIGGER INTERFACE */
     public boolean isRequestFailed() {
         return lastRequestFailed;
@@ -151,21 +168,9 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         return null;
     }
 
-    @Override
-    public void setup() {
-
-    }
-
-    @Override
-    public void init() {
-        dummyInventory = new SimpleInventory(9, "Items to keep stocked", 127, this::markDirty);
-        dummyInvUtil = new InventoryUtil(dummyInventory, false);
-        throttleTime = 100;
-    }
-
     /*** GUI ***/
-    public SimpleInventory getDummyInventory() {
-        return dummyInventory;
+    public SimpleInventory getFilterInventory() {
+        return filterInventory;
     }
 
     @Override
@@ -181,14 +186,14 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
-        dummyInventory.readNbt(nbt, "");
+        filterInventory.readNbt(nbt, "");
         requestPartials = nbt.getBoolean("requestpartials");
     }
 
     @Override
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        dummyInventory.writeNbt(nbt, "");
+        filterInventory.writeNbt(nbt, "");
         nbt.putBoolean("requestpartials", requestPartials);
     }
 
@@ -213,14 +218,5 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
     public void setRequestingPartials(boolean value) {
         requestPartials = value;
-    }
-
-    @Override
-    public boolean wrenchRightClick(ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side, WrenchMode wrenchMode) {
-        if (wrenchMode == WrenchMode.MODE_WRENCH && !isSneaking) {
-            GuiHelper.openGUI(player, LogisticsPipes.NAMESPACE.id("supplier"), this, null);
-            return true;
-        }
-        return false;
     }
 }

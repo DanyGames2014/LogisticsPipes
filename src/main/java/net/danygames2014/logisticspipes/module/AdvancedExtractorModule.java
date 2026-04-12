@@ -3,12 +3,14 @@ package net.danygames2014.logisticspipes.module;
 import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.pipe.LogisticsManager;
 import net.danygames2014.logisticspipes.interfaces.*;
+import net.danygames2014.logisticspipes.screen.handler.AdvancedExtractorScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.screen.ScreenHandler;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
@@ -16,7 +18,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class AdvancedExtractorModule implements LogisticsModule, SneakyDirectionReceiver, ClientInformationProvider, HUDModuleHandler, ModuleWatchReceiver, ModuleInventoryReceive {
+public class AdvancedExtractorModule implements LogisticsModule, SneakyDirectionReceiver, ClientInformationProvider, HUDModuleHandler, ModuleWatchReceiver, ModuleInventoryReceive, Inventory {
     protected int currentTick = 0;
     private final SimpleInventory filterInventory = new SimpleInventory(9, "Item list", 1, this::markDirty);
 
@@ -33,6 +35,9 @@ public class AdvancedExtractorModule implements LogisticsModule, SneakyDirection
 
     private final List<PlayerEntity> localModeWatchers = new ArrayList<>();
 
+    public AdvancedExtractorModule() {
+    }
+
     @Override
     public void registerHandler(InventoryProvider invProvider, SendRoutedItem itemSender, WorldProvider world) {
         this.invProvider = invProvider;
@@ -43,6 +48,11 @@ public class AdvancedExtractorModule implements LogisticsModule, SneakyDirection
     @Override
     public Identifier getScreenIdentifier() {
         return LogisticsPipes.NAMESPACE.id("advanced_extractor");
+    }
+
+    @Override
+    public ScreenHandler getScreenHandler(PlayerEntity player) {
+        return new AdvancedExtractorScreenHandler(player, this);
     }
 
     public SimpleInventory getFilterInventory() {
@@ -199,10 +209,6 @@ public class AdvancedExtractorModule implements LogisticsModule, SneakyDirection
         this.slot = slot;
     }
 
-    public void markDirty() {
-//        MainProxy.sendToPlayerList(new PacketModuleInvContent(NetworkConstants.MODULE_INV_CONTENT, xCoord, yCoord, zCoord, slot, ItemIdentifierStack.getListFromInventory(inventory)).getPacket(), localModeWatchers);
-    }
-
     @Override
     public void handleInvContent(LinkedList<ItemIdentifierStack> list) {
         filterInventory.handleItemStackList(list);
@@ -231,5 +237,45 @@ public class AdvancedExtractorModule implements LogisticsModule, SneakyDirection
     @Override
     public HUDModuleRenderer getRenderer() {
         return null;
+    }
+    
+    // Inventory
+    @Override
+    public int size() {
+        return filterInventory.size();
+    }
+
+    @Override
+    public ItemStack getStack(int slot) {
+        return filterInventory.getStack(slot);
+    }
+
+    @Override
+    public ItemStack removeStack(int slot, int amount) {
+        return filterInventory.removeStack(slot, amount);
+    }
+
+    @Override
+    public void setStack(int slot, ItemStack stack) {
+        filterInventory.setStack(slot, stack);
+    }
+
+    @Override
+    public String getName() {
+        return filterInventory.getName();
+    }
+
+    @Override
+    public int getMaxCountPerStack() {
+        return filterInventory.getMaxCountPerStack();
+    }
+
+    public void markDirty() {
+//        MainProxy.sendToPlayerList(new PacketModuleInvContent(NetworkConstants.MODULE_INV_CONTENT, xCoord, yCoord, zCoord, slot, ItemIdentifierStack.getListFromInventory(inventory)).getPacket(), localModeWatchers);
+    }
+
+    @Override
+    public boolean canPlayerUse(PlayerEntity player) {
+        return filterInventory.canPlayerUse(player);
     }
 }
