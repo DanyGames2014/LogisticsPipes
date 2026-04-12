@@ -65,7 +65,7 @@ public class OpenModuleScreenC2SPacket extends Packet implements ManagedPacket<O
                 }
 
                 GuiHelper.openGUI(player, subModule.getScreenIdentifier(), pipe, subModule.getScreenHandler(player), (messagePacket) -> {
-                    messagePacket.ints = new int[]{messagePacket.ints[0], pipe.getX(), pipe.getY(), pipe.getZ(), moduleSlot};
+                    messagePacket.ints = new int[]{messagePacket.ints != null ? messagePacket.ints[0] : 0, pipe.getX(), pipe.getY(), pipe.getZ(), moduleSlot};
                 });
             }
         }

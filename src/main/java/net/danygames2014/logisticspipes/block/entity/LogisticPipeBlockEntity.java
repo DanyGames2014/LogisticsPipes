@@ -18,7 +18,6 @@ import net.danygames2014.logisticspipes.routing.LogisticsNetwork;
 import net.danygames2014.logisticspipes.routing.LogisticsNetworkManager;
 import net.danygames2014.logisticspipes.routing.RouteDestination;
 import net.danygames2014.logisticspipes.routing.Router;
-import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
 import net.danygames2014.logisticspipes.util.tuple.Pair;
 import net.danygames2014.logisticspipes.util.tuple.Pair3;
@@ -92,20 +91,20 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         if (world.isRemote) {
             return true;
         }
-        
+
         if (wrenchMode == WrenchMode.MODE_WRENCH && !isSneaking) {
             this.openModuleScreen(player);
             return true;
         }
-        
+
         return false;
     }
-    
+
     public void openModuleScreen(PlayerEntity player) {
         LogisticsModule module = getLogisticsModule();
         if (module != null) {
             GuiHelper.openGUI(player, module.getScreenIdentifier(), this, module.getScreenHandler(player), (messagePacket) -> {
-                messagePacket.ints = new int[]{messagePacket.ints[0], x, y, z};
+                messagePacket.ints = new int[]{messagePacket.ints != null ? messagePacket.ints[0] : 0, x, y, z};
             });
         }
     }
@@ -391,9 +390,9 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             return routingTable.get(destinationId).metric;
         } else {
             return -1;
-        }   
+        }
     }
-    
+
     public long getNextHop(long destinationId) {
         if (!nextHopCache.containsKey(destinationId)) {
             nextHopCache.put(destinationId, calculateNextHop(destinationId));
