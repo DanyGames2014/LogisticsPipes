@@ -242,6 +242,10 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
         extractionMode = extractionMode.next();
     }
 
+    public void setExtractionMode(ExtractionMode extractionMode) {
+        this.extractionMode = extractionMode;
+    }
+
     @Override
     public List<String> getClientInformation() {
         List<String> list = new ArrayList<>();

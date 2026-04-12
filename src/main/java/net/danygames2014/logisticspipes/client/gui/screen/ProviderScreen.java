@@ -3,11 +3,13 @@ package net.danygames2014.logisticspipes.client.gui.screen;
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.gui.StringHandlerButtonWidget;
 import net.danygames2014.logisticspipes.module.ProviderModule;
+import net.danygames2014.logisticspipes.network.ProviderModuleCommandC2SPacket;
 import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
 import net.danygames2014.logisticspipes.screen.handler.ProviderScreenHandler;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.entity.player.PlayerEntity;
+import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import org.lwjgl.opengl.GL11;
 
 public class ProviderScreen extends ScreenWithPrevious {
@@ -52,8 +54,14 @@ public class ProviderScreen extends ScreenWithPrevious {
     protected void buttonClicked(ButtonWidget button) {
         if (button.id == 0) {
             provider.setFilterExcluded(!provider.isExcludeFilter());
+            if (player.world.isRemote) {
+                PacketHelper.send(new ProviderModuleCommandC2SPacket(0, provider.isExcludeFilter() ? 1 : 0));
+            }
         } else if (button.id == 1) {
             provider.nextExtractionMode();
+            if (player.world.isRemote) {
+                PacketHelper.send(new ProviderModuleCommandC2SPacket(1, provider.getExtractionMode().ordinal()));
+            }
         }
         super.buttonClicked(button);
     }
