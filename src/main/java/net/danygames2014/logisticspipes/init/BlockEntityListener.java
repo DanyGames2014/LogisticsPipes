@@ -1,8 +1,6 @@
 package net.danygames2014.logisticspipes.init;
 
-import net.danygames2014.logisticspipes.block.entity.BasicLogisticPipeBlockEntity;
-import net.danygames2014.logisticspipes.block.entity.ChassisLogisticPipeBlockEntity;
-import net.danygames2014.logisticspipes.block.entity.SupplierLogisticPipeBlockEntity;
+import net.danygames2014.logisticspipes.block.entity.*;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.modificationstation.stationapi.api.event.block.entity.BlockEntityRegisterEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
@@ -17,5 +15,7 @@ public class BlockEntityListener {
         event.register(BasicLogisticPipeBlockEntity.class, NAMESPACE.id("basic_logistic_pipe").toString());
         event.register(ChassisLogisticPipeBlockEntity.class, NAMESPACE.id("chassis_logistic_pipe").toString());
         event.register(SupplierLogisticPipeBlockEntity.class, NAMESPACE.id("supplier_logistic_pipe").toString());
+        event.register(CraftingLogisticPipeBlockEntity.class, NAMESPACE.id("crafting_logistic_pipe").toString());
+        event.register(CraftingLogisticPipeBlockEntityMk2.class, NAMESPACE.id("crafting_logistic_pipe_mk2").toString());
     }
 }
