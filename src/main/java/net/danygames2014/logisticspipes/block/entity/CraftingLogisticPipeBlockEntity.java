@@ -3,6 +3,7 @@ package net.danygames2014.logisticspipes.block.entity;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.danygames2014.buildcraft.block.PipeBlock;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeBlockEntity;
+import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.pipe.ItemSendMode;
 import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
 import net.danygames2014.logisticspipes.interfaces.*;
@@ -14,6 +15,8 @@ import net.danygames2014.logisticspipes.routing.LogisticsNetworkManager;
 import net.danygames2014.logisticspipes.routing.LogisticsOrderManager;
 import net.danygames2014.logisticspipes.routing.LogisticsPromise;
 import net.danygames2014.logisticspipes.routing.Router;
+import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
+import net.danygames2014.logisticspipes.screen.handler.SupplierScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
 import net.danygames2014.logisticspipes.util.tuple.Pair;
 import net.danygames2014.nyalib.capability.CapabilityHelper;
@@ -24,6 +27,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
 
 import java.util.*;
 
@@ -80,6 +84,13 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
         ItemIdentifierStack targetItemStack = ItemIdentifierStack.getFromStack(itemstack);
         return invUtil.getSingleItem(targetItemStack.getItem());
+    }
+
+    @Override
+    public void openModuleScreen(PlayerEntity player) {
+        GuiHelper.openGUI(player, LogisticsPipes.NAMESPACE.id("crafting"), getDummyInventory(), new ModuleScreenHandler(player, getDummyInventory()), (messagePacket) -> {
+            messagePacket.ints = new int[]{messagePacket.ints != null ? messagePacket.ints[0] : 0, x, y, z};
+        });
     }
 
     public void enableUpdateRequest() {
@@ -156,6 +167,8 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         if (!isEnabled()){
             return;
         }
+
+        smartAdvertiseRouter();
 
         if (extras < 1) return;
         ItemIdentifier providedItem = providedItem();
