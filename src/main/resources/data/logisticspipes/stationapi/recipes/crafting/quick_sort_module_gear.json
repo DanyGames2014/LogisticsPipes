@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "dcd",
+    "rmr",
+    "drd"
+  ],
+  "key": {
+    "d": {
+      "item": "minecraft:dye",
+      "damage": 4
+    },
+    "c": {
+      "item": "buildcraft:diamond_gear"
+    },
+    "m": {
+      "item": "logisticspipes:blank_module"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:quick_sort_module",
+    "count": 1
+  }
+}

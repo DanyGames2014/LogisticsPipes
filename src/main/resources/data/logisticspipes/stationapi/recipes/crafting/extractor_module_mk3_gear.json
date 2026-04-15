@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "c",
+    "m"
+  ],
+  "key": {
+    "c": {
+      "item": "buildcraft:diamond_gear"
+    },
+    "m": {
+      "item": "logisticspipes:extractor_module_mk2"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:extractor_module_mk3",
+    "count": 1
+  }
+}

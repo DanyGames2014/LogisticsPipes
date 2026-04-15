@@ -2,18 +2,18 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "c",
-    "p"
+    "m"
   ],
   "key": {
     "c": {
       "item": "buildcraft:redstone_diamond_chipset"
     },
-    "p": {
-      "item": "logisticspipes:request_item_pipe"
+    "m": {
+      "item": "logisticspipes:extractor_module_mk2"
     }
   },
   "result": {
-    "item": "logisticspipes:request_item_pipe_mk2",
+    "item": "logisticspipes:extractor_module_mk3",
     "count": 1
   }
 }

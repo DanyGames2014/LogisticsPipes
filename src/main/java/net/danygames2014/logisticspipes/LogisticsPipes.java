@@ -19,6 +19,7 @@ import net.minecraft.item.Item;
 import net.modificationstation.stationapi.api.event.registry.BlockRegistryEvent;
 import net.modificationstation.stationapi.api.event.registry.ItemRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
+import net.modificationstation.stationapi.api.template.item.TemplateItem;
 import net.modificationstation.stationapi.api.util.Namespace;
 import org.apache.logging.log4j.Logger;
 
@@ -50,6 +51,7 @@ public class LogisticsPipes {
     public static Item magicWand;
     public static Item routingDebugger;
 
+    public static Item blankModule;
     public static Item providerModule;
     public static Item passiveSupplierModule;
     public static Item itemSinkModule;
@@ -62,7 +64,6 @@ public class LogisticsPipes {
     public static Item advancedExtractorModuleMk3;
     public static Item terminusModule;
     public static Item quickSortModule;
-
 
     @EventListener
     public void registerBlocks(BlockRegistryEvent event) {
@@ -210,7 +211,7 @@ public class LogisticsPipes {
         }
         routingDebugger = new RoutingDebugger(NAMESPACE.id("routing_debugger")).setTranslationKey(NAMESPACE, "routing_debugger");
 
-        // TODO: Blank Module and literally all module recipes
+        blankModule = new TemplateItem(NAMESPACE.id("blank_module")).setTranslationKey(NAMESPACE, "blank_module");
         providerModule = new ModuleItem(NAMESPACE.id("provider_module"), ProviderModule::new).setTranslationKey(NAMESPACE, "provider_module");
         passiveSupplierModule = new ModuleItem(NAMESPACE.id("passive_supplier_module"), PassiveSupplierModule::new).setTranslationKey(NAMESPACE, "passive_supplier_module");
         itemSinkModule = new ModuleItem(NAMESPACE.id("item_sink_module"), ItemSinkModule::new).setTranslationKey(NAMESPACE, "item_sink_module");

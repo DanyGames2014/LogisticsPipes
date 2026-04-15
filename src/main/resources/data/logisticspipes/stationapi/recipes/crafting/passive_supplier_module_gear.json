@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "dcd",
+    "rmr",
+    "drd"
+  ],
+  "key": {
+    "d": {
+      "item": "minecraft:dye",
+      "damage": 1
+    },
+    "c": {
+      "item": "buildcraft:iron_gear"
+    },
+    "m": {
+      "item": "logisticspipes:blank_module"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:passive_supplier_module",
+    "count": 1
+  }
+}

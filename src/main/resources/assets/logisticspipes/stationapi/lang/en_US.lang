@@ -4,6 +4,8 @@ tile.logisticspipes.request_item_pipe.name=Request Logistics Pipe
 tile.logisticspipes.request_item_pipe_mk2.name=Request Logistics Pipe Mk2
 tile.logisticspipes.provider_item_pipe.name=Provider Logistics Pipe
 tile.logisticspipes.supplier_item_pipe.name=Supplier Item Pipe
+tile.logisticspipes.crafting_item_pipe.name=Crafting Item Pipe
+tile.logisticspipes.satellite_item_pipe.name=Satellite Item Pipe
 tile.logisticspipes.chassis_item_pipe_mk1.name=Logistics Chassis Mk1
 tile.logisticspipes.chassis_item_pipe_mk2.name=Logistics Chassis Mk2
 tile.logisticspipes.chassis_item_pipe_mk3.name=Logistics Chassis Mk3
@@ -11,6 +13,7 @@ tile.logisticspipes.chassis_item_pipe_mk4.name=Logistics Chassis Mk4
 tile.logisticspipes.chassis_item_pipe_mk5.name=Logistics Chassis Mk5
 
 # Modules
+item.logisticspipes.blank_module.name=Blank Module
 item.logisticspipes.provider_module.name=Provider Module
 item.logisticspipes.passive_supplier_module.name=Passive Supplier Module
 item.logisticspipes.item_sink_module.name=ItemSink Module
@@ -34,3 +37,4 @@ wrenchmode.logisticspipes.learn_routes.name=Learn Routes from Neighbors
 wrenchmode.logisticspipes.clear_routing_table.name=Clear Routing Table
 wrenchmode.logisticspipes.discover_network.name=Discover Network Routers
 wrenchmode.logisticspipes.propagate_routes.name=Propagate Routes
+wrenchmode.logisticspipes.discover_routers_by_metric.name=Discover Routers by Metric

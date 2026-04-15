@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "c",
+    "m"
+  ],
+  "key": {
+    "c": {
+      "item": "buildcraft:redstone_golden_chipset"
+    },
+    "m": {
+      "item": "logisticspipes:extractor_module"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:extractor_module_mk2",
+    "count": 1
+  }
+}

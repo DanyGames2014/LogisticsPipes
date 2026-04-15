@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "r",
+    "m"
+  ],
+  "key": {
+    "r": {
+      "item": "minecraft:redstone"
+    },
+    "m": {
+      "item": "logisticspipes:extractor_module_mk3"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:advanced_extractor_module_mk3",
+    "count": 1
+  }
+}

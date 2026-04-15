@@ -1,0 +1,31 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " c ",
+    "rmr",
+    "pri"
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:dye",
+      "damage": 0
+    },
+    "p": {
+      "item": "minecraft:dye",
+      "damage": 5
+    },
+    "c": {
+      "item": "buildcraft:redstone_iron_chipset"
+    },
+    "m": {
+      "item": "logisticspipes:blank_module"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:terminus_module",
+    "count": 1
+  }
+}

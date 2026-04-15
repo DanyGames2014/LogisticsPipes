@@ -1,26 +1,23 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "grg",
-    "cdc",
-    "grg"
+    "prp",
+    "prp",
+    "pgp"
   ],
   "key": {
-    "g": {
-      "item": "minecraft:glass"
+    "p": {
+      "item": "minecraft:paper"
     },
     "r": {
-      "item": "minecraft:redstone_torch_lit"
+      "item": "minecraft:redstone"
     },
-    "c": {
-      "item": "buildcraft:redstone_golden_chipset"
-    },
-    "d": {
-      "item": "buildcraft:diamond_item_pipe"
+    "g": {
+      "item": "minecraft:gold_ingot"
     }
   },
   "result": {
-    "item": "logisticspipes:basic_item_pipe",
-    "count": 8
+    "item": "logisticspipes:blank_module",
+    "count": 4
   }
 }
