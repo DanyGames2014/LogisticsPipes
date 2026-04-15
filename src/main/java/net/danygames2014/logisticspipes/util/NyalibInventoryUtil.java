@@ -7,6 +7,9 @@ import net.modificationstation.stationapi.api.util.math.Direction;
 
 public class NyalibInventoryUtil {
     public static boolean hasItemHandler(BlockEntity blockEntity){
+        if(blockEntity == null) {
+            return false;
+        }
         return CapabilityHelper.getCapability(blockEntity, ItemHandlerBlockCapability.class) != null;
     }
 

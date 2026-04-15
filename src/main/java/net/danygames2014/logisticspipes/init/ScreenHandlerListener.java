@@ -28,6 +28,7 @@ public class ScreenHandlerListener {
         event.register(NAMESPACE.id("crafting"), new GuiHandler(this::openCraftingScreen, CraftingLogisticPipeBlockEntity::new));
         event.register(NAMESPACE.id("satellite"), new GuiHandler(this::openSatelliteScreen, SatelliteLogisticPipeBlockEntity::new));
         event.register(NAMESPACE.id("provider"), new GuiHandler(this::openProviderScreen, ProviderModule::new));
+        event.register(NAMESPACE.id("provider_pipe"), new GuiHandler(this::openProviderPipeScreen, ProviderLogisticPipeBlockEntity::new));
         event.register(NAMESPACE.id("passive_supplier"), new GuiHandler(this::openPassiveSupplierScreen, PassiveSupplierModule::new));
         event.register(NAMESPACE.id("item_sink"), new GuiHandler(this::openItemSinkScreen, ItemSinkModule::new));
         event.register(NAMESPACE.id("extractor"), new GuiHandler(this::openExtractorScreen, ExtractorModule::new));
@@ -51,6 +52,15 @@ public class ScreenHandlerListener {
         BlockEntity blockEntity = player.world.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]);
         if (blockEntity instanceof SupplierLogisticPipeBlockEntity pipe) {
             return new SupplierScreen(player, pipe);
+        }
+
+        return null;
+    }
+
+    private Screen openProviderPipeScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
+        BlockEntity blockEntity = player.world.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]);
+        if (blockEntity instanceof ProviderLogisticPipeBlockEntity pipe) {
+            return new ProviderPipeScreen(player, pipe);
         }
 
         return null;

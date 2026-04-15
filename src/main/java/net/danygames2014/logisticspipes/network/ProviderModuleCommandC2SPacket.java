@@ -1,5 +1,6 @@
 package net.danygames2014.logisticspipes.network;
 
+import net.danygames2014.logisticspipes.block.entity.ProviderLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.pipe.ExtractionMode;
 import net.danygames2014.logisticspipes.module.ProviderModule;
 import net.danygames2014.logisticspipes.screen.handler.ProviderScreenHandler;
@@ -67,6 +68,21 @@ public class ProviderModuleCommandC2SPacket extends Packet implements ManagedPac
                         }
                         
                         providerModule.setExtractionMode(ExtractionMode.values()[commandValue]);
+                    }
+                }
+            }
+            if (providerHandler.moduleInventory instanceof ProviderLogisticPipeBlockEntity providerPipe) {
+                switch (commandId) {
+                    case 0 -> {
+                        providerPipe.setFilterExcluded(commandValue == 1);
+                    }
+
+                    case 1 -> {
+                        if (commandValue < 0 || commandValue > 4) {
+                            return;
+                        }
+
+                        providerPipe.setExtractionMode(ExtractionMode.values()[commandValue]);
                     }
                 }
             }

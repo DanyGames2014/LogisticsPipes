@@ -38,8 +38,10 @@ public class LogisticsPipes {
     public static Block requestItemPipe;
     public static Block requestItemPipeMk2;
     public static Block providerItemPipe;
+    public static Block providerItemPipeMk2;
     public static Block supplierItemPipe;
     public static Block craftingItemPipe;
+    public static Block craftingItemPipeMk2;
     public static Block satelliteItemPipe;
 
     public static Block chassisItemPipeMk1;
@@ -112,8 +114,19 @@ public class LogisticsPipes {
                 PipeType.ITEM,
                 logisticPipeBehavior,
                 LogisticItemPipeTransporter::new,
-                BasicLogisticPipeBlockEntity::new
+                ProviderLogisticPipeBlockEntity::new
         ).setTranslationKey(NAMESPACE, "provider_item_pipe").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
+
+        providerItemPipeMk2 = new LogisticPipeBlock(
+                NAMESPACE.id("provider_item_pipe_mk2"),
+                pipeMaterial,
+                NAMESPACE.id("block/pipe/provider_item_pipe_mk2"),
+                null,
+                PipeType.ITEM,
+                logisticPipeBehavior,
+                LogisticItemPipeTransporter::new,
+                ProviderLogisticPipeBlockEntityMk2::new
+        ).setTranslationKey(NAMESPACE, "provider_item_pipe_mk2").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
 
         supplierItemPipe = new LogisticPipeBlock(
                 NAMESPACE.id("supplier_item_pipe"),
@@ -136,6 +149,17 @@ public class LogisticsPipes {
                 LogisticItemPipeTransporter::new,
                 CraftingLogisticPipeBlockEntity::new
         ).setTranslationKey(NAMESPACE, "crafting_item_pipe").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
+
+        craftingItemPipe = new LogisticPipeBlock(
+                NAMESPACE.id("crafting_item_pipe_mk2"),
+                pipeMaterial,
+                NAMESPACE.id("block/pipe/crafting_item_pipe_mk2"),
+                null,
+                PipeType.ITEM,
+                logisticPipeBehavior,
+                LogisticItemPipeTransporter::new,
+                CraftingLogisticPipeBlockEntityMk2::new
+        ).setTranslationKey(NAMESPACE, "crafting_item_pipe_mk2").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
 
         satelliteItemPipe = new LogisticPipeBlock(
                 NAMESPACE.id("satellite_item_pipe"),

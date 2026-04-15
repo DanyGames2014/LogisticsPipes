@@ -118,7 +118,7 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         }
 
         LinkedList<AdjacentBlockEntity> crafters = locateCrafters();
-        if (crafters.size() < 1 ){
+        if (crafters.isEmpty()){
             orderManager.sendFailed();
             return;
         }
