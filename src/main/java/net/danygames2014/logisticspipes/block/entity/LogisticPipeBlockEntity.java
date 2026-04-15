@@ -14,6 +14,7 @@ import net.danygames2014.logisticspipes.block.pipe.LogisticsManager;
 import net.danygames2014.logisticspipes.config.Config;
 import net.danygames2014.logisticspipes.gui.hud.TestHud;
 import net.danygames2014.logisticspipes.interfaces.*;
+import net.danygames2014.logisticspipes.network.PipeParticleS2CPacket;
 import net.danygames2014.logisticspipes.routing.LogisticsNetwork;
 import net.danygames2014.logisticspipes.routing.LogisticsNetworkManager;
 import net.danygames2014.logisticspipes.routing.RouteDestination;
@@ -30,6 +31,7 @@ import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
@@ -64,6 +66,8 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
     public boolean updateNeighbors = true;
 
+    private int[] queuedParticles = new int[ParticleColor.values().length];
+    boolean hasQueuedParticles = false;
     // HUD Rendering
     private final TestHud HUD = new TestHud(this);
 
@@ -112,6 +116,8 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     @Override
     public void tick() {
         super.tick();
+
+        spawnParticleTick();
 
         if (world != null && !world.isRemote) {
             if (updateNeighbors || (world.getTime() % Config.NETWORK_CONFIG.neighborDetectionFrequency == this.updateOffset)) {
@@ -564,6 +570,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
         if (changed) {
             this.refreshRenderState();
+            queueParticle(ParticleColor.GREEN, 3);
             world.setBlockDirty(x, y, z);
         }
     }
@@ -665,6 +672,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         long neighborHash = neighborTable.hashCode();
         if (prevNeighborHash != neighborHash) {
             LogisticsNetworkManager.invalidateNetwork(world, this);
+            queueParticle(ParticleColor.GREEN, 3);
         }
     }
 
@@ -685,6 +693,14 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             System.err.println(entry.getLongKey() + " -> " + entry.getValue());
             player.sendMessage(entry.getLongKey() + " -> " + entry.getValue());
         }
+    }
+
+    public int[] getQueuedParticles() {
+        return queuedParticles;
+    }
+
+    public void setQueuedParticles(int[] queuedParticles) {
+        this.queuedParticles = queuedParticles;
     }
 
     private record SearchNode(int x, int y, int z, int metric, Direction firstDir) {
@@ -732,6 +748,22 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     @Override
     public void itemCouldNotBeSend(ItemIdentifierStack item) {
         //Override by subclasses
+    }
+
+    public void queueParticle(ParticleColor color, int amount) {
+        queuedParticles[color.ordinal()] += amount;
+        hasQueuedParticles = true;
+    }
+
+    private void spawnParticleTick() {
+        if(!hasQueuedParticles || world.isRemote){
+            return;
+        }
+
+        PipeParticleS2CPacket packet = new PipeParticleS2CPacket(queuedParticles, x, y, z);
+        PacketUtil.sendNetworkUpdate(world, packet, x, y, z, 16);
+        Arrays.fill(queuedParticles, 0);
+        hasQueuedParticles = false;
     }
 
     @Override

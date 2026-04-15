@@ -21,5 +21,6 @@ public class PacketListener {
         Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("provider_module_command"), ProviderModuleCommandC2SPacket.TYPE);
         Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("advanced_extractor_module_command"), AdvancedExtractorModuleCommandC2SPacket.TYPE);
         Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("extractor_module_direction"), ExtractorModuleDirectionC2SPacket.TYPE);
+        Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("pipe_particle"), PipeParticleS2CPacket.TYPE);
     }
 }
