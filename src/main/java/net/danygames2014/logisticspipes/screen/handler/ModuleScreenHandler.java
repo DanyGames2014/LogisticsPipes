@@ -12,7 +12,7 @@ public class ModuleScreenHandler extends ScreenHandler {
     public PlayerEntity player;
     public final Inventory playerInventory;
     public final Inventory moduleInventory;
-    
+
     public ModuleScreenHandler(PlayerEntity player, Inventory moduleInventory) {
         this.player = player;
         this.playerInventory = player.inventory;
@@ -67,74 +67,38 @@ public class ModuleScreenHandler extends ScreenHandler {
     @Override
     public ItemStack onSlotClick(int index, int button, boolean shift, PlayerEntity player) {
         System.out.println("index = " + index + ", button = " + button + ", shift = " + shift + ", player = " + player);
+
+        if (index < 0) {
+            return super.onSlotClick(index, button, shift, player);
+        }
+
+        // Filter Slot Handling
+        if (slots.get(index) instanceof FilterSlot filterSlot) {
+            ItemStack cursorStack = player.inventory.getCursorStack();
+
+            if (cursorStack != null) {
+                if (button == 0) {
+                    filterSlot.setStack(new ItemStack(cursorStack.getItem(), cursorStack.count, cursorStack.getDamage()));
+                } else if (button == 1) {
+                    filterSlot.setStack(new ItemStack(cursorStack.getItem(), 1, cursorStack.getDamage()));
+                }
+            } else {
+                if (shift) {
+                    if (button == 0) {
+                        filterSlot.changeAmount(1);
+                    } else if (button == 1) {
+                        filterSlot.changeAmount(-1);
+                    }
+                } else {
+                    filterSlot.setStack(null);
+                }
+            }
+            
+            return cursorStack;
+        }
+
         return super.onSlotClick(index, button, shift, player);
     }
-
-    //    @Override
-//    public ItemStack onSlotClick(int index, int button, boolean shift, PlayerEntity player) {
-//        if (index < 0) return super.onSlotClick(index, button, shift, player);
-//        Slot slot = (Slot) slots.get(index);
-//        if (slot == null || !(slot instanceof DummySlot)) {
-//            ItemStack stack1 = super.onSlotClick(index, button, shift, player);
-//            ItemStack stack2 = slot.getStack();
-////            if(stack2 != null && stack2.getItem().id == Configs.ItemModuleId + 256) {
-////                if(player instanceof EntityPlayerMP && MainProxy.isServer(player.worldObj)) {
-////                    ((EntityPlayerMP)player).updateCraftingInventorySlot(this, index, stack2);
-////                }
-////            }
-//            return stack1;
-//        }
-//
-//        PlayerInventory inventoryplayer = player.inventory;
-//
-//        ItemStack currentlyEquippedStack = inventoryplayer.getCursorStack();
-//        if (currentlyEquippedStack == null) {
-//            if (slot.getStack() != null && button == 1) {
-//                if (shift) {
-//                    slot.getStack().count = Math.min(127, slot.getStack().count * 2);
-//                } else {
-//                    slot.getStack().count /= 2;
-//                }
-//            } else {
-//                slot.setStack(null);
-//            }
-//            return currentlyEquippedStack;
-//        }
-//
-//        if (!slot.hasStack()) {
-//            slot.setStack(currentlyEquippedStack.copy());
-//            if (button == 1) {
-//                slot.getStack().count = 1;
-//            }
-//            if (slot.getStack().count > slot.getMaxItemCount()) {
-//                slot.getStack().count = slot.getMaxItemCount();
-//            }
-//
-//            return currentlyEquippedStack;
-//        }
-//
-//        ItemIdentifier currentItem = ItemIdentifier.get(currentlyEquippedStack);
-//        ItemIdentifier slotItem = ItemIdentifier.get(slot.getStack());
-//        if (currentItem == slotItem) {
-//            //Do manual shift-checking to play nice with NEI
-//            int counter = shift ? 10 : 1;
-//            if (button == 1 && slot.getStack().count + counter <= slot.getMaxItemCount()) {
-//                slot.getStack().count += counter;
-//                return currentlyEquippedStack;
-//            }
-//            if (button == 0) {
-//                if (slot.getStack().count - counter > 0) {
-//                    slot.getStack().count -= counter;
-//                } else {
-//                    slot.setStack(null);
-//                }
-//                return currentlyEquippedStack;
-//            }
-//        } else {
-//            slot.setStack(currentlyEquippedStack.copy());
-//        }
-//        return currentlyEquippedStack;
-//    }
 
     @Override
     public boolean canUse(PlayerEntity player) {
