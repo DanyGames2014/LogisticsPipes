@@ -8,15 +8,12 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.ScreenHandlerListener;
 
 public class ItemSinkScreenHandler extends ModuleScreenHandler {
-    private ItemSinkModule module;
+    private final ItemSinkModule module;
     private boolean defaultRoute;
-    
+
     public ItemSinkScreenHandler(PlayerEntity player, Inventory moduleInventory) {
         super(player, moduleInventory);
-        
-        if (moduleInventory instanceof ItemSinkModule itemSinkModule) {
-            this.module = itemSinkModule;
-        }
+        this.module = (ItemSinkModule) moduleInventory;
 
         addNormalSlotsForPlayerInventory(8, 60);
 
@@ -30,9 +27,7 @@ public class ItemSinkScreenHandler extends ModuleScreenHandler {
     @Override
     public void addListener(ScreenHandlerListener listener) {
         super.addListener(listener);
-        if (module != null) {
-            listener.onPropertyUpdate(this, 0, this.module.isDefaultRoute() ? 1 : 0);
-        }
+        listener.onPropertyUpdate(this, 0, this.module.isDefaultRoute() ? 1 : 0);
     }
 
     @Override

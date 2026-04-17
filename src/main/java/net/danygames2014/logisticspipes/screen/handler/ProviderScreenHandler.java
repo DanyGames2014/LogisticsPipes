@@ -9,16 +9,13 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.ScreenHandlerListener;
 
 public class ProviderScreenHandler extends ModuleScreenHandler {
-    private ProviderModule module;
+    private final ProviderModule module;
     private boolean isExcludeFilter;
     private int extractionMode;
-    
+
     public ProviderScreenHandler(PlayerEntity player, Inventory moduleInventory) {
         super(player, moduleInventory);
-        
-        if (moduleInventory instanceof ProviderModule providerModule) {
-            this.module = providerModule;
-        }
+        this.module = (ProviderModule) moduleInventory;
 
         addNormalSlotsForPlayerInventory(18, 97);
 
@@ -37,10 +34,8 @@ public class ProviderScreenHandler extends ModuleScreenHandler {
     @Override
     public void addListener(ScreenHandlerListener listener) {
         super.addListener(listener);
-        if (module != null) {
-            listener.onPropertyUpdate(this, 0, this.module.isExcludeFilter() ? 1 : 0);
-            listener.onPropertyUpdate(this, 1, this.module.getExtractionMode().ordinal());
-        }
+        listener.onPropertyUpdate(this, 0, this.module.isExcludeFilter() ? 1 : 0);
+        listener.onPropertyUpdate(this, 1, this.module.getExtractionMode().ordinal());
     }
 
     @Override
@@ -67,9 +62,9 @@ public class ProviderScreenHandler extends ModuleScreenHandler {
     public void setProperty(int id, int value) {
         switch (id) {
             case 0 -> {
-                this.module.setFilterExcluded(value == 1);    
+                this.module.setFilterExcluded(value == 1);
             }
-            
+
             case 1 -> {
                 this.module.setExtractionMode(ExtractionMode.values()[value]);
             }

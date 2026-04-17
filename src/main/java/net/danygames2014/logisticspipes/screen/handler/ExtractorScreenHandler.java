@@ -20,9 +20,7 @@ public class ExtractorScreenHandler extends ModuleScreenHandler {
     @Override
     public void addListener(ScreenHandlerListener listener) {
         super.addListener(listener);
-        if (module != null) {
-            listener.onPropertyUpdate(this, 0, this.module.getSneakyDirection().ordinal());
-        }
+        listener.onPropertyUpdate(this, 0, this.module.getSneakyDirection().ordinal());
     }
 
     @Override

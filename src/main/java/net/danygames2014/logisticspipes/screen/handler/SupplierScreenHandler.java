@@ -8,7 +8,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.ScreenHandlerListener;
 
 public class SupplierScreenHandler extends ModuleScreenHandler {
-    public SupplierLogisticPipeBlockEntity pipe;
+    public final SupplierLogisticPipeBlockEntity pipe;
     private boolean requestPartial;
     
     public SupplierScreenHandler(PlayerEntity player, SupplierLogisticPipeBlockEntity pipe, Inventory moduleInventory) {

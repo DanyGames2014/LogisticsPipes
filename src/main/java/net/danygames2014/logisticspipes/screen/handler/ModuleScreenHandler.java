@@ -9,7 +9,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 
 public class ModuleScreenHandler extends ScreenHandler {
-    public PlayerEntity player;
+    public final PlayerEntity player;
     public final Inventory playerInventory;
     public final Inventory moduleInventory;
 
@@ -68,7 +68,7 @@ public class ModuleScreenHandler extends ScreenHandler {
     public ItemStack onSlotClick(int index, int button, boolean shift, PlayerEntity player) {
         System.out.println("index = " + index + ", button = " + button + ", shift = " + shift + ", player = " + player);
 
-        if (index < 0) {
+        if (index < 0 || index >= slots.size()) {
             return super.onSlotClick(index, button, shift, player);
         }
 

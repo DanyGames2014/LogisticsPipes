@@ -9,16 +9,13 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.ScreenHandlerListener;
 
 public class AdvancedExtractorScreenHandler extends ModuleScreenHandler {
-    public AdvancedExtractorModule module;
+    public final AdvancedExtractorModule module;
     private boolean itemsIncluded;
     private int sneakyDirection;
-    
+
     public AdvancedExtractorScreenHandler(PlayerEntity player, Inventory moduleInventory) {
         super(player, moduleInventory);
-        
-        if (moduleInventory instanceof AdvancedExtractorModule advancedExtractorModule) {
-            this.module = advancedExtractorModule;
-        }
+        this.module = (AdvancedExtractorModule) moduleInventory;
 
         addNormalSlotsForPlayerInventory(8, 60);
 
@@ -32,10 +29,8 @@ public class AdvancedExtractorScreenHandler extends ModuleScreenHandler {
     @Override
     public void addListener(ScreenHandlerListener listener) {
         super.addListener(listener);
-        if (module != null) {
-            listener.onPropertyUpdate(this, 0, this.module.areItemsIncluded() ? 1 : 0);
-            listener.onPropertyUpdate(this, 1, this.module.getSneakyDirection().ordinal());
-        }
+        listener.onPropertyUpdate(this, 0, this.module.areItemsIncluded() ? 1 : 0);
+        listener.onPropertyUpdate(this, 1, this.module.getSneakyDirection().ordinal());
     }
 
     @Override
@@ -48,7 +43,7 @@ public class AdvancedExtractorScreenHandler extends ModuleScreenHandler {
                     this.itemsIncluded = this.module.areItemsIncluded();
                     listener.onPropertyUpdate(this, 0, this.module.areItemsIncluded() ? 1 : 0);
                 }
-                
+
                 if (this.sneakyDirection != this.module.getSneakyDirection().ordinal()) {
                     this.sneakyDirection = this.module.getSneakyDirection().ordinal();
                     listener.onPropertyUpdate(this, 1, this.module.getSneakyDirection().ordinal());
@@ -64,7 +59,7 @@ public class AdvancedExtractorScreenHandler extends ModuleScreenHandler {
             case 0 -> {
                 this.module.setItemsIncluded(value == 1);
             }
-            
+
             case 1 -> {
                 this.module.setSneakyDirection(SneakyDirection.values()[value]);
             }
