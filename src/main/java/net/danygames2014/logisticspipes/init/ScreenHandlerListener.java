@@ -73,7 +73,12 @@ public class ScreenHandlerListener {
 
     private Screen openSatelliteScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
         BlockEntity blockEntity = player.world.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]);
-        return new SatelliteScreen((SatelliteLogisticPipeBlockEntity) blockEntity, player);
+        
+        if (blockEntity instanceof SatelliteLogisticPipeBlockEntity satellitePipe) {
+            return new SatelliteScreen(player, satellitePipe);
+        }
+        
+        return null;
     }
 
     // Modules

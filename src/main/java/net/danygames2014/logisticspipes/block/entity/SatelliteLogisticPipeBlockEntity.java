@@ -6,10 +6,10 @@ import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.pipe.ItemSendMode;
 import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
 import net.danygames2014.logisticspipes.interfaces.*;
+import net.danygames2014.logisticspipes.network.SatelliteIdC2SPacket;
 import net.danygames2014.logisticspipes.request.RequestManager;
-import net.danygames2014.logisticspipes.routing.LogisticsNetwork;
 import net.danygames2014.logisticspipes.routing.LogisticsNetworkManager;
-import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
+import net.danygames2014.logisticspipes.screen.handler.SatelliteScreenHandler;
 import net.danygames2014.logisticspipes.util.ItemHandlerBlockCapabilityInventoryWrapper;
 import net.danygames2014.logisticspipes.util.ItemIdentifier;
 import net.danygames2014.logisticspipes.util.ItemIdentifierStack;
@@ -21,6 +21,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
+import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 import java.util.*;
@@ -52,7 +53,7 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
 
     @Override
     public void openModuleScreen(PlayerEntity player) {
-        GuiHelper.openGUI(player, LogisticsPipes.NAMESPACE.id("satellite"),null, new ModuleScreenHandler(player, null), (messagePacket) -> {
+        GuiHelper.openGUI(player, LogisticsPipes.NAMESPACE.id("satellite"),null, new SatelliteScreenHandler(player, this), (messagePacket) -> {
             messagePacket.ints = new int[]{messagePacket.ints != null ? messagePacket.ints[0] : 0, x, y, z};
         });
     }
@@ -178,11 +179,15 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
     }
 
     protected void ensureAllSatelliteStatus() {
-        if(world.isRemote) return;
-        if (satelliteId == 0 && AllSatellites.contains(this)) {
+        if(world.isRemote) {
+            return;
+        }
+        
+        if (satelliteId == 0) {
             AllSatellites.remove(this);
         }
-        if (satelliteId != 0 && !AllSatellites.contains(this)) {
+        
+        if (satelliteId != 0) {
             AllSatellites.add(this);
         }
     }
@@ -191,11 +196,7 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
         satelliteId = findId(1);
         ensureAllSatelliteStatus();
         if (world.isRemote) {
-//            final PacketCoordinates packet = new PacketCoordinates(NetworkConstants.SATELLITE_PIPE_NEXT, xCoord, yCoord, zCoord);
-//            PacketDispatcher.sendPacketToServer(packet.getPacket());
-        } else {
-//            final PacketPipeInteger packet = new PacketPipeInteger(NetworkConstants.SATELLITE_PIPE_SATELLITE_ID, xCoord, yCoord, zCoord, satelliteId);
-//            PacketDispatcher.sendPacketToPlayer(packet.getPacket(), (Player)player);
+            PacketHelper.send(new SatelliteIdC2SPacket(0));
         }
         updateWatchers();
     }
@@ -204,11 +205,7 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
         satelliteId = findId(-1);
         ensureAllSatelliteStatus();
         if (world.isRemote) {
-//            final PacketCoordinates packet = new PacketCoordinates(NetworkConstants.SATELLITE_PIPE_PREV, xCoord, yCoord, zCoord);
-//            PacketDispatcher.sendPacketToServer(packet.getPacket());
-        } else {
-//            final PacketPipeInteger packet = new PacketPipeInteger(NetworkConstants.SATELLITE_PIPE_SATELLITE_ID, xCoord, yCoord, zCoord, satelliteId);
-//            PacketDispatcher.sendPacketToPlayer(packet.getPacket(),(Player) player);
+            PacketHelper.send(new SatelliteIdC2SPacket(1));
         }
         updateWatchers();
     }
@@ -245,9 +242,5 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
 
     @Override
     public void itemArrived(ItemIdentifier item) {
-    }
-
-    public void setSatelliteId(int integer) {
-        satelliteId = integer;
     }
 }
