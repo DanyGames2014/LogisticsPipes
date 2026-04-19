@@ -23,5 +23,6 @@ public class PacketListener {
         Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("extractor_module_direction"), ExtractorModuleDirectionC2SPacket.TYPE);
         Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("pipe_particle"), PipeParticleS2CPacket.TYPE);
         Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("satellite_id"), SatelliteIdC2SPacket.TYPE);
+        Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("crafting_pipe_command"), CraftingPipeCommandC2SPacket.TYPE);
     }
 }

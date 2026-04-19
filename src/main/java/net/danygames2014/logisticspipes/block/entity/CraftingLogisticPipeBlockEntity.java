@@ -8,6 +8,7 @@ import net.danygames2014.logisticspipes.block.pipe.ItemSendMode;
 import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.interfaces.routing.CraftItems;
+import net.danygames2014.logisticspipes.network.CraftingPipeCommandC2SPacket;
 import net.danygames2014.logisticspipes.request.CraftingTemplate;
 import net.danygames2014.logisticspipes.request.RequestManager;
 import net.danygames2014.logisticspipes.request.RequestTreeNode;
@@ -15,6 +16,7 @@ import net.danygames2014.logisticspipes.routing.LogisticsNetworkManager;
 import net.danygames2014.logisticspipes.routing.LogisticsOrderManager;
 import net.danygames2014.logisticspipes.routing.LogisticsPromise;
 import net.danygames2014.logisticspipes.routing.Router;
+import net.danygames2014.logisticspipes.screen.handler.CraftingPipeScreenHandler;
 import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
 import net.danygames2014.logisticspipes.screen.handler.SupplierScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
@@ -28,6 +30,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
+import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 
 import java.util.*;
 
@@ -88,7 +91,7 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
     @Override
     public void openModuleScreen(PlayerEntity player) {
-        GuiHelper.openGUI(player, LogisticsPipes.NAMESPACE.id("crafting"), getDummyInventory(), new ModuleScreenHandler(player, getDummyInventory()), (messagePacket) -> {
+        GuiHelper.openGUI(player, LogisticsPipes.NAMESPACE.id("crafting"), getDummyInventory(), new CraftingPipeScreenHandler(player, this), (messagePacket) -> {
             messagePacket.ints = new int[]{messagePacket.ints != null ? messagePacket.ints[0] : 0, x, y, z};
         });
     }
@@ -353,15 +356,12 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
     }
 
     public void setNextSatellite(PlayerEntity player) {
+        if (player.world.isRemote) {
+            PacketHelper.send(new CraftingPipeCommandC2SPacket(0));
+            return;
+        }
+        
         satelliteId = getNextConnectSatelliteId(false);
-//        if (MainProxy.isClient(player.worldObj)) {
-//            final PacketCoordinates packet = new PacketCoordinates(NetworkConstants.CRAFTING_PIPE_NEXT_SATELLITE, xCoord, yCoord, zCoord);
-//            PacketDispatcher.sendPacketToServer(packet.getPacket());
-//        } else {
-//            final PacketPipeInteger packet = new PacketPipeInteger(NetworkConstants.CRAFTING_PIPE_SATELLITE_ID, xCoord, yCoord, zCoord, satelliteId);
-//            PacketDispatcher.sendPacketToPlayer(packet.getPacket(), (Player)player);
-//        }
-
     }
 
     // This is called by the packet PacketCraftingPipeSatelliteId
@@ -370,14 +370,12 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
     }
 
     public void setPrevSatellite(PlayerEntity player) {
+        if (player.world.isRemote) {
+            PacketHelper.send(new CraftingPipeCommandC2SPacket(1));
+            return;
+        }
+        
         satelliteId = getNextConnectSatelliteId(true);
-//        if (MainProxy.isClient(player.worldObj)) {
-//            final PacketCoordinates packet = new PacketCoordinates(NetworkConstants.CRAFTING_PIPE_PREV_SATELLITE, xCoord, yCoord, zCoord);
-//            PacketDispatcher.sendPacketToServer(packet.getPacket());
-//        } else {
-//            final PacketPipeInteger packet = new PacketPipeInteger(NetworkConstants.CRAFTING_PIPE_SATELLITE_ID, xCoord, yCoord, zCoord, satelliteId);
-//            PacketDispatcher.sendPacketToPlayer(packet.getPacket(), (Player)player);
-//        }
     }
 
     public boolean isSatelliteConnected() {
@@ -420,11 +418,10 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
     public void openAttachedGui(PlayerEntity player) {
         if (world.isRemote) {
-            // TODO: networking
-//            final PacketCoordinates packet = new PacketCoordinates(NetworkConstants.CRAFTING_PIPE_OPEN_CONNECTED_GUI, xCoord, yCoord, zCoord);
-//            PacketDispatcher.sendPacketToServer(packet.getPacket());
+            PacketHelper.send(new CraftingPipeCommandC2SPacket(4));
             return;
         }
+        
         boolean found = false;
         for (final AdjacentBlockEntity adjacent : WorldUtil.getAdjacentBlockEntities(world, x, y, z)) {
 //            for (CraftingRecipeProvider provider : SimpleServiceLocator.craftingRecipeProviders) {
@@ -448,7 +445,12 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         }
     }
 
-//    public void importFromCraftingTable(EntityPlayer player) {
+    public void importFromCraftingTable(PlayerEntity player) {
+        if (player.world.isRemote) {
+            PacketHelper.send(new CraftingPipeCommandC2SPacket(3));
+            return;
+        }
+        
 //        final WorldUtil worldUtil = new WorldUtil(worldObj, xCoord, yCoord, zCoord);
 //        for (final AdjacentTile tile : worldUtil.getAdjacentTileEntities()) {
 //            for (ICraftingRecipeProvider provider : SimpleServiceLocator.craftingRecipeProviders) {
@@ -456,18 +458,7 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 //                    break;
 //            }
 //        }
-//
-//        if (MainProxy.isClient(player.worldObj)) {
-//            // Send packet asking for import
-//            final PacketCoordinates packet = new PacketCoordinates(NetworkConstants.CRAFTING_PIPE_IMPORT, xCoord, yCoord, zCoord);
-//            PacketDispatcher.sendPacketToServer(packet.getPacket());
-//        } else{
-//            // Send inventory as packet
-//            final PacketInventoryChange packet = new PacketInventoryChange(NetworkConstants.CRAFTING_PIPE_IMPORT_BACK, xCoord, yCoord, zCoord, _dummyInventory);
-//            PacketDispatcher.sendPacketToPlayer(packet.getPacket(), (Player)player);
-//
-//        }
-//    }
+    }
 
     public void handleStackMove(int number) {
         if(world.isRemote) {
@@ -486,21 +477,19 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
     }
 
     public void priorityUp(PlayerEntity player) {
+        if (player.world.isRemote) {
+            PacketHelper.send(new CraftingPipeCommandC2SPacket(20));
+        }
+        
         priority++;
-//        if(MainProxy.isClient()) {
-//            PacketDispatcher.sendPacketToServer(new PacketCoordinates(NetworkConstants.CRAFTING_PIPE_PRIORITY_UP, xCoord, yCoord, zCoord).getPacket());
-//        } else if(MainProxy.isServer() && player != null) {
-//            PacketDispatcher.sendPacketToPlayer(new PacketPipeInteger(NetworkConstants.CRAFTING_PIPE_PRIORITY, xCoord, yCoord, zCoord, priority).getPacket(), (Player)player);
-//        }
     }
 
     public void priorityDown(PlayerEntity player) {
+        if (player.world.isRemote) {
+            PacketHelper.send(new CraftingPipeCommandC2SPacket(21));
+        }
+        
         priority--;
-//        if(MainProxy.isClient()) {
-//            PacketDispatcher.sendPacketToServer(new PacketCoordinates(NetworkConstants.CRAFTING_PIPE_PRIORITY_DOWN, xCoord, yCoord, zCoord).getPacket());
-//        } else if(MainProxy.isServer() && player != null) {
-//            PacketDispatcher.sendPacketToPlayer(new PacketPipeInteger(NetworkConstants.CRAFTING_PIPE_PRIORITY, xCoord, yCoord, zCoord, priority).getPacket(), (Player)player);
-//        }
     }
 
     public void setPriority(int amount) {
