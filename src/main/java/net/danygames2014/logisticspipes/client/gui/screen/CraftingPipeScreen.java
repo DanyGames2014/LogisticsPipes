@@ -3,10 +3,12 @@ package net.danygames2014.logisticspipes.client.gui.screen;
 import net.danygames2014.logisticspipes.block.entity.CraftingLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.gui.SmallButtonWidget;
 import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.block.Block;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import org.lwjgl.opengl.GL11;
 
@@ -14,22 +16,15 @@ public class CraftingPipeScreen extends LogisticsBaseScreen {
     private final CraftingLogisticPipeBlockEntity pipe;
     private final ButtonWidget[] buttonArray;
 
-    public CraftingPipeScreen(PlayerEntity player, Inventory dummyInventory, CraftingLogisticPipeBlockEntity pipe){
-        super(player, pipe, new ModuleScreenHandler(player, dummyInventory));
-        moduleHandler.addNormalSlotsForPlayerInventory(18, 97);
-
-        for(int l = 0; l < 9; l++) {
-            moduleHandler.addFilterSlot(l, 18 + l * 18, 18);
-        }
-
-        moduleHandler.addFilterSlot(9, 90, 64);
-
+    public CraftingPipeScreen(PlayerEntity player, CraftingLogisticPipeBlockEntity pipe){
+        super(player, pipe, new ModuleScreenHandler(player, pipe.getDummyInventory()));
         this.pipe = pipe;
         this.backgroundWidth = 195;
         this.backgroundHeight = 187;
         buttonArray = new ButtonWidget[6];
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void init() {
         super.init();
@@ -37,10 +32,12 @@ public class CraftingPipeScreen extends LogisticsBaseScreen {
         buttons.add(new SmallButtonWidget(1, (width-backgroundWidth) / 2 + 129, (height - backgroundHeight) / 2 + 50, 10,10, "<"));
         buttons.add(new SmallButtonWidget(3, (width-backgroundWidth) / 2 + 47, (height - backgroundHeight) / 2 + 50, 37,10, "Import"));
         buttons.add(new SmallButtonWidget(4, (width-backgroundWidth) / 2 + 15, (height - backgroundHeight) / 2 + 50, 28,10, "Open"));
+        
         for(int i = 0; i < 6; i++) {
             buttons.add(buttonArray[i] = new SmallButtonWidget(5 + i, (width-backgroundWidth) / 2 + 20 + 18 * i, (height - backgroundHeight) / 2 + 37, 10,10, ">"));
             buttonArray[i].visible = false;
         }
+        
         buttons.add(new SmallButtonWidget(20, (width-backgroundWidth) / 2 + 164, (height - backgroundHeight) / 2 + 85, 10,10, ">"));
         buttons.add(new SmallButtonWidget(21, (width-backgroundWidth) / 2 + 129, (height - backgroundHeight) / 2 + 85, 10,10, "<"));
     }

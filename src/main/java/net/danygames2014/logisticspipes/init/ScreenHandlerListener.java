@@ -68,7 +68,11 @@ public class ScreenHandlerListener {
 
     private Screen openCraftingScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
         BlockEntity blockEntity = player.world.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]);
-        return new CraftingPipeScreen(player, ((CraftingLogisticPipeBlockEntity) blockEntity).getDummyInventory(), (CraftingLogisticPipeBlockEntity) blockEntity);
+        if (blockEntity instanceof CraftingLogisticPipeBlockEntity craftingPipe) {
+            return new CraftingPipeScreen(player, craftingPipe);
+        }
+        
+        return null;
     }
 
     private Screen openSatelliteScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
