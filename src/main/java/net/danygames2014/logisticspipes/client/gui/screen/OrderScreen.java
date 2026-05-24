@@ -499,6 +499,7 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
 
     @Override
     protected void keyPressed(char character, int keyCode) {
+        boolean isCtrl = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
         if(editsearch) {
             if (character == 13) {
                 editsearch = false;
@@ -506,8 +507,23 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
             } else if (keyCode == 47 && Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
                 searchinput1 = searchinput1 + getClipboard();
             } else if (character == 8) {
-                if (!searchinput1.isEmpty())
-                    searchinput1 = searchinput1.substring(0, searchinput1.length() - 1);
+                if (!searchinput1.isEmpty()){
+                    if(isCtrl) {
+                        if(searchinput1.endsWith(" ")){
+                            searchinput1 = searchinput1.replaceAll("[ \\t]+$", "");
+                        }
+
+                        int lastSpace = searchinput1.lastIndexOf(' ');
+
+                        if(lastSpace == -1){
+                            searchinput1 = "";
+                        } else {
+                            searchinput1 = searchinput1.substring(0, lastSpace + 1);
+                        }
+                    } else {
+                        searchinput1 = searchinput1.substring(0, searchinput1.length() - 1);
+                    }
+                }
                 return;
             } else if (Character.isLetterOrDigit(character) || character == ' ') {
                 if (textRenderer.getWidth(searchinput1 + character + searchinput2) <= searchWidth) {
@@ -516,13 +532,34 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
                 return;
             } else if(keyCode == 203) { //Left
                 if(!searchinput1.isEmpty()) {
-                    searchinput2 = searchinput1.substring(searchinput1.length() - 1) + searchinput2;
-                    searchinput1 = searchinput1.substring(0, searchinput1.length() - 1);
+                    if(isCtrl) {
+                        String trimmed = searchinput1.replaceAll("[ \\t]+$", "");
+                        int lastSpace = trimmed.lastIndexOf(' ');
+
+                        int cutIndex = (lastSpace == -1) ? 0 : lastSpace;
+
+                        searchinput2 = searchinput1.substring(cutIndex) + searchinput2;
+                        searchinput1 = searchinput1.substring(0, cutIndex);
+                    } else {
+                        searchinput2 = searchinput1.substring(searchinput1.length() - 1) + searchinput2;
+                        searchinput1 = searchinput1.substring(0, searchinput1.length() - 1);
+                    }
                 }
             } else if(keyCode == 205) { //Right
                 if(!searchinput2.isEmpty()) {
-                    searchinput1 += searchinput2.substring(0,1);
-                    searchinput2 = searchinput2.substring(1);
+                    if(isCtrl) {
+                        String trimmed = searchinput2.replaceAll("^[ \\t]+", "");
+                        int nextSpace = trimmed.indexOf(' ');
+
+                        int spacesSkipped = searchinput2.length() - trimmed.length();
+                        int cutIndex = (nextSpace == -1) ? searchinput2.length() : (nextSpace + spacesSkipped);
+
+                        searchinput1 += searchinput2.substring(0, cutIndex);
+                        searchinput2 = searchinput2.substring(cutIndex);
+                    } else {
+                        searchinput1 += searchinput2.substring(0,1);
+                        searchinput2 = searchinput2.substring(1);
+                    }
                 }
             } else if(keyCode == 1) { //ESC
                 editsearch = false;
