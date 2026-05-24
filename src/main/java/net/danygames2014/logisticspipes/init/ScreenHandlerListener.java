@@ -2,6 +2,7 @@ package net.danygames2014.logisticspipes.init;
 
 import net.danygames2014.logisticspipes.block.entity.*;
 import net.danygames2014.logisticspipes.client.gui.screen.*;
+import net.danygames2014.logisticspipes.interfaces.RequestItems;
 import net.danygames2014.logisticspipes.interfaces.SneakyDirectionReceiver;
 import net.danygames2014.logisticspipes.module.*;
 import net.mine_diver.unsafeevents.listener.EventListener;
@@ -29,6 +30,7 @@ public class ScreenHandlerListener {
         event.register(NAMESPACE.id("satellite"), new GuiHandler(this::openSatelliteScreen, SatelliteLogisticPipeBlockEntity::new));
         event.register(NAMESPACE.id("provider"), new GuiHandler(this::openProviderScreen, ProviderModule::new));
         event.register(NAMESPACE.id("provider_pipe"), new GuiHandler(this::openProviderPipeScreen, ProviderLogisticPipeBlockEntity::new));
+        event.register(NAMESPACE.id("normal_order"), new GuiHandler(this::openNormalOrderScreen, () -> null));
         event.register(NAMESPACE.id("passive_supplier"), new GuiHandler(this::openPassiveSupplierScreen, PassiveSupplierModule::new));
         event.register(NAMESPACE.id("item_sink"), new GuiHandler(this::openItemSinkScreen, ItemSinkModule::new));
         event.register(NAMESPACE.id("extractor"), new GuiHandler(this::openExtractorScreen, ExtractorModule::new));
@@ -52,6 +54,15 @@ public class ScreenHandlerListener {
         BlockEntity blockEntity = player.world.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]);
         if (blockEntity instanceof SupplierLogisticPipeBlockEntity pipe) {
             return new SupplierScreen(player, pipe);
+        }
+
+        return null;
+    }
+
+    private Screen openNormalOrderScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
+        BlockEntity blockEntity = player.world.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]);
+        if (blockEntity instanceof RequestItems requestItems) {
+            return new NormalOrderScreen(requestItems, player);
         }
 
         return null;

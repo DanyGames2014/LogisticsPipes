@@ -18,7 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class RequestManager {
-    public static boolean request(LinkedList<ItemIdentifierStack> items, RequestItems requester, LinkedList<Router> validDestinations, RequestLog log) {
+    public static boolean request(LinkedList<ItemIdentifierStack> items, RequestItems requester, List<Router> validDestinations, RequestLog log) {
         LinkedList<ProvideItems> providers = getProviders(validDestinations);
         LinkedList<CraftingTemplate> crafters = getCrafters(validDestinations);
         LinkedList<ItemMessage> messages = new LinkedList<>();

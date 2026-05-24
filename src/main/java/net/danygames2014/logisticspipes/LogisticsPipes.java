@@ -92,7 +92,7 @@ public class LogisticsPipes {
                 PipeType.ITEM,
                 logisticPipeBehavior,
                 LogisticItemPipeTransporter::new,
-                BasicLogisticPipeBlockEntity::new
+                RequestLogisticPipeBlockEntity::new
         ).setTranslationKey(NAMESPACE, "request_item_pipe").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
 
         requestItemPipeMk2 = new LogisticPipeBlock(
@@ -150,7 +150,7 @@ public class LogisticsPipes {
                 CraftingLogisticPipeBlockEntity::new
         ).setTranslationKey(NAMESPACE, "crafting_item_pipe").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
 
-        craftingItemPipe = new LogisticPipeBlock(
+        craftingItemPipeMk2 = new LogisticPipeBlock(
                 NAMESPACE.id("crafting_item_pipe_mk2"),
                 pipeMaterial,
                 NAMESPACE.id("block/pipe/crafting_item_pipe_mk2"),

@@ -2,9 +2,16 @@ package net.danygames2014.logisticspipes.util.gui;
 
 import net.danygames2014.buildcraft.util.ScreenUtil;
 import net.danygames2014.logisticspipes.client.gui.screen.LogisticsBaseScreen;
+import net.danygames2014.logisticspipes.interfaces.ItemSearch;
+import net.danygames2014.logisticspipes.util.ItemIdentifier;
+import net.danygames2014.logisticspipes.util.ItemIdentifierStack;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
+import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicItemRenderer;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
@@ -301,5 +308,98 @@ public class BasicGuiHelper {
             GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
             GL11.glEnable(2896 /*GL_LIGHTING*/);
         }
+    }
+
+    public static void renderItemIdentifierStackListIntoGui(List<ItemIdentifierStack> _allItems, ItemSearch itemSearch, int page, int left , int top, int columns, int items, int xSize, int ySize, Minecraft mc, boolean displayAmount, boolean forcenumber) {
+        renderItemIdentifierStackListIntoGui(_allItems, itemSearch, page, left, top, columns, items, xSize, ySize, mc, displayAmount, forcenumber, true);
+    }
+
+    public static void renderItemIdentifierStackListIntoGui(List<ItemIdentifierStack> _allItems, ItemSearch itemSearch, int page, int left , int top, int columns, int items, int xSize, int ySize, Minecraft mc, boolean displayAmount, boolean forcenumber, boolean color) {
+        renderItemIdentifierStackListIntoGui(_allItems, itemSearch, page, left, top, columns, items, xSize, ySize, mc, displayAmount, forcenumber, true, false);
+    }
+
+    public static void renderItemIdentifierStackListIntoGui(List<ItemIdentifierStack> _allItems, ItemSearch itemSearch, int page, int left , int top, int columns, int items, int xSize, int ySize, Minecraft mc, boolean displayAmount, boolean forcenumber, boolean color, boolean disableEffect) {
+        GL11.glPushMatrix();
+        int ppi = 0;
+        int column = 0;
+        int row = 0;
+        TextRenderer textRenderer = mc.textRenderer;
+        ItemRenderer itemRenderer = new ItemRenderer();
+        for(ItemIdentifierStack itemStack : _allItems) {
+            if(itemStack == null) {
+                column++;
+                if (column >= columns){
+                    row++;
+                    column = 0;
+                }
+                ppi++;
+                continue;
+            }
+            ItemIdentifier item = itemStack.getItem();
+            if(itemSearch!= null && !itemSearch.itemSearched(item)) continue;
+            ppi++;
+
+            if (ppi <= items * page) continue;
+            if (ppi > items * (page+1)) continue;
+            ItemStack st = itemStack.makeNormalStack();
+            int x = left + xSize * column;
+            int y = top + ySize * row;
+
+            GL11.glDisable(2896 /*GL_LIGHTING*/);
+            //GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
+
+            if(st != null && itemStack.getItem() != null) {
+                if(disableEffect) {
+                    itemRenderer.renderGuiItem(textRenderer, mc.textureManager, st, x, y);
+                } else {
+                    GL11.glTranslated(0, 0, 3.0);
+                    itemRenderer.renderGuiItem(textRenderer, mc.textureManager, st, x, y);
+                    GL11.glTranslated(0, 0, -3.0);
+                }
+            }
+
+            //GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
+            GL11.glEnable(2896 /*GL_LIGHTING*/);
+
+            if(displayAmount) {
+                String s;
+                if (st.count == 1 && !forcenumber){
+                    s = "";
+                } else if (st.count < 1000) {
+                    s = st.count + "";
+                } else if (st.count < 100000){
+                    s = st.count / 1000 + "K";
+                } else if (st.count < 1000000){
+                    s = "0M" + st.count / 100000;
+                } else {
+                    s = st.count / 1000000 + "M";
+                }
+
+                GL11.glDisable(2896 /*GL_LIGHTING*/);
+                GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
+                textRenderer.drawWithShadow(s, x + 16 - textRenderer.getWidth(s), y + 8, 0xFFFFFF);
+                GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
+                GL11.glEnable(2896 /*GL_LIGHTING*/);
+            }
+
+            column++;
+            if (column >= columns){
+                row++;
+                column = 0;
+            }
+        }
+        GL11.glDisable(2896 /*GL_LIGHTING*/);
+        GL11.glPopMatrix();
+    }
+
+    public static String getCuttedString(String input, int maxLength, TextRenderer renderer) {
+        if(renderer.getWidth(input) < maxLength) {
+            return input;
+        }
+        input += "...";
+        while(renderer.getWidth(input) > maxLength && !input.isEmpty()) {
+            input = input.substring(0, input.length() - 4) + "...";
+        }
+        return input;
     }
 }

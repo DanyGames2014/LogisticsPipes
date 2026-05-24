@@ -24,5 +24,9 @@ public class PacketListener {
         Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("pipe_particle"), PipeParticleS2CPacket.TYPE);
         Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("satellite_id"), SatelliteIdC2SPacket.TYPE);
         Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("crafting_pipe_command"), CraftingPipeCommandC2SPacket.TYPE);
+        Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("send_screen_content"), SendScreenContentS2CPacket.TYPE);
+        Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("submit_request"), SubmitRequestC2SPacket.TYPE);
+        Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("item_message"), ItemMessageS2CPacket.TYPE);
+        Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("request_screen_content"), RequestScreenContentC2SPacket.TYPE);
     }
 }
