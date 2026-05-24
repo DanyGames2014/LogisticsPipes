@@ -30,6 +30,9 @@
     ],
     "gcapi3": [
       "net.danygames2014.logisticspipes.config.Config"
+    ],
+    "nyalib:event_bus": [
+      "net.danygames2014.logisticspipes.init.CapabilityListener"
     ]
   },
   "mixins": [

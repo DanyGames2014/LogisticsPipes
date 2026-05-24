@@ -5,6 +5,7 @@ import net.danygames2014.buildcraft.block.PipeBlock;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeBlockEntity;
 import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.pipe.ItemSendMode;
+import net.danygames2014.logisticspipes.capability.recipeprovider.CraftingPipeRecipeProviderBlockCapability;
 import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.interfaces.routing.CraftItems;
@@ -17,8 +18,6 @@ import net.danygames2014.logisticspipes.routing.LogisticsOrderManager;
 import net.danygames2014.logisticspipes.routing.LogisticsPromise;
 import net.danygames2014.logisticspipes.routing.Router;
 import net.danygames2014.logisticspipes.screen.handler.CraftingPipeScreenHandler;
-import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
-import net.danygames2014.logisticspipes.screen.handler.SupplierScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
 import net.danygames2014.logisticspipes.util.tuple.Pair;
 import net.danygames2014.nyalib.capability.CapabilityHelper;
@@ -26,11 +25,13 @@ import net.danygames2014.nyalib.capability.block.itemhandler.ItemHandlerBlockCap
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
+import net.modificationstation.stationapi.api.util.math.Direction;
 
 import java.util.*;
 
@@ -451,13 +452,31 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
             return;
         }
         
-//        final WorldUtil worldUtil = new WorldUtil(worldObj, xCoord, yCoord, zCoord);
-//        for (final AdjacentTile tile : worldUtil.getAdjacentTileEntities()) {
-//            for (ICraftingRecipeProvider provider : SimpleServiceLocator.craftingRecipeProviders) {
-//                if (provider.importRecipe(tile.tile, _dummyInventory))
-//                    break;
-//            }
-//        }
+        for (Direction side : Direction.values()) {
+            BlockEntity blockEntity = world.getBlockEntity(this.x + side.getOffsetX(), this.y + side.getOffsetY(), this.z + side.getOffsetZ());
+            if (blockEntity == null) {
+                continue;
+            }
+            
+            CraftingPipeRecipeProviderBlockCapability cap = CapabilityHelper.getCapability(blockEntity, CraftingPipeRecipeProviderBlockCapability.class);
+            if (cap == null || !cap.canOpen(player)) {
+                continue;
+            }
+
+            CraftingPipeRecipe recipe = cap.getRecipe();
+            if (recipe == null) {
+                continue;
+            }
+            
+            // Set the recipe
+            this.dummyInventory.setStack(9, recipe.output);
+            int maxI = Math.min(9, recipe.inputs.size());
+            for (int i = 0; i < maxI; i++) {
+                this.dummyInventory.setStack(i, recipe.inputs.get(i));
+            }
+            
+            break;
+        }
     }
 
     public void handleStackMove(int number) {
