@@ -153,7 +153,7 @@ public class LogisticsBaseScreen extends HandledScreen implements SubScreenContr
                         if (slot.getToolTipText() != null && !slot.getToolTipText().isEmpty()) {
                             ArrayList<String> list = new ArrayList<>();
                             list.add(slot.getToolTipText());
-                            BasicGuiHelper.drawToolTip(mouseX, mouseY, list, 0xf, false);
+                            BasicGuiHelper.drawToolTip(mouseX, mouseY, list, 0xf);
                         }
                     }
                 }

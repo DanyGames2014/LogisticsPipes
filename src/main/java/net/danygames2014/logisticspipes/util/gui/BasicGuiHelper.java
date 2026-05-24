@@ -9,10 +9,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.render.platform.Lighting;
 import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.client.texture.atlas.Atlas;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicItemRenderer;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import java.util.List;
 
@@ -159,6 +161,67 @@ public class BasicGuiHelper {
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
 
+    public static void fill(int x1, int y1, int x2, int y2, int color) {
+        if (x1 < x2) {
+            int var6 = x1;
+            x1 = x2;
+            x2 = var6;
+        }
+
+        if (y1 < y2) {
+            int var11 = y1;
+            y1 = y2;
+            y2 = var11;
+        }
+
+        float var12 = (float)(color >> 24 & 255) / 255.0F;
+        float var7 = (float)(color >> 16 & 255) / 255.0F;
+        float var8 = (float)(color >> 8 & 255) / 255.0F;
+        float var9 = (float)(color & 255) / 255.0F;
+        Tessellator var10 = Tessellator.INSTANCE;
+        GL11.glEnable(3042);
+        GL11.glDisable(3553);
+        GL11.glBlendFunc(770, 771);
+        GL11.glColor4f(var7, var8, var9, var12);
+        var10.startQuads();
+        var10.vertex(x1, y2, 0.0F);
+        var10.vertex(x2, y2, 0.0F);
+        var10.vertex(x2, y1, 0.0F);
+        var10.vertex(x1, y1, 0.0F);
+        var10.draw();
+        GL11.glEnable(3553);
+        GL11.glDisable(3042);
+    }
+
+    public static void fillGradient(int startX, int startY, int endX, int endY, int colorStart, int colorEnd) {
+        float var7 = (float)(colorStart >> 24 & 255) / 255.0F;
+        float var8 = (float)(colorStart >> 16 & 255) / 255.0F;
+        float var9 = (float)(colorStart >> 8 & 255) / 255.0F;
+        float var10 = (float)(colorStart & 255) / 255.0F;
+        float var11 = (float)(colorEnd >> 24 & 255) / 255.0F;
+        float var12 = (float)(colorEnd >> 16 & 255) / 255.0F;
+        float var13 = (float)(colorEnd >> 8 & 255) / 255.0F;
+        float var14 = (float)(colorEnd & 255) / 255.0F;
+        GL11.glDisable(3553);
+        GL11.glEnable(3042);
+        GL11.glDisable(3008);
+        GL11.glBlendFunc(770, 771);
+        GL11.glShadeModel(7425);
+        Tessellator var15 = Tessellator.INSTANCE;
+        var15.startQuads();
+        var15.color(var8, var9, var10, var7);
+        var15.vertex((double)endX, (double)startY, (double)0.0F);
+        var15.vertex((double)startX, (double)startY, (double)0.0F);
+        var15.color(var12, var13, var14, var11);
+        var15.vertex((double)startX, (double)endY, (double)0.0F);
+        var15.vertex((double)endX, (double)endY, (double)0.0F);
+        var15.draw();
+        GL11.glShadeModel(7424);
+        GL11.glDisable(3042);
+        GL11.glEnable(3008);
+        GL11.glEnable(3553);
+    }
+
     /**
      * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height
      */
@@ -247,7 +310,7 @@ public class BasicGuiHelper {
         };
     }
 
-    public static void drawToolTip(int posX, int posY, List<String> msg, int color, boolean forceminecraft) {
+    public static void drawToolTip(int posX, int posY, List<String> msg, int color) {
 
         if (!msg.isEmpty()) {
             int var10 = 0;
@@ -270,32 +333,31 @@ public class BasicGuiHelper {
                 var14 += 2 + (msg.size() - 1) * 10;
             }
 
+            GL11.glEnable(32826);
             GL11.glDisable(2896 /*GL_LIGHTING*/);
             GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
             float zOffset = 300.0F;
             int var15 = -267386864;
-            drawGradientRect(var11 - 3, var12 - 4, var11 + var10 + 3, var12 - 3, var15, var15, zOffset);
-            drawGradientRect(var11 - 3, var12 + var14 + 3, var11 + var10 + 3, var12 + var14 + 4, var15, var15, zOffset);
-            drawGradientRect(var11 - 3, var12 - 3, var11 + var10 + 3, var12 + var14 + 3, var15, var15, zOffset);
-            drawGradientRect(var11 - 4, var12 - 3, var11 - 3, var12 + var14 + 3, var15, var15, zOffset);
-            drawGradientRect(var11 + var10 + 3, var12 - 3, var11 + var10 + 4, var12 + var14 + 3, var15, var15, zOffset);
-            int var16 = 1347420415;
-            int var17 = (var16 & 16711422) >> 1 | var16 & -16777216;
-            drawGradientRect(var11 - 3, var12 - 3 + 1, var11 - 3 + 1, var12 + var14 + 3 - 1, var16, var17, zOffset);
-            drawGradientRect(var11 + var10 + 2, var12 - 3 + 1, var11 + var10 + 3, var12 + var14 + 3 - 1, var16, var17, zOffset);
-            drawGradientRect(var11 - 3, var12 - 3, var11 + var10 + 3, var12 - 3 + 1, var16, var16, zOffset);
-            drawGradientRect(var11 - 3, var12 + var14 + 2, var11 + var10 + 3, var12 + var14 + 3, var17, var17, zOffset);
+            fillGradient(var11 - 3, var12 - 4, var11 + var10 + 3, var12 + var14 + 4, 0xC0000000, 0xC0000000);
+//            drawGradientRect(var11 - 3, var12 + var14 + 3, var11 + var10 + 3, var12 + var14 + 4, var15, var15, zOffset);
+//            drawGradientRect(var11 - 3, var12 - 3, var11 + var10 + 3, var12 + var14 + 3, var15, var15, zOffset);
+//            drawGradientRect(var11 - 4, var12 - 3, var11 - 3, var12 + var14 + 3, var15, var15, zOffset);
+//            drawGradientRect(var11 + var10 + 3, var12 - 3, var11 + var10 + 4, var12 + var14 + 3, var15, var15, zOffset);
+//            int var16 = 1347420415;
+//            int var17 = (var16 & 16711422) >> 1 | var16 & -16777216;
+//            drawGradientRect(var11 - 3, var12 - 3 + 1, var11 - 3 + 1, var12 + var14 + 3 - 1, var16, var17, zOffset);
+//            drawGradientRect(var11 + var10 + 2, var12 - 3 + 1, var11 + var10 + 3, var12 + var14 + 3 - 1, var16, var17, zOffset);
+//            drawGradientRect(var11 - 3, var12 - 3, var11 + var10 + 3, var12 - 3 + 1, var16, var16, zOffset);
+//            drawGradientRect(var11 - 3, var12 + var14 + 2, var11 + var10 + 3, var12 + var14 + 3, var17, var17, zOffset);
 
             for (int var18 = 0; var18 < msg.size(); ++var18) {
                 String var19 = msg.get(var18);
 
-                if (var18 == 0) {
-                    var19 = "§" + Integer.toHexString(color) + var19;
-                } else {
-                    var19 = "§7" + var19;
+                if(var18 != 0) {
+                    var19 = "§f" + var19;
                 }
 
-                Minecraft.INSTANCE.textRenderer.drawWithShadow(var19, var11, var12, -1);
+                Minecraft.INSTANCE.textRenderer.drawWithShadow(var19, var11, var12, var18 == 0 ? color : -1);
 
                 if (var18 == 0) {
                     var12 += 2;
@@ -307,6 +369,7 @@ public class BasicGuiHelper {
 
             GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
             GL11.glEnable(2896 /*GL_LIGHTING*/);
+            GL11.glDisable(32826);
         }
     }
 
@@ -345,8 +408,11 @@ public class BasicGuiHelper {
             int x = left + xSize * column;
             int y = top + ySize * row;
 
-            GL11.glDisable(2896 /*GL_LIGHTING*/);
-            //GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
+            GL11.glPushMatrix();
+            GL11.glRotatef(120.0F, 1.0F, 0.0F, 0.0F);
+            Lighting.turnOn();
+            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+            GL11.glPopMatrix();
 
             if(st != null && itemStack.getItem() != null) {
                 if(disableEffect) {
@@ -358,8 +424,8 @@ public class BasicGuiHelper {
                 }
             }
 
-            //GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
-            GL11.glEnable(2896 /*GL_LIGHTING*/);
+            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+            Lighting.turnOff();
 
             if(displayAmount) {
                 String s;

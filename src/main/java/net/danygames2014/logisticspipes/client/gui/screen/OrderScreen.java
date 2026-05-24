@@ -20,8 +20,10 @@ import net.glasslauncher.mods.gcapi3.impl.GlassYamlFile;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.modificationstation.stationapi.api.client.TooltipHelper;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicItemRenderer;
@@ -75,6 +77,14 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
         this.backgroundHeight = 240;
     }
 
+    @Override
+    public void render(int mouseX, int mouseY, float delta) {
+        super.render(mouseX, mouseY, delta);
+        if(tooltip == null) return;
+
+        BasicGuiHelper.drawToolTip((int)tooltip[0], (int)tooltip[1], TooltipHelper.getTooltipForItemStack(TranslationStorage.getInstance().get(((ItemStack)tooltip[2]).getTranslationKey() + ".name"), (ItemStack)tooltip[2], player.inventory, this), 0xFFFFFF);
+    }
+
     protected abstract void  refreshItems();
 
     public void handlePacket(SendScreenContentS2CPacket packet) {
@@ -98,6 +108,8 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
         buttons.add(new SmallButtonWidget(7, xCenter + 28, bottom - 26, 15, 10, "++")); // +10
         buttons.add(new SmallButtonWidget(11, xCenter + 16, bottom - 15, 26, 10, "+++")); // +64
         buttons.add(new CheckBoxWidget(8, guiLeft + 9, bottom - 60, 14, 14, Config.HUD_CONFIG.displayPopup)); // Popup
+
+        refreshItems();
     }
 
     @Override
@@ -174,7 +186,7 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
 
         tooltip = null;
 
-        fill(guiLeft + 6, guiTop + 16, right - 12, bottom - 84, Colors.MiddleGrey);
+        fill(guiLeft + 8, guiTop + 16, right - 12, bottom - 84, Colors.MiddleGrey);
 
         if(!listbyserver) {
             int graphic = ((int)(System.currentTimeMillis() / 250) % 5);
@@ -208,20 +220,18 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
                 int mouseX = Mouse.getX() * this.width / this.minecraft.displayWidth;
                 int mouseY = this.height - Mouse.getY() * this.height / this.minecraft.displayHeight - 1;
 
-                if (mouseX >= x && mouseX < x + panelxSize &&
-                            mouseY >= y && mouseY < y + panelySize) {
-                    fill(x - 3, y - 1, x + panelxSize - 3, y + panelySize - 3, Colors.Black);
-                    fill(x - 2, y - 0, x + panelxSize - 4, y + panelySize - 4, Colors.DarkGrey);
+                if (mouseX >= x && mouseX < x + panelxSize && mouseY >= y && mouseY < y + panelySize) {
+                    fill(x - 2, y - 2, x + panelxSize - 2, y + panelySize - 2, Colors.Black);
+                    fill(x - 1, y - 1, x + panelxSize - 3, y + panelySize - 3, Colors.DarkGrey);
 
                     tooltip = new Object[]{mouseX,mouseY,st};
                 }
 
-                if (lastClickedx >= x && lastClickedx < x + panelxSize &&
-                            lastClickedy >= y && lastClickedy < y + panelySize){
+                if (lastClickedx >= x && lastClickedx < x + panelxSize && lastClickedy >= y && lastClickedy < y + panelySize){
                     selectedItem = itemStack;
-                    fill(x - 4, y - 2, x + panelxSize - 2, y + panelySize - 2, Colors.Black);
-                    fill(x - 3, y - 1, x + panelxSize - 3, y + panelySize - 3, Colors.White);
-                    fill(x - 2, y - 0, x + panelxSize - 4, y + panelySize - 4, Colors.DarkGrey);
+                    fill(x - 2, y - 2, x + panelxSize - 2, y + panelySize - 2, Colors.Black);
+                    fill(x - 1, y - 1, x + panelxSize - 3, y + panelySize - 3, Colors.LightGrey);
+                    fill(x, y, x + panelxSize - 4, y + panelySize - 4, Colors.DarkGrey);
                     specialItemRendering(item, x, y);
                 }
             }
@@ -236,7 +246,6 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
     @Override
     protected void drawForeground() {
         if(super.hasSubScreen()) return;
-//        BasicGuiHelper.drawToolTip();
     }
 
     @Override
