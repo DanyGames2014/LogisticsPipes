@@ -1,11 +1,17 @@
 package net.danygames2014.logisticspipes.network;
 
+import net.danygames2014.logisticspipes.client.gui.screen.OrderScreen;
+import net.danygames2014.logisticspipes.gui.SubScreenController;
 import net.danygames2014.logisticspipes.util.ItemMessage;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.network.NetworkHandler;
 import net.minecraft.network.packet.Packet;
+import net.modificationstation.stationapi.api.entity.player.PlayerHelper;
 import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
 import net.modificationstation.stationapi.api.network.packet.PacketType;
+import net.modificationstation.stationapi.api.util.SideUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
@@ -68,7 +74,22 @@ public class ItemMessageS2CPacket extends Packet implements ManagedPacket<ItemMe
 
     @Override
     public void apply(NetworkHandler networkHandler) {
-
+        PlayerEntity player = PlayerHelper.getPlayerFromPacketHandler(networkHandler);
+        SideUtil.run(() -> {
+            if(Minecraft.INSTANCE.currentScreen instanceof OrderScreen screen) {
+                screen.handleRequestAnswer(items, !error, screen, player);
+            }
+            else if(error) {
+                for(ItemMessage item : items) {
+                    player.sendMessage("Missing: " + item);
+                }
+            } else {
+                for(ItemMessage item : items) {
+                    player.sendMessage("Requested: " + item);
+                }
+                player.sendMessage("Request successful!");
+            }
+        }, null);
     }
 
     @Override

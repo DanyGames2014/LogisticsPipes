@@ -428,6 +428,8 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
         }
         clickWasButton = true;
 
+        boolean isShift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
+
         if (button.id == 0 && selectedItem != null){
             LogisticPipeBlockEntity requestPipe = (LogisticPipeBlockEntity)itemRequester;
             PacketHelper.send(new SubmitRequestC2SPacket(requestPipe.x,requestPipe.y,requestPipe.z,selectedItem.getItem(),requestCount));
@@ -445,21 +447,35 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
         } else if (button.id == 5) {
             requestCount = Math.max(1, requestCount - 1);
         } else if (button.id == 6) {
-            requestCount+=1;
+            if(selectedItem != null && requestCount + 1 > selectedItem.stackSize && !isShift){
+                requestCount = selectedItem.stackSize;
+            } else {
+                requestCount+=1;
+            }
         } else if (button.id == 7) {
             if(requestCount == 1) {
                 requestCount-=1;
             }
-            requestCount+=10;
+            if(selectedItem != null && requestCount + 10 > selectedItem.stackSize && !isShift){
+                requestCount = selectedItem.stackSize;
+            } else {
+                requestCount+=10;
+            }
         } else if (button.id == 11) {
             if(requestCount == 1) {
                 requestCount-=1;
             }
-            requestCount+=64;
+            if(selectedItem != null && requestCount + 64 > selectedItem.stackSize && !isShift){
+                requestCount = selectedItem.stackSize;
+            } else {
+                requestCount+=64;
+            }
         } else if (button.id == 8) {
             CheckBoxWidget checkbox = (CheckBoxWidget)buttons.get(10);
             GlassYamlFile modConfigFile = new GlassYamlFile();
-            modConfigFile.set ("speed", checkbox.change());
+            Config.HUD_CONFIG.displayPopup = checkbox.change();
+            modConfigFile.set ("displayPopup", Config.HUD_CONFIG.displayPopup);
+
             GCAPI.reloadConfig(Identifier.of("logisticspipes:hud").toString(), modConfigFile);
         }
         super.buttonClicked(button);
