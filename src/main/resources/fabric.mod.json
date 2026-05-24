@@ -35,6 +35,7 @@
       "net.danygames2014.logisticspipes.init.CapabilityListener"
     ]
   },
+  "accessWidener": "logisticspipes.accesswidener",
   "mixins": [
     "logisticspipes.mixins.json"
   ],
