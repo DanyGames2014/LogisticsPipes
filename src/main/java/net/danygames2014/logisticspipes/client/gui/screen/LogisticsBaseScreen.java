@@ -24,8 +24,8 @@ public class LogisticsBaseScreen extends HandledScreen implements SubScreenContr
         Red
     }
 
-    protected int guiLeft;
-    protected int guiTop;
+    public int guiLeft;
+    public int guiTop;
     protected int right;
     protected int bottom;
     protected int xCenter;

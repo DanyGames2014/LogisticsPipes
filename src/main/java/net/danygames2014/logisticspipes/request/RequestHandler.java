@@ -17,6 +17,8 @@ import net.minecraft.item.Item;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -103,7 +105,8 @@ public class RequestHandler {
             if(!itemnbt.contains("nbt")) {
                 itemNBTContent = null;
             }
-            ItemIdentifierStack stack = ItemIdentifier.get(Item.ITEMS[itemnbt.getInt("id")],itemnbt.getInt("data"),itemNBTContent).makeStack(itemnbt.getInt("amount"));
+            // TODO: maybe invalid identifier check is needed
+            ItemIdentifierStack stack = ItemIdentifier.get(ItemRegistry.INSTANCE.get(Identifier.of(itemnbt.getString("identifier"))),itemnbt.getInt("data"),itemNBTContent).makeStack(itemnbt.getInt("amount"));
             transaction.add(stack);
             items.add(new ItemMessage(stack));
         }

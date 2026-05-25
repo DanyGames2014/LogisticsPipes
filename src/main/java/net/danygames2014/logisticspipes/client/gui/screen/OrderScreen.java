@@ -76,7 +76,7 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
     @Override
     public void render(int mouseX, int mouseY, float delta) {
         super.render(mouseX, mouseY, delta);
-        if(tooltip == null) return;
+        if(tooltip == null || hasSubScreen()) return;
 
         BasicGuiHelper.drawToolTip((int)tooltip[0], (int)tooltip[1], TooltipHelper.getTooltipForItemStack(TranslationStorage.getInstance().get(((ItemStack)tooltip[2]).getTranslationKey() + ".name"), (ItemStack)tooltip[2], player.inventory, this), 0xFFFFFF);
     }

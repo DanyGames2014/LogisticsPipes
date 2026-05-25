@@ -3,6 +3,7 @@ package net.danygames2014.logisticspipes;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeType;
 import net.danygames2014.buildcraft.block.material.PipeMaterial;
 import net.danygames2014.logisticspipes.block.LogisticPipeBlock;
+import net.danygames2014.logisticspipes.block.RequestMk2LogisticPipeBlock;
 import net.danygames2014.logisticspipes.block.entity.*;
 import net.danygames2014.logisticspipes.block.pipe.behavior.LogisticPipeBehavior;
 import net.danygames2014.logisticspipes.block.pipe.transporter.LogisticItemPipeTransporter;
@@ -98,7 +99,7 @@ public class LogisticsPipes {
                 RequestLogisticPipeBlockEntity::new
         ).setTranslationKey(NAMESPACE, "request_item_pipe").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
 
-        requestItemPipeMk2 = new LogisticPipeBlock(
+        requestItemPipeMk2 = new RequestMk2LogisticPipeBlock(
                 NAMESPACE.id("request_item_pipe_mk2"),
                 pipeMaterial,
                 NAMESPACE.id("block/pipe/request_item_pipe_mk2"),
@@ -106,7 +107,7 @@ public class LogisticsPipes {
                 PipeType.ITEM,
                 logisticPipeBehavior,
                 LogisticItemPipeTransporter::new,
-                BasicLogisticPipeBlockEntity::new
+                RequestLogisticPipeBlockEntity::new
         ).setTranslationKey(NAMESPACE, "request_item_pipe_mk2").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
 
         providerItemPipe = new LogisticPipeBlock(

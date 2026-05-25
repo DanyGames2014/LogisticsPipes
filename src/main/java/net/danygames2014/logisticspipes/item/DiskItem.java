@@ -19,6 +19,8 @@ public class DiskItem extends TemplateItem implements CustomTooltipProvider {
     public @NotNull String[] getTooltip(ItemStack stack, String originalTooltip) {
         List<String> strings = new ArrayList<>();
 
+        strings.add(originalTooltip);
+
         if(!stack.getStationNbt().values().isEmpty()) {
             if(stack.getStationNbt().contains("name")) {
                 String name = "§8" + stack.getStationNbt().getString("name");

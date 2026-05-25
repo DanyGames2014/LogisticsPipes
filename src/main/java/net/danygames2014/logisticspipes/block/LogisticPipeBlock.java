@@ -40,25 +40,4 @@ public class LogisticPipeBlock extends PipeBlock {
             pipe.debugPrint(player);
         }
     }
-
-    @Override
-    public boolean onUse(World world, int x, int y, int z, PlayerEntity player) {
-        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-            if (world.getBlockEntity(x, y, z) instanceof LogisticPipeBlockEntity pipe) {
-                RoutedItemEntity routedItemEntity = new RoutedItemEntity(world, new TravellingItemEntity(world, x + 0.5D, y + 0.5D, z + 0.5D, new ItemStack(Block.DIAMOND_BLOCK, 1)));
-                routedItemEntity.setSource(pipe.getRouterId());
-                if (pipe.routingTable.isEmpty()) {
-                    return false;
-                }
-                routedItemEntity.setDestination(pipe.routingTable.keySet().toLongArray()[world.random.nextInt(pipe.routingTable.size())]);
-                routedItemEntity.travelDirection = Direction.DOWN;
-                routedItemEntity.lastTravelDirection = routedItemEntity.travelDirection;
-                ((ItemPipeTransporter) pipe.transporter).receiveTravellingItem(routedItemEntity, Direction.UP);
-                world.spawnEntity(routedItemEntity);
-                return true;
-            }
-        }
-        
-        return false;
-    }
 }
