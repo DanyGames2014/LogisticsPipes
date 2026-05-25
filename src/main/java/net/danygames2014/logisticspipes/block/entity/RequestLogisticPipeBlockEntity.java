@@ -10,6 +10,7 @@ import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
 import net.danygames2014.logisticspipes.screen.handler.SupplierScreenHandler;
 import net.danygames2014.logisticspipes.util.SimpleInventory;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
 
 public class RequestLogisticPipeBlockEntity extends LogisticPipeBlockEntity {
@@ -46,6 +47,18 @@ public class RequestLogisticPipeBlockEntity extends LogisticPipeBlockEntity {
     @Override
     public void itemDropped(RoutedItemEntity routedItemEntity) {
 
+    }
+
+    @Override
+    public void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
+        diskInventory.writeNbt(nbt, "");
+    }
+
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        diskInventory.readNbt(nbt, "");
     }
 
     public void openModuleScreen(PlayerEntity player) {

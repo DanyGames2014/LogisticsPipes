@@ -6,6 +6,7 @@ import net.danygames2014.logisticspipes.block.LogisticPipeBlock;
 import net.danygames2014.logisticspipes.block.entity.*;
 import net.danygames2014.logisticspipes.block.pipe.behavior.LogisticPipeBehavior;
 import net.danygames2014.logisticspipes.block.pipe.transporter.LogisticItemPipeTransporter;
+import net.danygames2014.logisticspipes.item.DiskItem;
 import net.danygames2014.logisticspipes.item.MagicWand;
 import net.danygames2014.logisticspipes.item.ModuleItem;
 import net.danygames2014.logisticspipes.item.RoutingDebugger;
@@ -66,6 +67,8 @@ public class LogisticsPipes {
     public static Item advancedExtractorModuleMk3;
     public static Item terminusModule;
     public static Item quickSortModule;
+
+    public static Item disk;
 
     @EventListener
     public void registerBlocks(BlockRegistryEvent event) {
@@ -249,5 +252,6 @@ public class LogisticsPipes {
         terminusModule = new ModuleItem(NAMESPACE.id("terminus_module"), TerminusModule::new).setTranslationKey(NAMESPACE, "terminus_module");
         quickSortModule = new ModuleItem(NAMESPACE.id("quick_sort_module"), QuickSortModule::new).setTranslationKey(NAMESPACE, "quick_sort_module");
 
+        disk = new DiskItem(NAMESPACE.id("disk")).setTranslationKey(NAMESPACE, "disk");
     }
 }

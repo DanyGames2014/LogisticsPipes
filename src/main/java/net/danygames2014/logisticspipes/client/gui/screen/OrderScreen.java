@@ -50,7 +50,7 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
     protected long oldSystemTime = 0;
     protected static int searchWidth = 150;
 
-    protected ArsenicItemRenderer itemRenderer = new ArsenicItemRenderer(new ItemRenderer());
+    protected ItemRenderer itemRenderer = new ItemRenderer();
 
     protected int lastClickedx = 0;
     protected int lastClickedy = 0;
