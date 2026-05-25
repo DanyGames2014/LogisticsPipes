@@ -3,6 +3,7 @@ package net.danygames2014.logisticspipes.client.gui.screen;
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.config.Config;
 import net.danygames2014.logisticspipes.gui.CheckBoxWidget;
+import net.danygames2014.logisticspipes.gui.TextInputWidget;
 import net.danygames2014.logisticspipes.gui.SmallButtonWidget;
 import net.danygames2014.logisticspipes.gui.SubScreenController;
 import net.danygames2014.logisticspipes.gui.popup.RequestPopupSubScreen;
@@ -26,7 +27,6 @@ import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.client.TooltipHelper;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
-import net.modificationstation.stationapi.impl.client.arsenic.renderer.render.ArsenicItemRenderer;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
@@ -42,19 +42,9 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
 
     protected ItemIdentifierStack selectedItem = null;
     public final LinkedList<ItemIdentifierStack> allItems = new LinkedList<>();
-    protected String searchinput1 = "";
-    protected String searchinput2 = "";
-    protected boolean editsearch = false;
-    protected boolean editsearchb = false;
-    protected boolean displaycursor = true;
-    protected long oldSystemTime = 0;
     protected static int searchWidth = 150;
 
     protected ItemRenderer itemRenderer = new ItemRenderer();
-
-    protected int lastClickedx = 0;
-    protected int lastClickedy = 0;
-    protected int lastClickedk = 0;
 
     protected final String title = "Request items";
     protected boolean clickWasButton = false;
@@ -66,6 +56,12 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
     protected Object[] tooltip = null;
 
     protected boolean listbyserver = false;
+
+    protected int lastClickedx = 0;
+    protected int lastClickedy = 0;
+    protected int lastClickedk = 0;
+
+    protected TextInputWidget textInputWidget;
 
 
     public OrderScreen(RequestItems itemRequester, PlayerEntity player) {
@@ -109,6 +105,14 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
         buttons.add(new SmallButtonWidget(11, xCenter + 16, bottom - 15, 26, 10, "+++")); // +64
         buttons.add(new CheckBoxWidget(8, guiLeft + 9, bottom - 60, 14, 14, Config.HUD_CONFIG.displayPopup)); // Popup
 
+        this.textInputWidget = new TextInputWidget(
+            this.textRenderer,
+            guiLeft + 30,
+            bottom - 80,
+            (right - 28) - (guiLeft + 30),
+            17
+        );
+
         refreshItems();
     }
 
@@ -142,42 +146,7 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
         textRenderer.draw(requestCount + "", xCenter - textRenderer.getWidth(requestCount+"") / 2, bottom - 24, 0x404040);
         textRenderer.draw(StackrequestCount + "", xCenter - textRenderer.getWidth(StackrequestCount+"") / 2, bottom - 14, 0x404040);
 
-        //SearchInput
-        if(editsearch) {
-            fill(guiLeft + 30, bottom - 80, right - 28, bottom - 63, Colors.Black);
-            fill(guiLeft + 31, bottom - 79, right - 29, bottom - 64, Colors.White);
-        } else {
-            fill(guiLeft + 31, bottom - 79, right - 29, bottom - 64, Colors.Black);
-        }
-        fill(guiLeft + 32, bottom - 78, right - 30, bottom - 65, Colors.DarkGrey);
-
-        textRenderer.draw(searchinput1 + searchinput2, guiLeft + 35, bottom - 75, 0xFFFFFF);
-        if(editsearch) {
-            int linex = guiLeft + 35 + textRenderer.getWidth(searchinput1);
-            if(System.currentTimeMillis() - oldSystemTime > 500) {
-                displaycursor = !displaycursor;
-                oldSystemTime = System.currentTimeMillis();
-            }
-            if(displaycursor) {
-                fill(linex, bottom - 77, linex + 1, bottom - 66, Colors.White);
-            }
-        }
-
-        //Click into search
-        if(lastClickedx != -10000000 &&	lastClickedy != -10000000) {
-            if (lastClickedx >= guiLeft + 32 && lastClickedx < right - 28 &&
-                        lastClickedy >= bottom - 80 && lastClickedy < bottom - 63){
-                editsearch = true;
-                lastClickedx = -10000000;
-                lastClickedy = -10000000;
-                if(lastClickedk == 1) {
-                    searchinput1 = "";
-                    searchinput2 = "";
-                }
-            } else {
-                editsearch = false;
-            }
-        }
+        textInputWidget.render();
 
         int ppi = 0;
 
@@ -250,9 +219,10 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
 
     @Override
     public boolean itemSearched(ItemIdentifier item) {
-        if(Objects.equals(searchinput1, "") && Objects.equals(searchinput2, "")) return true;
-        if(isSearched(item.getFriendlyName().toLowerCase(),(searchinput1 + searchinput2).toLowerCase())) return true;
-        if(isSearched(String.valueOf(item.item.id),(searchinput1 + searchinput2))) return true;
+        String query = textInputWidget.getText().trim().toLowerCase();
+        if (query.isEmpty()) return true;
+        if(isSearched(item.getFriendlyName().toLowerCase(),query)) return true;
+        if(isSearched(String.valueOf(item.item.id),query)) return true;
         return false;
     }
 
@@ -279,12 +249,11 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int button) {
         clickWasButton = false;
-        editsearchb = true;
         super.mouseClicked(mouseX, mouseY, button);
-        if((!clickWasButton && mouseX >= guiLeft + 10 && mouseX < right - 10 && mouseY >= guiTop + 18 && mouseY < bottom - 63) || editsearch) {
-            if(!editsearchb) {
-                editsearch = false;
-            }
+
+        boolean textInputClicked = textInputWidget.mouseClicked(mouseX, mouseY, button);
+
+        if(!clickWasButton && !textInputClicked && mouseX >= guiLeft + 10 && mouseX < right - 10 && mouseY >= guiTop + 18 && mouseY < bottom - 63) {
             selectedItem = null;
             lastClickedx = mouseX;
             lastClickedy = mouseY;
@@ -423,9 +392,6 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
 
     @Override
     protected void buttonClicked(ButtonWidget button) {
-        if(editsearch) {
-            editsearchb = false;
-        }
         clickWasButton = true;
 
         boolean isShift = Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_RSHIFT);
@@ -499,85 +465,11 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
 
     @Override
     protected void keyPressed(char character, int keyCode) {
-        boolean isCtrl = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
-        if(editsearch) {
-            if (character == 13) {
-                editsearch = false;
-                return;
-            } else if (keyCode == 47 && Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
-                searchinput1 = searchinput1 + getClipboard();
-            } else if (character == 8) {
-                if (!searchinput1.isEmpty()){
-                    if(isCtrl) {
-                        if(searchinput1.endsWith(" ")){
-                            searchinput1 = searchinput1.replaceAll("[ \\t]+$", "");
-                        }
-
-                        int lastSpace = searchinput1.lastIndexOf(' ');
-
-                        if(lastSpace == -1){
-                            searchinput1 = "";
-                        } else {
-                            searchinput1 = searchinput1.substring(0, lastSpace + 1);
-                        }
-                    } else {
-                        searchinput1 = searchinput1.substring(0, searchinput1.length() - 1);
-                    }
-                }
-                return;
-            } else if (Character.isLetterOrDigit(character) || character == ' ') {
-                if (textRenderer.getWidth(searchinput1 + character + searchinput2) <= searchWidth) {
-                    searchinput1 += character;
-                }
-                return;
-            } else if(keyCode == 203) { //Left
-                if(!searchinput1.isEmpty()) {
-                    if(isCtrl) {
-                        String trimmed = searchinput1.replaceAll("[ \\t]+$", "");
-                        int lastSpace = trimmed.lastIndexOf(' ');
-
-                        int cutIndex = (lastSpace == -1) ? 0 : lastSpace;
-
-                        searchinput2 = searchinput1.substring(cutIndex) + searchinput2;
-                        searchinput1 = searchinput1.substring(0, cutIndex);
-                    } else {
-                        searchinput2 = searchinput1.substring(searchinput1.length() - 1) + searchinput2;
-                        searchinput1 = searchinput1.substring(0, searchinput1.length() - 1);
-                    }
-                }
-            } else if(keyCode == 205) { //Right
-                if(!searchinput2.isEmpty()) {
-                    if(isCtrl) {
-                        String trimmed = searchinput2.replaceAll("^[ \\t]+", "");
-                        int nextSpace = trimmed.indexOf(' ');
-
-                        int spacesSkipped = searchinput2.length() - trimmed.length();
-                        int cutIndex = (nextSpace == -1) ? searchinput2.length() : (nextSpace + spacesSkipped);
-
-                        searchinput1 += searchinput2.substring(0, cutIndex);
-                        searchinput2 = searchinput2.substring(cutIndex);
-                    } else {
-                        searchinput1 += searchinput2.substring(0,1);
-                        searchinput2 = searchinput2.substring(1);
-                    }
-                }
-            } else if(keyCode == 1) { //ESC
-                editsearch = false;
-            } else if(keyCode == 28) { //Enter
-                editsearch = false;
-            } else if(keyCode == 199) { //Pos
-                searchinput2 = searchinput1 + searchinput2;
-                searchinput1 = "";
-            } else if(keyCode == 207) { //Ende
-                searchinput1 = searchinput1 + searchinput2;
-                searchinput2 = "";
-            } else if(keyCode == 211) { //Entf
-                if (!searchinput2.isEmpty())
-                    searchinput2 = searchinput2.substring(1);
-            }
-        } else {
-            super.keyPressed(character, keyCode);
+        if(textInputWidget.keyPressed(character, keyCode)) {
+            return;
         }
+
+        super.keyPressed(character, keyCode);
     }
 
     @Override
