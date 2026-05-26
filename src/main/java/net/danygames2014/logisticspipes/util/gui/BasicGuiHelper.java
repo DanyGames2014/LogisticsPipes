@@ -241,6 +241,20 @@ public class BasicGuiHelper {
         ScreenUtil.drawSprite(sprite, x, y, 16, 16, zOffset);
     }
 
+    public static void drawPlayerInventoryBackground(Minecraft mc, int xOffset, int yOffset) {
+        //Player "backpack"
+        for(int row = 0; row < 3; row++) {
+            for(int column = 0; column < 9; column++)
+            {
+                drawSlotBackground(mc, xOffset + column * 18 - 1, yOffset + row * 18 - 1);
+            }
+        }
+        //Player "hotbar"
+        for(int i1 = 0; i1 < 9; i1++) {
+            drawSlotBackground(mc, xOffset + i1 * 18 - 1, yOffset + 58 - 1);
+        }
+    }
+
     public static void drawSlotBackground(Minecraft mc, int x, int y) {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.textureManager.bindTexture(mc.textureManager.getTextureId(SLOT));

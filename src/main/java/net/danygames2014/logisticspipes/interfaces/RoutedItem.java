@@ -40,6 +40,7 @@ public interface RoutedItem {
     boolean isDestinationValid();
 
     ItemStack getItemStack();
+    void setItemStack(ItemStack stack);
 
     TravellingItemEntity getTravellingItemEntity();
 

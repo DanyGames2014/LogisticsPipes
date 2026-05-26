@@ -32,6 +32,7 @@ public class ScreenHandlerListener {
         event.register(NAMESPACE.id("provider_pipe"), new GuiHandler(this::openProviderPipeScreen, ProviderLogisticPipeBlockEntity::new));
         event.register(NAMESPACE.id("normal_order"), new GuiHandler(this::openNormalOrderScreen, () -> null));
         event.register(NAMESPACE.id("normal_order_mk2"), new GuiHandler(this::openNormalOrderScreenMk2, () -> null));
+        event.register(NAMESPACE.id("request_table"), new GuiHandler(this::openRequestTableScreen, RequestTableLogisticPipeBlockEntity::new));
         event.register(NAMESPACE.id("passive_supplier"), new GuiHandler(this::openPassiveSupplierScreen, PassiveSupplierModule::new));
         event.register(NAMESPACE.id("item_sink"), new GuiHandler(this::openItemSinkScreen, ItemSinkModule::new));
         event.register(NAMESPACE.id("extractor"), new GuiHandler(this::openExtractorScreen, ExtractorModule::new));
@@ -73,6 +74,15 @@ public class ScreenHandlerListener {
         BlockEntity blockEntity = player.world.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]);
         if (blockEntity instanceof RequestLogisticPipeBlockEntity pipe) {
             return new NormalOrderScreenMk2(pipe, player);
+        }
+
+        return null;
+    }
+
+    private Screen openRequestTableScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
+        BlockEntity blockEntity = player.world.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]);
+        if (blockEntity instanceof RequestTableLogisticPipeBlockEntity table) {
+            return new RequestTableScreen(player, table);
         }
 
         return null;

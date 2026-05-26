@@ -12,6 +12,8 @@ tile.logisticspipes.chassis_item_pipe_mk3.name=Logistics Chassis Mk3
 tile.logisticspipes.chassis_item_pipe_mk4.name=Logistics Chassis Mk4
 tile.logisticspipes.chassis_item_pipe_mk5.name=Logistics Chassis Mk5
 
+tile.logisticspipes.request_table.name=Logistics Request Table
+
 # Modules
 item.logisticspipes.blank_module.name=Blank Module
 item.logisticspipes.provider_module.name=Provider Module

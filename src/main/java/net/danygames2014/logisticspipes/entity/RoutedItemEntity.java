@@ -106,6 +106,11 @@ public class RoutedItemEntity extends TravellingItemEntity implements RoutedItem
     }
 
     @Override
+    public void setItemStack(ItemStack stack) {
+        this.stack = stack;
+    }
+
+    @Override
     public void setDoNotBuffer(boolean isBuffered) {
         doNotBuffer = isBuffered;
     }

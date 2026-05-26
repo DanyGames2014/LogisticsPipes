@@ -21,5 +21,6 @@ public class BlockEntityListener {
         event.register(ProviderLogisticPipeBlockEntity.class, NAMESPACE.id("provider_logistic_pipe").toString());
         event.register(ProviderLogisticPipeBlockEntityMk2.class, NAMESPACE.id("provider_logistic_pipe_mk2").toString());
         event.register(RequestLogisticPipeBlockEntity.class, NAMESPACE.id("request_logistic_pipe").toString());
+        event.register(RequestTableLogisticPipeBlockEntity.class, NAMESPACE.id("request_table").toString());
     }
 }

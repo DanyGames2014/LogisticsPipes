@@ -18,6 +18,7 @@ import net.danygames2014.logisticspipes.util.ItemMessage;
 import net.danygames2014.logisticspipes.util.gui.BasicGuiHelper;
 import net.glasslauncher.mods.gcapi3.api.GCAPI;
 import net.glasslauncher.mods.gcapi3.impl.GlassYamlFile;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.item.ItemRenderer;
@@ -73,6 +74,15 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
         this.backgroundHeight = 240;
     }
 
+    public OrderScreen(RequestItems itemRequester, PlayerEntity player,  ModuleScreenHandler handler) {
+        super(player, itemRequester instanceof LogisticPipeBlockEntity ? (LogisticPipeBlockEntity)itemRequester : null, handler);
+
+        this.itemRequester = itemRequester;
+
+        this.backgroundWidth = 220;
+        this.backgroundHeight = 240;
+    }
+
     @Override
     public void render(int mouseX, int mouseY, float delta) {
         super.render(mouseX, mouseY, delta);
@@ -92,6 +102,11 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
     @Override
     public void init() {
         super.init();
+
+        this.guiLeft += this.getLeftAddition();
+        this.xCenter = (right + guiLeft) / 2;
+        this.yCenter = (bottom + guiTop) / 2;
+
         buttons.clear();
         buttons.add(new ButtonWidget(0, right - 55, bottom - 25, 50,20,"Request")); // Request
         buttons.add(new SmallButtonWidget(1, right - 15, guiTop + 5, 10 ,10 ,">")); // Next page
@@ -113,6 +128,8 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
             17
         );
 
+        this.guiLeft -= this.getLeftAddition();
+
         refreshItems();
     }
 
@@ -130,6 +147,8 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
         if (page > maxPage){
             page = maxPage;
         }
+
+        this.guiLeft += this.getLeftAddition();
 
         textRenderer.draw(title, guiLeft + textRenderer.getWidth(title) / 2, guiTop + 6, 0x404040);
         String pageString = "Page " + (page + 1) + " / " + (maxPage + 1);
@@ -208,6 +227,8 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
             }
             BasicGuiHelper.renderItemIdentifierStackListIntoGui(allItems, this, page, guiLeft + 10, guiTop + 18, 10, 70, panelxSize, panelySize, minecraft, true, false);
         }
+
+        this.guiLeft -= this.getLeftAddition();
         GL11.glDisable(2896 /*GL_LIGHTING*/);
     }
 
@@ -496,5 +517,9 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
 
     protected int getStackAmount() {
         return 64;
+    }
+
+    protected int getLeftAddition() {
+        return 0;
     }
 }

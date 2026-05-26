@@ -4,6 +4,7 @@ import net.danygames2014.buildcraft.block.entity.pipe.PipeType;
 import net.danygames2014.buildcraft.block.material.PipeMaterial;
 import net.danygames2014.logisticspipes.block.LogisticPipeBlock;
 import net.danygames2014.logisticspipes.block.RequestMk2LogisticPipeBlock;
+import net.danygames2014.logisticspipes.block.RequestTableLogisticPipeBlock;
 import net.danygames2014.logisticspipes.block.entity.*;
 import net.danygames2014.logisticspipes.block.pipe.behavior.LogisticPipeBehavior;
 import net.danygames2014.logisticspipes.block.pipe.transporter.LogisticItemPipeTransporter;
@@ -51,6 +52,8 @@ public class LogisticsPipes {
     public static Block chassisItemPipeMk3;
     public static Block chassisItemPipeMk4;
     public static Block chassisItemPipeMk5;
+
+    public static Block requestTable;
 
     public static Item magicWand;
     public static Item routingDebugger;
@@ -230,6 +233,17 @@ public class LogisticsPipes {
                 LogisticItemPipeTransporter::new,
                 ChassisLogisticPipeBlockEntity::new
         ).setTranslationKey(NAMESPACE, "chassis_item_pipe_mk5").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
+
+        requestTable = new RequestTableLogisticPipeBlock(
+                NAMESPACE.id("request_table"),
+                pipeMaterial,
+                NAMESPACE.id("block/pipe/chassis_item_pipe_mk5"),
+                null,
+                PipeType.ITEM,
+                logisticPipeBehavior,
+                LogisticItemPipeTransporter::new,
+                RequestTableLogisticPipeBlockEntity::new
+        ).setTranslationKey(NAMESPACE, "request_table").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
     }
 
     @EventListener

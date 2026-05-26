@@ -148,4 +148,48 @@ public class SimpleInventory implements Inventory, SaveState {
         }
         markDirty();
     }
+
+    public int addCompressed(ItemStack stack) {
+        if(stack == null) return 0;
+        stack = stack.copy();
+        for(int i=0; i<this.contents.length;i++) {
+            if(stack.count <= 0) {
+                break;
+            }
+            if(contents[i] == null) continue; //Skip Empty Slots on first attempt.
+            int added = tryAddToSlot(i, stack);
+            stack.count -= added;
+        }
+        for(int i=0; i<this.contents.length;i++) {
+            if(stack.count <= 0) {
+                break;
+            }
+            int added = tryAddToSlot(i, stack);
+            stack.count -= added;
+        }
+        markDirty();
+        return stack.count;
+    }
+
+    private int tryAddToSlot(int i, ItemStack stack) {
+        ItemStack slot = contents[i];
+        if(slot == null) {
+            contents[i] = stack.copy();
+            return stack.count;
+        }
+        ItemIdentifier slotIdent = ItemIdentifier.get(slot);
+        ItemIdentifier stackIdent = ItemIdentifier.get(stack);
+        if(slotIdent.equals(stackIdent)) {
+            slot.count += stack.count;
+            if(slot.count > this.stackLimit) {
+                int ans = stack.count - (slot.count - this.stackLimit);
+                slot.count = this.stackLimit;
+                return ans;
+            } else {
+                return stack.count;
+            }
+        } else {
+            return 0;
+        }
+    }
 }

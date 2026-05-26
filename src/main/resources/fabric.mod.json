@@ -24,7 +24,8 @@
       "net.danygames2014.logisticspipes.init.PacketListener"
     ],
     "stationapi:event_bus_client": [
-      "net.danygames2014.logisticspipes.init.ScreenHandlerListener"
+      "net.danygames2014.logisticspipes.init.ScreenHandlerListener",
+      "net.danygames2014.logisticspipes.init.BlockEntityRendererListener"
     ],
     "stationapi:event_bus_server": [
     ],
