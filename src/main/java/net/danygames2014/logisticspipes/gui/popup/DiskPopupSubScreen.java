@@ -167,6 +167,12 @@ public class DiskPopupSubScreen extends SubScreen {
             }
             return;
         }
+
+        if (keyCode == 1) {
+            this.exitScreen();
+            return;
+        }
+
         super.keyPressed(character, keyCode);
     }
 

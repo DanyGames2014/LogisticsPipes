@@ -190,8 +190,10 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
                 int mouseY = this.height - Mouse.getY() * this.height / this.minecraft.displayHeight - 1;
 
                 if (mouseX >= x && mouseX < x + panelxSize && mouseY >= y && mouseY < y + panelySize) {
-                    fill(x - 2, y - 2, x + panelxSize - 2, y + panelySize - 2, Colors.Black);
-                    fill(x - 1, y - 1, x + panelxSize - 3, y + panelySize - 3, Colors.DarkGrey);
+                    if(!hasSubScreen()) {
+                        fill(x - 2, y - 2, x + panelxSize - 2, y + panelySize - 2, Colors.Black);
+                        fill(x - 1, y - 1, x + panelxSize - 3, y + panelySize - 3, Colors.DarkGrey);
+                    }
 
                     tooltip = new Object[]{mouseX,mouseY,st};
                 }

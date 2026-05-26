@@ -27,6 +27,8 @@ item.logisticspipes.advanced_extractor_module_mk3.name=Advanced Extractor Mk3 Mo
 item.logisticspipes.terminus_module.name=Terminus Module
 item.logisticspipes.quick_sort_module.name=QuickSort Module
 
+item.logisticspipes.disk.name=Logistics Disk
+
 # Debug
 item.logisticspipes.magic_wand.name=Magic Wand
 item.logisticspipes.routing_debugger.name=Routing Debugger

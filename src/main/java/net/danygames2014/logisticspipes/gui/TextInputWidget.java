@@ -89,6 +89,9 @@ public class TextInputWidget extends DrawContext {
     public boolean keyPressed(char character, int keyCode) {
         if (!isFocused) return false;
 
+        displayCursor = true;
+        lastCursorBlinkTime = System.currentTimeMillis();
+
         boolean isCtrl = Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
 
         switch (keyCode) {
