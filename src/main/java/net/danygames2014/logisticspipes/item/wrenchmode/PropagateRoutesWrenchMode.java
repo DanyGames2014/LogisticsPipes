@@ -20,7 +20,6 @@ public class PropagateRoutesWrenchMode extends WrenchMode {
             long nanoEnd = System.nanoTime();
 
             player.sendMessage("Route propagation took " + (nanoEnd - nanoTime) / 1000 + "us");
-
             return true;
         }
 

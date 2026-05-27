@@ -23,10 +23,10 @@ public class DiscoverRoutersByMetricWrenchMode extends WrenchMode {
             List<Router> routers = LogisticsNetworkManager.fetchRoutersByMetric(world, pipe);
             long nanoEnd = System.nanoTime();
 
-            player.sendMessage("Discover routers took " + (nanoEnd - nanoTime) / 1000 + "us");
             for (Router router : routers) {
                 player.sendMessage(router.getRouterId() + " -> " + router.getMetric(pipe.getRouterId()));
             }
+            player.sendMessage("Discover routers took " + (nanoEnd - nanoTime) / 1000 + "us");
 
             return true;
         }

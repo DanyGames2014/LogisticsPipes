@@ -23,8 +23,7 @@ public class AdvertiseRouterWrenchMode extends WrenchMode {
             }
             long nanoEnd = System.nanoTime();
 
-            player.sendMessage("Advertisement took " + (nanoEnd - nanoTime) / 1000 + "us");
-
+            player.sendMessage((isSneaking ? "" : "Smart ") + "Advertisement took " + (nanoEnd - nanoTime) / 1000 + "us");
             return true;
         }
 

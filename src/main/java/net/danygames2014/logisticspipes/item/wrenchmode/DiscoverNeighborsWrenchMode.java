@@ -15,7 +15,11 @@ public class DiscoverNeighborsWrenchMode extends WrenchMode {
     @Override
     public boolean wrenchRightClick(ItemStack stack, PlayerEntity player, boolean isSneaking, World world, int x, int y, int z, int side, WrenchMode wrenchMode) {
         if (world.getBlockEntity(x, y, z) instanceof LogisticPipeBlockEntity pipe) {
+            long nanoTime = System.nanoTime();
             pipe.updateNeighbors();
+            long nanoEnd = System.nanoTime();
+
+            player.sendMessage("Neighbor discovery took " + (nanoEnd - nanoTime) / 1000 + "us");
             return true;
         }
 
