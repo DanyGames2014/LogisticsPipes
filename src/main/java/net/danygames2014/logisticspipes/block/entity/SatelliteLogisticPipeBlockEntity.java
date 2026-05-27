@@ -20,6 +20,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
@@ -47,13 +48,19 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
     }
 
     @Override
+    public void init(BlockState blockState) {
+        super.init(blockState);
+        ensureAllSatelliteStatus();
+    }
+
+    @Override
     public void setup() {
         throttleTime = 40;
     }
 
     @Override
     public void openModuleScreen(PlayerEntity player) {
-        GuiHelper.openGUI(player, LogisticsPipes.NAMESPACE.id("satellite"),null, new SatelliteScreenHandler(player, this), (messagePacket) -> {
+        GuiHelper.openGUI(player, LogisticsPipes.NAMESPACE.id("satellite"), null, new SatelliteScreenHandler(player, this), (messagePacket) -> {
             messagePacket.ints = new int[]{messagePacket.ints != null ? messagePacket.ints[0] : 0, x, y, z};
         });
     }
@@ -61,10 +68,10 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
     @Override
     public void tick() {
         super.tick();
-        if(world.isRemote) {
+        if (world.isRemote) {
             return;
         }
-        if(world.getTime() % 20 == 0) {
+        if (world.getTime() % 20 == 0) {
             updateInv(false);
         }
     }
@@ -96,8 +103,8 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
     }
 
     private void addToList(ItemIdentifierStack stack) {
-        for(ItemIdentifierStack ident:itemList) {
-            if(ident.getItem().equals(stack.getItem())) {
+        for (ItemIdentifierStack ident : itemList) {
+            if (ident.getItem().equals(stack.getItem())) {
                 ident.stackSize += stack.stackSize;
                 return;
             }
@@ -107,17 +114,18 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
 
     private void updateInv(boolean force) {
         itemList.clear();
-        for(Direction direction : Direction.values()) {
+        for (Direction direction : Direction.values()) {
             Inventory inv = getInventory(direction);
-            if(inv != null) {
-                for(int i=0;i<inv.size();i++) {
-                    if(inv.getStack(i) != null) {
+            if (inv != null) {
+                for (int i = 0; i < inv.size(); i++) {
+                    if (inv.getStack(i) != null) {
                         addToList(ItemIdentifierStack.getFromStack(inv.getStack(i)));
                     }
                 }
             }
         }
-        if(!itemList.equals(oldList) || force) {
+        
+        if (!itemList.equals(oldList) || force) {
             oldList.clear();
             oldList.addAll(itemList);
 //            MainProxy.sendToPlayerList(new PacketPipeInvContent(NetworkConstants.PIPE_CHEST_CONTENT, xCoord, yCoord, zCoord, itemList).getPacket(), localModeWatchers);
@@ -149,7 +157,6 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         satelliteId = nbt.getInt("satelliteid");
-        ensureAllSatelliteStatus();
     }
 
     @Override
@@ -159,7 +166,7 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
     }
 
     protected int findId(int increment) {
-        if(world.isRemote) return satelliteId;
+        if (world.isRemote) return satelliteId;
         int potentialId = satelliteId;
         boolean conflict = true;
         while (conflict) {
@@ -179,14 +186,14 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
     }
 
     protected void ensureAllSatelliteStatus() {
-        if(world.isRemote) {
+        if (world.isRemote) {
             return;
         }
-        
+
         if (satelliteId == 0) {
             AllSatellites.remove(this);
         }
-        
+
         if (satelliteId != 0) {
             AllSatellites.add(this);
         }
@@ -220,7 +227,7 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
     @Override
     public void onBreak() {
         super.onBreak();
-        if(world.isRemote){
+        if (world.isRemote) {
             return;
         }
         AllSatellites.remove(this);
@@ -229,7 +236,7 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
     @Override
     public void throttledUpdateEntity() {
         super.throttledUpdateEntity();
-        if(lostItems.isEmpty()) {
+        if (lostItems.isEmpty()) {
             return;
         }
         lostItems.removeIf(itemIdentifier -> RequestManager.request(itemIdentifier.makeStack(1), this, LogisticsNetworkManager.fetchRoutersByMetric(world, this), null));
