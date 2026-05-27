@@ -29,6 +29,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
@@ -47,12 +48,10 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
     private boolean init = false;
 
     // logic stuff
-    protected SimpleInventory dummyInventory = new SimpleInventory(10, "Requested items", 127, this::markDirty);
+    protected SimpleInventory dummyInventory = new SimpleInventory(10, "Requested items", 127, () -> {});
     protected final LinkedList<ItemIdentifier> lostItems = new LinkedList<>();
     public int satelliteId = 0;
     public int priority = 0;
-
-
 
     public CraftingLogisticPipeBlockEntity() {
         super();
@@ -67,21 +66,20 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         throttleTime = 40;
     }
 
-    protected LinkedList<AdjacentBlockEntity> locateCrafters()	{
+    protected LinkedList<AdjacentBlockEntity> locateCrafters() {
         LinkedList<AdjacentBlockEntity> crafters = new LinkedList<>();
-        for (AdjacentBlockEntity adjacent : WorldUtil.getAdjacentBlockEntities(world, x ,y ,z)){
+        for (AdjacentBlockEntity adjacent : WorldUtil.getAdjacentBlockEntities(world, x, y, z)) {
             if (adjacent.blockEntity instanceof PipeBlockEntity) continue;
 
             ItemHandlerBlockCapability capability = CapabilityHelper.getCapability(adjacent.blockEntity, ItemHandlerBlockCapability.class);
-            if(capability == null) continue;
+            if (capability == null) continue;
 
             crafters.add(adjacent);
         }
         return crafters;
     }
 
-    protected ItemStack extractFromInventory(Inventory inv){
-
+    protected ItemStack extractFromInventory(Inventory inv) {
         InventoryUtil invUtil = new InventoryUtil(inv, false);
         ItemStack itemstack = getCraftedItemLogic();
         if (itemstack == null) return null;
@@ -104,8 +102,8 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
     @Override
     public void tick() {
         super.tick();
-        if(!init) {
-            if(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+        if (!init) {
+            if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
 //                if(FMLClientHandler.instance().getClient() != null && FMLClientHandler.instance().getClient().thePlayer != null && FMLClientHandler.instance().getClient().thePlayer.sendQueue != null){
 //                    PacketDispatcher.sendPacketToServer(new PacketCoordinates(NetworkConstants.REQUEST_CRAFTING_PIPE_UPDATE, xCoord, yCoord, zCoord).getPacket());
 //                }
@@ -113,32 +111,32 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
             init = true;
         }
 
-        if(this instanceof CraftingLogisticPipeBlockEntityMk2) {
+        if (this instanceof CraftingLogisticPipeBlockEntityMk2) {
             return;
         }
 
-        if ((!orderManager.hasOrders() && extras < 1) || world.getTime() % 6 != 0){
+        if ((!orderManager.hasOrders() && extras < 1) || world.getTime() % 6 != 0) {
             return;
         }
 
         LinkedList<AdjacentBlockEntity> crafters = locateCrafters();
-        if (crafters.isEmpty()){
+        if (crafters.isEmpty()) {
             orderManager.sendFailed();
             return;
         }
 
-        for (AdjacentBlockEntity adjacent : locateCrafters()){
+        for (AdjacentBlockEntity adjacent : locateCrafters()) {
             ItemStack extracted = null;
 
-            if(NyalibInventoryUtil.hasItemHandler(adjacent.blockEntity)){
+            if (NyalibInventoryUtil.hasItemHandler(adjacent.blockEntity)) {
                 extracted = extractFromInventory(NyalibInventoryUtil.getWrappedItemHandler(adjacent.blockEntity, adjacent.direction.getOpposite()));
             }
 
             if (extracted == null) continue;
-            while (extracted.count > 0){
+            while (extracted.count > 0) {
                 ItemStack stackToSend = extracted.split(1);
 //                Position p = new Position(adjacent.tile.xCoord, adjacent.tile.yCoord, adjacent.tile.zCoord, adjacent.orientation);
-                if (orderManager.hasOrders()){
+                if (orderManager.hasOrders()) {
                     Pair<ItemIdentifierStack, RequestItems> order = orderManager.getNextRequest();
                     RoutedItem item = ItemUtil.createRoutedItem(stackToSend, world);
                     item.setSource(this.getRouter().getRouterId());
@@ -146,7 +144,7 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
                     item.setTransportMode(RoutedItem.TransportMode.Active);
                     super.queueRoutedItem(item, adjacent.direction);
                     orderManager.sendSuccessfull(1);
-                }else{
+                } else {
                     extras--;
                     // TODO: put shit in pipes
 //                    if(LogisticsPipes.DisplayRequests)System.out.println("Extra dropped, " + _extras + " remaining");
@@ -160,7 +158,7 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         }
     }
 
-    private ItemIdentifier providedItem(){
+    private ItemIdentifier providedItem() {
         ItemStack stack = getCraftedItemLogic();
         if (stack == null) return null;
         return ItemIdentifier.get(stack);
@@ -168,7 +166,7 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
     @Override
     public void canProvide(RequestTreeNode tree, Map<ItemIdentifier, Integer> donePromisses) {
-        if (!isEnabled()){
+        if (!isEnabled()) {
             return;
         }
 
@@ -190,24 +188,23 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
     @Override
     public void addCrafting(LinkedList<CraftingTemplate> crafters) {
-        if (!isEnabled()){
+        if (!isEnabled()) {
             return;
         }
 
         ItemStack stack = getCraftedItemLogic();
-        if ( stack == null) return;
+        if (stack == null) return;
 
         CraftingTemplate template = new CraftingTemplate(ItemIdentifierStack.getFromStack(stack), this, priority);
 
-        //Check all materials
+        // Check all materials
         boolean hasSatellite = isSatelliteConnected();
-        for (int i = 0; i < 9; i++){
+        for (int i = 0; i < 9; i++) {
             ItemStack resourceStack = getMaterials(i);
             if (resourceStack == null || resourceStack.count == 0) continue;
-            if (i < 6 || !hasSatellite){
+            if (i < 6 || !hasSatellite) {
                 template.addRequirement(ItemIdentifierStack.getFromStack(resourceStack), this);
-            }
-            else{
+            } else {
                 getSatelliteRouter().smartAdvertiseRouter();
                 template.addRequirement(ItemIdentifierStack.getFromStack(resourceStack), getSatelliteRouter().getPipe());
             }
@@ -218,9 +215,10 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
     @Override
     public void fullFill(LogisticsPromise promise, RequestItems destination) {
-        if (promise.extra){
+        if (promise.extra) {
             extras -= promise.numberOfItems;
         }
+        
         orderManager.addOrder(new ItemIdentifierStack(promise.item, promise.numberOfItems), destination);
     }
 
@@ -242,7 +240,7 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
     @Override
     public ItemIdentifier getCraftedItem() {
-        if (!isEnabled()){
+        if (!isEnabled()) {
             return null;
         }
         return providedItem();
@@ -302,9 +300,9 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         super.stopWatching();
     }
 
-    public void onChange(){
+    public void onChange() {
         LinkedList<ItemIdentifierStack> all = orderManager.getContentList(world);
-        if(!oldList.equals(all)) {
+        if (!oldList.equals(all)) {
             oldList.clear();
             oldList.addAll(all);
 //            MainProxy.sendToPlayerList(new PacketPipeInvContent(NetworkConstants.ORDER_MANAGER_CONTENT, xCoord, yCoord, zCoord, all).getPacket(), localModeWatchers);
@@ -332,10 +330,7 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         return this;
     }
 
-    // logic code
-
-    /* ** SATELLITE CODE ** */
-
+    /* SATELLITE CODE */
     protected int getNextConnectSatelliteId(boolean prev) {
         final ObjectOpenHashSet<Router> routes = getRouter().getNetwork().routers;
         int closestIdFound = prev ? 0 : Integer.MAX_VALUE;
@@ -348,6 +343,7 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
                 }
             }
         }
+        
         if (closestIdFound == Integer.MAX_VALUE) {
             return satelliteId;
         }
@@ -361,13 +357,8 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
             PacketHelper.send(new CraftingPipeCommandC2SPacket(0));
             return;
         }
-        
-        satelliteId = getNextConnectSatelliteId(false);
-    }
 
-    // This is called by the packet PacketCraftingPipeSatelliteId
-    public void setSatelliteId(int satelliteId) {
-        this.satelliteId = satelliteId;
+        satelliteId = getNextConnectSatelliteId(false);
     }
 
     public void setPrevSatellite(PlayerEntity player) {
@@ -375,7 +366,7 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
             PacketHelper.send(new CraftingPipeCommandC2SPacket(1));
             return;
         }
-        
+
         satelliteId = getNextConnectSatelliteId(true);
     }
 
@@ -387,6 +378,7 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
                 }
             }
         }
+        
         return false;
     }
 
@@ -396,20 +388,23 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
                 return satellite.getRouter();
             }
         }
+        
         return null;
     }
 
     @Override
     public void throttledUpdateEntity() {
         super.throttledUpdateEntity();
-        if(lostItems.isEmpty()) {
+        if (lostItems.isEmpty()) {
             return;
         }
+        
         lostItems.removeIf(itemIdentifier -> RequestManager.request(itemIdentifier.makeStack(1), this, LogisticsNetworkManager.fetchRoutersByMetric(world, this), null));
     }
 
     @Override
     public void itemArrived(ItemIdentifier item) {
+        
     }
 
     @Override
@@ -422,9 +417,10 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
             PacketHelper.send(new CraftingPipeCommandC2SPacket(4));
             return;
         }
-        
+
         boolean found = false;
         for (final AdjacentBlockEntity adjacent : WorldUtil.getAdjacentBlockEntities(world, x, y, z)) {
+            // TODO: convert to the recipe provider capability
 //            for (CraftingRecipeProvider provider : SimpleServiceLocator.craftingRecipeProviders) {
 //                if (provider.canOpenGui(blockEntity.tile)) {
 //                    found = true;
@@ -437,8 +433,8 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
             if (found) {
                 Block block = world.getBlockState(adjacent.blockEntity.x, adjacent.blockEntity.y, adjacent.blockEntity.z).getBlock();
-                if(block != null) {
-                    if(block.onUse(world, adjacent.blockEntity.x, adjacent.blockEntity.y, adjacent.blockEntity.z, player)){
+                if (block != null) {
+                    if (block.onUse(world, adjacent.blockEntity.x, adjacent.blockEntity.y, adjacent.blockEntity.z, player)) {
                         break;
                     }
                 }
@@ -451,13 +447,13 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
             PacketHelper.send(new CraftingPipeCommandC2SPacket(3));
             return;
         }
-        
+
         for (Direction side : Direction.values()) {
             BlockEntity blockEntity = world.getBlockEntity(this.x + side.getOffsetX(), this.y + side.getOffsetY(), this.z + side.getOffsetZ());
             if (blockEntity == null) {
                 continue;
             }
-            
+
             CraftingPipeRecipeProviderBlockCapability cap = CapabilityHelper.getCapability(blockEntity, CraftingPipeRecipeProviderBlockCapability.class);
             if (cap == null || !cap.canOpen(player)) {
                 continue;
@@ -467,27 +463,28 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
             if (recipe == null) {
                 continue;
             }
-            
+
             // Set the recipe
             this.dummyInventory.setStack(9, recipe.output);
             int maxI = Math.min(9, recipe.inputs.size());
             for (int i = 0; i < maxI; i++) {
                 this.dummyInventory.setStack(i, recipe.inputs.get(i));
             }
-            
+
             break;
         }
     }
 
     public void handleStackMove(int number) {
-        if(world.isRemote) {
+        if (world.isRemote) {
 //            PacketDispatcher.sendPacketToServer(new PacketPipeInteger(NetworkConstants.CRAFTING_PIPE_STACK_MOVE,xCoord,yCoord,zCoord,number).getPacket());
         }
+        
         ItemStack stack = dummyInventory.getStack(number);
-        if(stack == null ) return;
-        for(int i = 6;i < 9;i++) {
+        if (stack == null) return;
+        for (int i = 6; i < 9; i++) {
             ItemStack stackb = dummyInventory.getStack(i);
-            if(stackb == null) {
+            if (stackb == null) {
                 dummyInventory.setStack(i, stack);
                 dummyInventory.setStack(number, null);
                 break;
@@ -499,7 +496,7 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         if (player.world.isRemote) {
             PacketHelper.send(new CraftingPipeCommandC2SPacket(20));
         }
-        
+
         priority++;
     }
 
@@ -507,7 +504,7 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         if (player.world.isRemote) {
             PacketHelper.send(new CraftingPipeCommandC2SPacket(21));
         }
-        
+
         priority--;
     }
 
@@ -528,7 +525,15 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         return dummyInventory;
     }
 
-    public void markDirty(){
+    @Override
+    public void writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
+        dummyInventory.writeNbt(nbt, "crafting_pipe_inventory_");
+    }
 
+    @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        dummyInventory.readNbt(nbt, "crafting_pipe_inventory_");
     }
 }
