@@ -48,7 +48,7 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
     @Override
     public void init() {
-        filterInventory = new SimpleInventory(9, "Items to keep stocked", 127, this::markDirty);
+        filterInventory = new SimpleInventory(9, "Items to keep stocked", 127, this::markInventoryDirty);
         dummyInvUtil = new InventoryUtil(filterInventory, false);
         throttleTime = 100;
     }
@@ -69,9 +69,8 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         lastRequestFailed = value;
     }
 
-    @Override
-    public void markDirty() {
-        super.markDirty();
+    public void markInventoryDirty() {
+        
     }
 
     @Override

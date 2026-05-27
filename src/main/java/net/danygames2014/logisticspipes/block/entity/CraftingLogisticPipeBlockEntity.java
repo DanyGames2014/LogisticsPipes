@@ -48,7 +48,8 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
     private boolean init = false;
 
     // logic stuff
-    protected SimpleInventory dummyInventory = new SimpleInventory(10, "Requested items", 127, () -> {});
+    protected SimpleInventory dummyInventory = new SimpleInventory(10, "Requested items", 127, this::markInventoryDirty);
+
     protected final LinkedList<ItemIdentifier> lostItems = new LinkedList<>();
     public int satelliteId = 0;
     public int priority = 0;
@@ -328,6 +329,10 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
     @Override
     public LogisticPipeBlockEntity getPipe() {
         return this;
+    }
+
+    private void markInventoryDirty() {
+        
     }
 
     /* SATELLITE CODE */

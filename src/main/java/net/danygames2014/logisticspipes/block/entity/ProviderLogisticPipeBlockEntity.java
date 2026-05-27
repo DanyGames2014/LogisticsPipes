@@ -32,10 +32,10 @@ public class ProviderLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
     public final LinkedList<ItemIdentifierStack> itemListOrderer = new LinkedList<>();
 //    private final HUDProvider HUD = new HUDProvider(this);
 
-    protected LogisticsOrderManager orderManager = new LogisticsOrderManager(this::markDirty);
+    protected LogisticsOrderManager orderManager = new LogisticsOrderManager(this::markInventoryDirty);
 
     // Logic
-    private final SimpleInventory filterInventory = new SimpleInventory(9, "Items to provide (or empty for all)", 1, this::markDirty);
+    private final SimpleInventory filterInventory = new SimpleInventory(9, "Items to provide (or empty for all)", 1, this::markInventoryDirty);
     private boolean filterIsExclude;
     private ExtractionMode extractionMode = ExtractionMode.Normal;
 
@@ -57,7 +57,6 @@ public class ProviderLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
     }
 
     public int getTotalItemCount(ItemIdentifier item) {
-
         if (!isEnabled()){
             return 0;
         }
@@ -313,7 +312,7 @@ public class ProviderLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
     }
 
-    public void markDirty(){
+    public void markInventoryDirty(){
         LinkedList<ItemIdentifierStack> all = orderManager.getContentList(world);
         if(!oldList.equals(all)) {
             oldList.clear();

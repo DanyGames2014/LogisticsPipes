@@ -2,13 +2,10 @@ package net.danygames2014.logisticspipes.block.entity;
 
 import net.danygames2014.buildcraft.block.PipeBlock;
 import net.danygames2014.logisticspipes.LogisticsPipes;
-import net.danygames2014.logisticspipes.block.RequestMk2LogisticPipeBlock;
 import net.danygames2014.logisticspipes.block.pipe.ItemSendMode;
 import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
 import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
-import net.danygames2014.logisticspipes.module.ItemSinkModule;
 import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
-import net.danygames2014.logisticspipes.screen.handler.SupplierScreenHandler;
 import net.danygames2014.logisticspipes.util.SimpleInventory;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,8 +14,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
 
 public class RequestLogisticPipeBlockEntity extends LogisticPipeBlockEntity {
-
-    private SimpleInventory diskInventory = new SimpleInventory(1, "Disk", 1, this::markDirty);
+    private final SimpleInventory diskInventory = new SimpleInventory(1, "Disk", 1, this::markInventoryDirty);
 
     public RequestLogisticPipeBlockEntity() {
         super();
@@ -73,6 +69,7 @@ public class RequestLogisticPipeBlockEntity extends LogisticPipeBlockEntity {
         diskInventory.readNbt(nbt, "");
     }
 
+    @Override
     public void openModuleScreen(PlayerEntity player) {
         boolean isMk2 = world.getBlockState(x, y, z).getBlock() == LogisticsPipes.requestItemPipeMk2;
         GuiHelper.openGUI(player, isMk2 ? LogisticsPipes.NAMESPACE.id("normal_order_mk2") : LogisticsPipes.NAMESPACE.id("normal_order"), diskInventory, new ModuleScreenHandler(player, diskInventory), (messagePacket) -> {
@@ -84,7 +81,7 @@ public class RequestLogisticPipeBlockEntity extends LogisticPipeBlockEntity {
         return diskInventory;
     }
 
-    public void markDirty() {
+    public void markInventoryDirty() {
 
     }
 }
