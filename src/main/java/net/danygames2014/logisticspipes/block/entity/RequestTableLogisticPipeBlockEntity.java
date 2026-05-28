@@ -86,7 +86,10 @@ public class RequestTableLogisticPipeBlockEntity extends RequestLogisticPipeBloc
             ItemStack stack = item.getItemStack();
             stack.count = inv.addCompressed(stack);
             item.setItemStack(stack);
+            if(stack.count > 0){
+                return super.itemArrived(item);
+            }
         }
-        return super.itemArrived(item);
+        return null;
     }
 }
