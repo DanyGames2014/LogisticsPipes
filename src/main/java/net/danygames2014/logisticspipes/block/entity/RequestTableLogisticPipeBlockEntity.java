@@ -17,7 +17,6 @@ public class RequestTableLogisticPipeBlockEntity extends RequestLogisticPipeBloc
 
     public SimpleInventory inv = new SimpleInventory(27, "Crafting Resources", 64, this::markInventoryDirty);
     public SimpleInventory matrix = new SimpleInventory(9, "Crafting Matrix", 64, this::markInventoryDirty);
-    public SimpleInventory resultInv = new SimpleInventory(1, "Crafting Result", 64, this::markInventoryDirty);
     public SimpleInventory toSortInv = new SimpleInventory(1, "Sorting Slot", 64, this::markInventoryDirty);
     private int delay = 0;
 
