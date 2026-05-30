@@ -3,20 +3,31 @@ package net.danygames2014.logisticspipes.client.gui.screen;
 import net.danygames2014.logisticspipes.block.RequestTableLogisticPipeBlock;
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.entity.RequestTableLogisticPipeBlockEntity;
+import net.danygames2014.logisticspipes.gui.CheckBoxWidget;
+import net.danygames2014.logisticspipes.gui.ScreenWithDisk;
 import net.danygames2014.logisticspipes.gui.SmallButtonWidget;
+import net.danygames2014.logisticspipes.gui.popup.DiskPopupSubScreen;
 import net.danygames2014.logisticspipes.interfaces.RequestItems;
+import net.danygames2014.logisticspipes.network.DropDiskC2SPacket;
+import net.danygames2014.logisticspipes.network.RequestDiskContentC2SPacket;
 import net.danygames2014.logisticspipes.network.RequestScreenContentC2SPacket;
 import net.danygames2014.logisticspipes.request.RequestHandler;
 import net.danygames2014.logisticspipes.screen.handler.ChassisScreenHandler;
 import net.danygames2014.logisticspipes.screen.handler.RequestTableScreenHandler;
 import net.danygames2014.logisticspipes.util.ItemIdentifier;
+import net.danygames2014.logisticspipes.util.ItemIdentifierStack;
 import net.danygames2014.logisticspipes.util.SimpleInventory;
 import net.danygames2014.logisticspipes.util.gui.BasicGuiHelper;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.render.platform.Lighting;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
+import org.lwjgl.opengl.GL11;
 
-public class RequestTableScreen extends OrderScreen{
+import java.util.LinkedList;
+
+public class RequestTableScreen extends OrderScreen implements ScreenWithDisk {
     private enum DisplayOptions {
         Both,
         SupplyOnly,
@@ -25,6 +36,8 @@ public class RequestTableScreen extends OrderScreen{
 
     protected DisplayOptions displayOptions = DisplayOptions.Both;
     public RequestTableLogisticPipeBlockEntity table;
+
+    private SmallButtonWidget Macrobutton;
 
     public RequestTableScreen(PlayerEntity player, RequestTableLogisticPipeBlockEntity table) {
         super(table, player, new RequestTableScreenHandler(player, table, 0, 0));
@@ -38,12 +51,16 @@ public class RequestTableScreen extends OrderScreen{
     @Override
     public void init() {
         super.init();
+        buttons.add(new CheckBoxWidget(32, guiLeft + 75, guiTop + 56, 14, 14, table.refillMatrix));
         this.guiLeft += this.getLeftAddition();
-        buttons.add(new SmallButtonWidget(3, guiLeft + 10, bottom - 15, 46, 10, "Refresh")); // Refresh
-        buttons.add(new SmallButtonWidget(13,  guiLeft + 10, bottom - 28, 46, 10, "Content")); // Component
+//        buttons.add(new SmallButtonWidget(3, guiLeft + 10, bottom - 15, 46, 10, "Refresh")); // Refresh
+//        buttons.add(new SmallButtonWidget(13,  guiLeft + 10, bottom - 28, 46, 10, "Content")); // Component
         buttons.add(new SmallButtonWidget(9, guiLeft + 10, bottom - 41, 46, 10, "Both"));
+        buttons.add(Macrobutton = new SmallButtonWidget(12, right - 55, bottom - 60, 50, 10, "Disk"));
+        Macrobutton.active = false;
+
         this.guiLeft -= this.getLeftAddition();
-        buttons.add(new SmallButtonWidget(14, guiLeft + 75, guiTop + 55, 46, 10, "Request"));
+//        buttons.add(new SmallButtonWidget(14, guiLeft + 75, guiTop + 55, 46, 10, "Request"));
     }
 
     @Override
@@ -59,6 +76,11 @@ public class RequestTableScreen extends OrderScreen{
                 BasicGuiHelper.drawSlotBackground(minecraft, guiLeft + (x * 18) + 19, guiTop + (y * 18) + 14);
             }
         }
+
+        fill(right - 39, bottom - 47, right - 19, bottom - 27, Colors.Black);
+        fill(right - 37, bottom - 45, right - 21, bottom - 29, Colors.DarkGrey);
+
+
         BasicGuiHelper.drawSlotBackground(minecraft, guiLeft + 100, guiTop + 32);
         BasicGuiHelper.drawSlotBackground(minecraft, guiLeft + 163, guiTop + 50);
         fill(guiLeft + 75, guiTop + 38, guiLeft + 95, guiTop + 43, Colors.DarkGrey);
@@ -70,6 +92,20 @@ public class RequestTableScreen extends OrderScreen{
             fill(guiLeft + 164 + a, guiTop + 65 - a, guiLeft + 166 + a, guiTop + 67 - a, Colors.DarkGrey);
         }
         BasicGuiHelper.drawPlayerInventoryBackground(minecraft, guiLeft + 20, guiTop + 150);
+
+        if(getDisk() != null) {
+            itemRenderer.renderGuiItem(textRenderer, minecraft.textureManager, getDisk(), right - 37, bottom - 45);
+            Lighting.turnOff();
+            Macrobutton.active = true;
+        } else {
+            Macrobutton.active = false;
+        }
+
+        if(buttons.get(11) instanceof CheckBoxWidget checkBoxWidget && checkBoxWidget.getState()) {
+            textRenderer.draw("Refill", guiLeft + 91, guiTop + 60, 0x404040);
+        } else {
+            textRenderer.draw("Refill", guiLeft + 91, guiTop + 60, 0xA0A0A0);
+        }
     }
 
     @Override
@@ -115,6 +151,26 @@ public class RequestTableScreen extends OrderScreen{
 //            }
             refreshItems();
         }
+        if (button.id == 12) {
+            PacketHelper.send(new RequestDiskContentC2SPacket(table.x, table.y, table.z));
+            this.setSubScreen(new DiskPopupSubScreen(this));
+        }
+        if (button.id == 32) {
+            CheckBoxWidget checkbox = (CheckBoxWidget)buttons.get(11);
+            table.refillMatrix = checkbox.change();
+        }
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int button) {
+        super.mouseClicked(mouseX, mouseY, button);
+        if (button == 0) {
+            if (mouseX >= right - 39 && mouseX < right - 19 && mouseY >= bottom - 47 && mouseY < bottom - 27) {
+                if (getDisk() != null) {
+                    PacketHelper.send(new DropDiskC2SPacket(table.x, table.y, table.z));
+                }
+            }
+        }
     }
 
     @Override
@@ -125,5 +181,40 @@ public class RequestTableScreen extends OrderScreen{
     @Override
     protected int getLeftAddition() {
         return 200;
+    }
+
+    @Override
+    public ItemStack getDisk(){
+        return table.getDiskInventory().getStack(0);
+    }
+
+    @Override
+    public LogisticsBaseScreen getScreen() {
+        return this;
+    }
+
+    @Override
+    public LinkedList<ItemIdentifierStack> getAllItems() {
+        return allItems;
+    }
+
+    @Override
+    public int getX() {
+        return table.x;
+    }
+
+    @Override
+    public int getY() {
+        return table.y;
+    }
+
+    @Override
+    public int getZ() {
+        return table.z;
+    }
+
+    @Override
+    public PlayerEntity getPlayer() {
+        return player;
     }
 }

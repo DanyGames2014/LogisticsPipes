@@ -2,6 +2,7 @@ package net.danygames2014.logisticspipes.gui.popup;
 
 import net.danygames2014.logisticspipes.client.gui.screen.LogisticsBaseScreen;
 import net.danygames2014.logisticspipes.client.gui.screen.NormalOrderScreenMk2;
+import net.danygames2014.logisticspipes.gui.ScreenWithDisk;
 import net.danygames2014.logisticspipes.gui.SmallButtonWidget;
 import net.danygames2014.logisticspipes.gui.SubScreen;
 import net.danygames2014.logisticspipes.gui.TextInputWidget;
@@ -16,13 +17,13 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 public class DiskPopupSubScreen extends SubScreen {
-    NormalOrderScreenMk2 mainScreen;
+    ScreenWithDisk mainScreen;
     private int scroll = 0;
     private int selected = -1;
 
     private TextInputWidget textInputWidget;
 
-    public DiskPopupSubScreen(NormalOrderScreenMk2 mainScreen) {
+    public DiskPopupSubScreen(ScreenWithDisk mainScreen) {
         super(150, 200, 0, 0);
         this.mainScreen = mainScreen;
     }
@@ -55,7 +56,7 @@ public class DiskPopupSubScreen extends SubScreen {
     }
 
     private void writeDiskName() {
-        PacketHelper.send(new SetDiskNameC2SPacket(mainScreen.pipe.x, mainScreen.pipe.y, mainScreen.pipe.z, textInputWidget.getText()));
+        PacketHelper.send(new SetDiskNameC2SPacket(mainScreen.getX(), mainScreen.getY(), mainScreen.getZ(), textInputWidget.getText()));
         mainScreen.getDisk().getStationNbt().putString("name", textInputWidget.getText());
     }
 
@@ -120,7 +121,7 @@ public class DiskPopupSubScreen extends SubScreen {
     }
 
     private void handleRequest() {
-        PacketHelper.send(new RequestDiskMacroC2SPacket(mainScreen.pipe.x, mainScreen.pipe.y, mainScreen.pipe.z, selected));
+        PacketHelper.send(new RequestDiskMacroC2SPacket(mainScreen.getX(), mainScreen.getY(), mainScreen.getZ(), selected));
     }
 
     @Override

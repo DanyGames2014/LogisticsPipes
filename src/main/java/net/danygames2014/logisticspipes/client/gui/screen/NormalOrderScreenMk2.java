@@ -1,16 +1,22 @@
 package net.danygames2014.logisticspipes.client.gui.screen;
 
 import net.danygames2014.logisticspipes.block.entity.RequestLogisticPipeBlockEntity;
+import net.danygames2014.logisticspipes.gui.CheckBoxWidget;
+import net.danygames2014.logisticspipes.gui.ScreenWithDisk;
 import net.danygames2014.logisticspipes.gui.SmallButtonWidget;
 import net.danygames2014.logisticspipes.gui.popup.DiskPopupSubScreen;
 import net.danygames2014.logisticspipes.network.DropDiskC2SPacket;
 import net.danygames2014.logisticspipes.network.RequestDiskContentC2SPacket;
+import net.danygames2014.logisticspipes.util.ItemIdentifierStack;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.render.platform.Lighting;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 
-public class NormalOrderScreenMk2 extends NormalOrderScreen {
+import java.util.LinkedList;
+
+public class NormalOrderScreenMk2 extends NormalOrderScreen implements ScreenWithDisk {
     public RequestLogisticPipeBlockEntity pipe;
     private SmallButtonWidget Macrobutton;
 
@@ -38,6 +44,7 @@ public class NormalOrderScreenMk2 extends NormalOrderScreen {
         if(getDisk() != null) {
             itemRenderer.renderGuiItem(textRenderer, minecraft.textureManager, getDisk(), right - 37, bottom - 45);
             Macrobutton.active = true;
+            Lighting.turnOff();
         } else {
             Macrobutton.active = false;
         }
@@ -74,7 +81,38 @@ public class NormalOrderScreenMk2 extends NormalOrderScreen {
         }
     }
 
+    @Override
     public ItemStack getDisk(){
         return pipe.getDiskInventory().getStack(0);
+    }
+
+    @Override
+    public LogisticsBaseScreen getScreen() {
+        return this;
+    }
+
+    @Override
+    public LinkedList<ItemIdentifierStack> getAllItems() {
+        return allItems;
+    }
+
+    @Override
+    public int getX() {
+        return pipe.x;
+    }
+
+    @Override
+    public int getY() {
+        return pipe.y;
+    }
+
+    @Override
+    public int getZ() {
+        return pipe.z;
+    }
+
+    @Override
+    public PlayerEntity getPlayer() {
+        return player;
     }
 }

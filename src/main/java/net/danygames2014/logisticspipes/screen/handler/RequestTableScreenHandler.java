@@ -3,11 +3,14 @@ package net.danygames2014.logisticspipes.screen.handler;
 import net.danygames2014.logisticspipes.block.entity.RequestTableLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.gui.CraftingRefillSlot;
 import net.danygames2014.logisticspipes.gui.PersistentCraftingInventory;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.CraftingResultInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.recipe.CraftingRecipeManager;
+import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.screen.slot.Slot;
 
 public class RequestTableScreenHandler extends ModuleScreenHandler{
@@ -17,6 +20,8 @@ public class RequestTableScreenHandler extends ModuleScreenHandler{
     public CraftingInventory craftingMatrix;
     public Inventory craftingResult;
     public Slot craftingResultSlot;
+
+    public boolean refillMatrix;
 
     public RequestTableScreenHandler(PlayerEntity player, RequestTableLogisticPipeBlockEntity table, int guiLeft, int guiTop) {
         super(player, table.inv);
@@ -62,5 +67,33 @@ public class RequestTableScreenHandler extends ModuleScreenHandler{
     public void onSlotUpdate(Inventory inventory) {
         updateCraftingResult();
         super.onSlotUpdate(inventory);
+    }
+
+    @Override
+    public void addListener(ScreenHandlerListener listener) {
+        super.addListener(listener);
+        listener.onPropertyUpdate(this, 0, this.table.refillMatrix ? 1 : 0);
+    }
+
+    @Override
+    public void sendContentUpdates() {
+        super.sendContentUpdates();
+
+        for (var listenerO : this.listeners) {
+            if (listenerO instanceof ScreenHandlerListener listener) {
+                if (this.refillMatrix != this.table.refillMatrix) {
+                    this.refillMatrix = this.table.refillMatrix;
+                    listener.onPropertyUpdate(this, 0, this.table.refillMatrix ? 1 : 0);
+                }
+            }
+        }
+    }
+
+    @Environment(EnvType.CLIENT)
+    @Override
+    public void setProperty(int id, int value) {
+        if (id == 0) {
+            this.table.refillMatrix = value == 1;
+        }
     }
 }

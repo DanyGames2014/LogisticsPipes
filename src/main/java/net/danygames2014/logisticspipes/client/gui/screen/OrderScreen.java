@@ -154,7 +154,7 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
         String pageString = "Page " + (page + 1) + " / " + (maxPage + 1);
         textRenderer.draw(pageString, right - 47 - textRenderer.getWidth(pageString) / 2 , guiTop + 6 , 0x404040);
 
-        if(buttons.get(9) instanceof CheckBoxWidget checkBoxWidget && checkBoxWidget.getState()) {
+        if(buttons.get(10) instanceof CheckBoxWidget checkBoxWidget && checkBoxWidget.getState()) {
             textRenderer.draw("Popup", guiLeft + 25 , bottom - 56, 0x404040);
         } else {
             textRenderer.draw("Popup", guiLeft + 25 , bottom - 56, 0xA0A0A0);

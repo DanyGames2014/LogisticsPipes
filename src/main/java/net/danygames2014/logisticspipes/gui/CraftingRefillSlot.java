@@ -52,7 +52,7 @@ public class CraftingRefillSlot extends CraftingResultSlot {
                 }
 
                 // The stack became null, try to refill it
-                if (input.getStack(i) == null) {
+                if (input.getStack(i) == null && handler.table.refillMatrix) {
                     for (int j = 0; j <= this.handler.table.inv.size(); ++j) {
                         ItemStack potentialStack = this.handler.table.inv.getStack(j);
                         System.out.println("Index: " + j + " Stack: " + potentialStack);

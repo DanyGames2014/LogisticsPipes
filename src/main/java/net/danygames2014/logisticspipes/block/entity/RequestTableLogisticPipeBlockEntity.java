@@ -18,6 +18,8 @@ public class RequestTableLogisticPipeBlockEntity extends RequestLogisticPipeBloc
     public SimpleInventory inv = new SimpleInventory(27, "Crafting Resources", 64, this::markInventoryDirty);
     public SimpleInventory matrix = new SimpleInventory(9, "Crafting Matrix", 64, this::markInventoryDirty);
     public SimpleInventory toSortInv = new SimpleInventory(1, "Sorting Slot", 64, this::markInventoryDirty);
+
+    public boolean refillMatrix = true;
     private int delay = 0;
 
     public RequestTableLogisticPipeBlockEntity() {
@@ -45,6 +47,7 @@ public class RequestTableLogisticPipeBlockEntity extends RequestLogisticPipeBloc
         inv.writeNbt(nbt, "inv");
         matrix.writeNbt(nbt, "matrix");
         toSortInv.writeNbt(nbt, "toSortInv");
+        nbt.putBoolean("refillMatrix", refillMatrix);
     }
 
     @Override
@@ -53,6 +56,7 @@ public class RequestTableLogisticPipeBlockEntity extends RequestLogisticPipeBloc
         inv.readNbt(nbt, "inv");
         matrix.readNbt(nbt, "matrix");
         toSortInv.readNbt(nbt, "toSortInv");
+        refillMatrix = nbt.getBoolean("refillMatrix");
     }
 
     @Override

@@ -2,6 +2,7 @@ package net.danygames2014.logisticspipes.gui.popup;
 
 import net.danygames2014.logisticspipes.client.gui.screen.LogisticsBaseScreen;
 import net.danygames2014.logisticspipes.client.gui.screen.NormalOrderScreenMk2;
+import net.danygames2014.logisticspipes.gui.ScreenWithDisk;
 import net.danygames2014.logisticspipes.gui.SmallButtonWidget;
 import net.danygames2014.logisticspipes.gui.SubScreen;
 import net.danygames2014.logisticspipes.gui.TextInputWidget;
@@ -26,7 +27,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class AddMacroPopupSubScreen extends SubScreen implements ItemSearch {
-    private NormalOrderScreenMk2 mainScreen;
+    private ScreenWithDisk mainScreen;
 
     private int mousePosX = 0;
     private int mousePosY = 0;
@@ -45,7 +46,7 @@ public class AddMacroPopupSubScreen extends SubScreen implements ItemSearch {
 
     private Object[] tooltip;
 
-    public AddMacroPopupSubScreen(NormalOrderScreenMk2 mainScreen) {
+    public AddMacroPopupSubScreen(ScreenWithDisk mainScreen) {
         super(200, 200, 0, 0);
         this.mainScreen = mainScreen;
     }
@@ -107,7 +108,7 @@ public class AddMacroPopupSubScreen extends SubScreen implements ItemSearch {
 
         textRenderer.draw("Add Macro", guiLeft + textRenderer.getWidth("Add Macro") / 2, guiTop + 6, 0x404040);
 
-        maxPageAll = (int) Math.floor((getSearchedItemNumber(mainScreen.allItems) - 1)  / 45F);
+        maxPageAll = (int) Math.floor((getSearchedItemNumber(mainScreen.getAllItems()) - 1)  / 45F);
         if(maxPageAll == -1) maxPageAll = 0;
         if (pageAll > maxPageAll){
             pageAll = maxPageAll;
@@ -160,7 +161,7 @@ public class AddMacroPopupSubScreen extends SubScreen implements ItemSearch {
         fill(guiLeft + 8, guiTop + 16, right - 12, bottom - 84, BasicGuiHelper.ConvertEnumToColor(LogisticsBaseScreen.Colors.MiddleGrey));
         fill(guiLeft + 8, bottom - 52, right - 12, bottom - 32, BasicGuiHelper.ConvertEnumToColor(LogisticsBaseScreen.Colors.DarkGrey));
 
-        for(ItemIdentifierStack itemStack : mainScreen.allItems) {
+        for(ItemIdentifierStack itemStack : mainScreen.getAllItems()) {
             ItemIdentifier item = itemStack.getItem();
             if(!itemSearched(item)) continue;
             ppi++;
@@ -242,7 +243,7 @@ public class AddMacroPopupSubScreen extends SubScreen implements ItemSearch {
             }
         }
 
-        BasicGuiHelper.renderItemIdentifierStackListIntoGui(mainScreen.allItems, this, pageAll, guiLeft + 10, guiTop + 18, 9, 45, panelxSize, panelySize, minecraft, false, false);
+        BasicGuiHelper.renderItemIdentifierStackListIntoGui(mainScreen.getAllItems(), this, pageAll, guiLeft + 10, guiTop + 18, 9, 45, panelxSize, panelySize, minecraft, false, false);
 
         ppi = 0;
         column = 0;
@@ -279,7 +280,7 @@ public class AddMacroPopupSubScreen extends SubScreen implements ItemSearch {
         super.render(mouseX, mouseY, delta);
 
         if(!this.hasSubScreen() && tooltip != null) {
-            BasicGuiHelper.drawToolTip((int)tooltip[0] - mainScreen.guiLeft - 10, (int)tooltip[1] - mainScreen.guiTop - 15, TooltipHelper.getTooltipForItemStack(TranslationStorage.getInstance().get(((ItemStack)tooltip[2]).getTranslationKey() + ".name"), (ItemStack)tooltip[2], mainScreen.player.inventory, mainScreen), 0xFFFFFF);
+            BasicGuiHelper.drawToolTip((int)tooltip[0] - mainScreen.getScreen().guiLeft - 10, (int)tooltip[1] - mainScreen.getScreen().guiTop - 15, TooltipHelper.getTooltipForItemStack(TranslationStorage.getInstance().get(((ItemStack)tooltip[2]).getTranslationKey() + ".name"), (ItemStack)tooltip[2], mainScreen.getPlayer().inventory, mainScreen.getScreen()), 0xFFFFFF);
         }
     }
 
@@ -384,7 +385,7 @@ public class AddMacroPopupSubScreen extends SubScreen implements ItemSearch {
                     nbt.put("inventar", inventar);
                     list.add(nbt);
                     this.mainScreen.getDisk().getStationNbt().put("macroList", list);
-                    PacketHelper.send(new SetDiskContentC2SPacket(mainScreen.pipe.x, mainScreen.pipe.y, mainScreen.pipe.z, mainScreen.getDisk()));
+                    PacketHelper.send(new SetDiskContentC2SPacket(mainScreen.getX(), mainScreen.getY(), mainScreen.getZ(), mainScreen.getDisk()));
                     this.exitScreen();
                 }
             } else if(!macroItems.isEmpty()) {
