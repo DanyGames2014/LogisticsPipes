@@ -69,7 +69,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     private int[] queuedParticles = new int[ParticleColor.values().length];
     boolean hasQueuedParticles = false;
     // HUD Rendering
-    private final TestHud HUD = new TestHud(this);
+//    private final TestHud HUD = new TestHud(this);
 
     public LogisticPipeBlockEntity() {
         init();
@@ -315,7 +315,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
     @Override
     public HUDRenderer getRenderer() {
-        return HUD;
+        return null;
     }
 
     public abstract LogisticsModule getLogisticsModule();

@@ -1,6 +1,7 @@
 package net.danygames2014.logisticspipes.module;
 
 import net.danygames2014.logisticspipes.LogisticsPipes;
+import net.danygames2014.logisticspipes.gui.hud.modules.ItemSinkHud;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.screen.handler.ItemSinkScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
@@ -23,7 +24,7 @@ public class ItemSinkModule implements LogisticsModule, ClientInformationProvide
     private int y = 0;
     private int z = 0;
 
-//    private IHUDModuleRenderer HUD = new HUDItemSink(this);
+    private ItemSinkHud HUD = new ItemSinkHud(this);
 
     private final List<PlayerEntity> localModeWatchers = new ArrayList<>();
 
@@ -137,7 +138,7 @@ public class ItemSinkModule implements LogisticsModule, ClientInformationProvide
 
     @Override
     public HUDModuleRenderer getRenderer() {
-        return null;
+        return HUD;
     }
 
     @Override

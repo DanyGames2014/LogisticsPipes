@@ -401,11 +401,12 @@ public class BasicGuiHelper {
         int column = 0;
         int row = 0;
         TextRenderer textRenderer = mc.textRenderer;
-        ItemRenderer itemRenderer = new ItemRenderer();
-        for(ItemIdentifierStack itemStack : _allItems) {
+        ItemRenderer renderItem = new ItemRenderer();
+        renderItem.useCustomDisplayColor = color;
+        for(ItemIdentifierStack itemStack: _allItems) {
             if(itemStack == null) {
                 column++;
-                if (column >= columns){
+                if(column >= columns) {
                     row++;
                     column = 0;
                 }
@@ -413,63 +414,81 @@ public class BasicGuiHelper {
                 continue;
             }
             ItemIdentifier item = itemStack.getItem();
-            if(itemSearch!= null && !itemSearch.itemSearched(item)) continue;
+            if(itemSearch != null && !itemSearch.itemSearched(item)) continue;
             ppi++;
 
-            if (ppi <= items * page) continue;
-            if (ppi > items * (page+1)) continue;
+            if(ppi <= items * page) continue;
+            if(ppi > items * (page + 1)) continue;
             ItemStack st = itemStack.makeNormalStack();
             int x = left + xSize * column;
             int y = top + ySize * row;
 
-            GL11.glPushMatrix();
-            GL11.glRotatef(120.0F, 1.0F, 0.0F, 0.0F);
-            Lighting.turnOn();
-            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-            GL11.glPopMatrix();
+            GL11.glDisable(GL11.GL_LIGHTING);
 
-            if(st != null && itemStack.getItem() != null) {
+            GL11.glPushMatrix();
+            GL11.glScaled(1d, 1d, -0.2d);
+
+            if(st != null) {
                 if(disableEffect) {
-                    itemRenderer.renderGuiItem(textRenderer, mc.textureManager, st, x, y);
+                    GL11.glTranslated(0, 0, -15);
+                    renderItem.renderGuiItem(textRenderer, mc.textureManager, st, x, y);
+                    GL11.glTranslated(0, 0, 15);
                 } else {
                     GL11.glTranslated(0, 0, 3.0);
-                    itemRenderer.renderGuiItem(textRenderer, mc.textureManager, st, x, y);
+//                    renderItem.renderItemAndEffectIntoGUI(fontRenderer, mc.renderEngine, st, x, y);
                     GL11.glTranslated(0, 0, -3.0);
                 }
             }
 
-            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-            Lighting.turnOff();
+            GL11.glPopMatrix();
+
+            GL11.glEnable(GL11.GL_LIGHTING);
 
             if(displayAmount) {
                 String s;
-                if (st.count == 1 && !forcenumber){
+                if(st.count == 1 && !forcenumber) {
                     s = "";
-                } else if (st.count < 1000) {
+                } else if(st.count < 1000) {
                     s = st.count + "";
-                } else if (st.count < 100000){
+                } else if(st.count < 100000) {
                     s = st.count / 1000 + "K";
-                } else if (st.count < 1000000){
+                } else if(st.count < 1000000) {
                     s = "0M" + st.count / 100000;
                 } else {
                     s = st.count / 1000000 + "M";
                 }
 
-                GL11.glDisable(2896 /*GL_LIGHTING*/);
-                GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
-                textRenderer.drawWithShadow(s, x + 16 - textRenderer.getWidth(s), y + 8, 0xFFFFFF);
-                GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
-                GL11.glEnable(2896 /*GL_LIGHTING*/);
+                GL11.glDisable(GL11.GL_LIGHTING);
+                GL11.glTranslated(0.0D, 0.0D, 100.0D);
+                drawStringWithShadow(textRenderer, s, x + 16 - textRenderer.getWidth(s), y + 8, 0xFFFFFF);
+                GL11.glTranslated(0.0D, 0.0D, -100.0D);
+                GL11.glEnable(GL11.GL_LIGHTING);
             }
 
             column++;
-            if (column >= columns){
+            if(column >= columns) {
                 row++;
                 column = 0;
             }
         }
-        GL11.glDisable(2896 /*GL_LIGHTING*/);
+        GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
+    }
+
+    /**
+     * Draws the specified string with a shadow.
+     * @throws SecurityException
+     * @throws NoSuchMethodException
+     * @throws IllegalArgumentException
+     * @throws IllegalAccessException
+     * @throws NoSuchFieldException
+     */
+    private static void drawStringWithShadow(TextRenderer textRenderer, String par1Str, int par2, int par3, int par4) {
+        textRenderer.draw(par1Str, par2 + 1, par3 + 1, par4, true);
+
+        GL11.glTranslated(0.0D, 0.0D, 1.0D);
+        textRenderer.draw(par1Str, par2, par3, par4, false);
+        GL11.glTranslated(0.0D, 0.0D, -1.0D);
     }
 
     public static String getCuttedString(String input, int maxLength, TextRenderer renderer) {

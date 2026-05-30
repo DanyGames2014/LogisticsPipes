@@ -6,6 +6,8 @@ import net.danygames2014.buildcraft.block.entity.pipe.PipeConnectionType;
 import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.pipe.ItemSendMode;
 import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
+import net.danygames2014.logisticspipes.gui.hud.ChassisPipeHud;
+import net.danygames2014.logisticspipes.gui.hud.TestHud;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.item.ModuleItem;
 import net.danygames2014.logisticspipes.module.ChassisModule;
@@ -44,7 +46,7 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
     //HUD
     public final LinkedList<ItemIdentifierStack> displayList = new LinkedList<>();
     public final List<PlayerEntity> localModeWatchers = new ArrayList<>();
-//    private HUDChassiePipe HUD;
+    private ChassisPipeHud HUD;
 
     public ChassisLogisticPipeBlockEntity() {
         super();
@@ -88,6 +90,10 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
         
         if (module == null) {
             module = new ChassisModule(getChassisSize(), this);
+        }
+
+        if(HUD == null) {
+           HUD = new ChassisPipeHud(this, module, moduleInventory);
         }
     }
 
@@ -420,5 +426,10 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
     @Override
     public long getSourceId() {
         return getRouterId();
+    }
+
+    @Override
+    public HUDRenderer getRenderer() {
+        return HUD;
     }
 }

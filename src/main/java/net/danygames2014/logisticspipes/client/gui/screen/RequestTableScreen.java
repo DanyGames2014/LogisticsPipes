@@ -1,29 +1,24 @@
 package net.danygames2014.logisticspipes.client.gui.screen;
 
-import net.danygames2014.logisticspipes.block.RequestTableLogisticPipeBlock;
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.entity.RequestTableLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.gui.CheckBoxWidget;
 import net.danygames2014.logisticspipes.gui.ScreenWithDisk;
 import net.danygames2014.logisticspipes.gui.SmallButtonWidget;
 import net.danygames2014.logisticspipes.gui.popup.DiskPopupSubScreen;
-import net.danygames2014.logisticspipes.interfaces.RequestItems;
 import net.danygames2014.logisticspipes.network.DropDiskC2SPacket;
 import net.danygames2014.logisticspipes.network.RequestDiskContentC2SPacket;
 import net.danygames2014.logisticspipes.network.RequestScreenContentC2SPacket;
 import net.danygames2014.logisticspipes.request.RequestHandler;
-import net.danygames2014.logisticspipes.screen.handler.ChassisScreenHandler;
 import net.danygames2014.logisticspipes.screen.handler.RequestTableScreenHandler;
 import net.danygames2014.logisticspipes.util.ItemIdentifier;
 import net.danygames2014.logisticspipes.util.ItemIdentifierStack;
-import net.danygames2014.logisticspipes.util.SimpleInventory;
 import net.danygames2014.logisticspipes.util.gui.BasicGuiHelper;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.platform.Lighting;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
-import org.lwjgl.opengl.GL11;
 
 import java.util.LinkedList;
 
@@ -37,7 +32,7 @@ public class RequestTableScreen extends OrderScreen implements ScreenWithDisk {
     protected DisplayOptions displayOptions = DisplayOptions.Both;
     public RequestTableLogisticPipeBlockEntity table;
 
-    private SmallButtonWidget Macrobutton;
+    private SmallButtonWidget macroButton;
 
     public RequestTableScreen(PlayerEntity player, RequestTableLogisticPipeBlockEntity table) {
         super(table, player, new RequestTableScreenHandler(player, table, 0, 0));
@@ -53,14 +48,11 @@ public class RequestTableScreen extends OrderScreen implements ScreenWithDisk {
         super.init();
         buttons.add(new CheckBoxWidget(32, guiLeft + 75, guiTop + 56, 14, 14, table.refillMatrix));
         this.guiLeft += this.getLeftAddition();
-//        buttons.add(new SmallButtonWidget(3, guiLeft + 10, bottom - 15, 46, 10, "Refresh")); // Refresh
-//        buttons.add(new SmallButtonWidget(13,  guiLeft + 10, bottom - 28, 46, 10, "Content")); // Component
         buttons.add(new SmallButtonWidget(9, guiLeft + 10, bottom - 41, 46, 10, "Both"));
-        buttons.add(Macrobutton = new SmallButtonWidget(12, right - 55, bottom - 60, 50, 10, "Disk"));
-        Macrobutton.active = false;
+        buttons.add(macroButton = new SmallButtonWidget(12, right - 55, bottom - 60, 50, 10, "Disk"));
+        macroButton.active = false;
 
         this.guiLeft -= this.getLeftAddition();
-//        buttons.add(new SmallButtonWidget(14, guiLeft + 75, guiTop + 55, 46, 10, "Request"));
     }
 
     @Override
@@ -96,9 +88,9 @@ public class RequestTableScreen extends OrderScreen implements ScreenWithDisk {
         if(getDisk() != null) {
             itemRenderer.renderGuiItem(textRenderer, minecraft.textureManager, getDisk(), right - 37, bottom - 45);
             Lighting.turnOff();
-            Macrobutton.active = true;
+            macroButton.active = true;
         } else {
-            Macrobutton.active = false;
+            macroButton.active = false;
         }
 
         if(buttons.get(11) instanceof CheckBoxWidget checkBoxWidget && checkBoxWidget.getState()) {

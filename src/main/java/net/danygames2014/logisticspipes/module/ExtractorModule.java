@@ -2,6 +2,8 @@ package net.danygames2014.logisticspipes.module;
 
 import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.pipe.LogisticsManager;
+import net.danygames2014.logisticspipes.gui.hud.modules.ExtractorHud;
+import net.danygames2014.logisticspipes.gui.hud.modules.ItemSinkHud;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.screen.handler.ExtractorScreenHandler;
 import net.danygames2014.logisticspipes.util.ItemHandlerBlockCapabilityInventoryWrapper;
@@ -33,6 +35,8 @@ public class ExtractorModule implements LogisticsModule, SneakyDirectionReceiver
     private int z = 0;
 
     private final List<PlayerEntity> localModeWatchers = new ArrayList<>();
+
+    private ExtractorHud HUD = new ExtractorHud(this);
 
     public ExtractorModule() {
     }
@@ -179,7 +183,7 @@ public class ExtractorModule implements LogisticsModule, SneakyDirectionReceiver
 
     @Override
     public HUDModuleRenderer getRenderer() {
-        return null;
+        return HUD;
     }
 
     // Inventory

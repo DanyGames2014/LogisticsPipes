@@ -11,6 +11,10 @@ import java.util.List;
 public abstract class BasicGuiHud implements HUDRenderer {
     protected final List<HUDButton> buttons = new ArrayList<>();
 
+    protected void addButton(HUDButton button) {
+        buttons.add(button);
+    }
+
     @Override
     public void renderHeadUpDisplay(double d, boolean day, Minecraft mc) {
         for (HUDButton button : buttons) {

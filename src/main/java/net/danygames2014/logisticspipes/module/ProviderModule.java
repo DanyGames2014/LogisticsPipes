@@ -2,6 +2,8 @@ package net.danygames2014.logisticspipes.module;
 
 import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.pipe.ExtractionMode;
+import net.danygames2014.logisticspipes.gui.hud.modules.ItemSinkHud;
+import net.danygames2014.logisticspipes.gui.hud.modules.ProviderModuleHud;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.request.RequestTreeNode;
 import net.danygames2014.logisticspipes.routing.LogisticsOrderManager;
@@ -43,6 +45,8 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
     public LinkedList<ItemIdentifierStack> oldList = new LinkedList<>();
 
     private final List<PlayerEntity> localModeWatchers = new ArrayList<>();
+
+    private ProviderModuleHud HUD = new ProviderModuleHud(this);
 
     public ProviderModule() {
     }
@@ -304,7 +308,7 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
 
     @Override
     public HUDModuleRenderer getRenderer() {
-        return null;
+        return HUD;
     }
 
     @Override

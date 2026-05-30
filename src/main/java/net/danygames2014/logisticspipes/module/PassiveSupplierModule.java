@@ -1,6 +1,8 @@
 package net.danygames2014.logisticspipes.module;
 
 import net.danygames2014.logisticspipes.LogisticsPipes;
+import net.danygames2014.logisticspipes.gui.hud.modules.ItemSinkHud;
+import net.danygames2014.logisticspipes.gui.hud.modules.PassiveSupplierHud;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.screen.handler.PassiveSupplierScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
@@ -24,6 +26,8 @@ public class PassiveSupplierModule implements LogisticsModule, ClientInformation
     private int z = 0;
 
     private final List<PlayerEntity> localModeWatchers = new ArrayList<>();
+
+    private PassiveSupplierHud HUD = new PassiveSupplierHud(this);
 
     @Override
     public void registerHandler(InventoryProvider invProvider, SendRoutedItem itemSender, WorldProvider world) {
@@ -121,7 +125,7 @@ public class PassiveSupplierModule implements LogisticsModule, ClientInformation
 
     @Override
     public HUDModuleRenderer getRenderer() {
-        return null;
+        return HUD;
     }
 
     @Override
