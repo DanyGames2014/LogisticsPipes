@@ -95,15 +95,17 @@ public class LogisticsNetworkManager {
             }
 
             // Discover the routers neigbors
-            Long2IntOpenHashMap neighborTable = current.getNeighborTable();
-            for (long neighborId : neighborTable.keySet()) {
-                Router neighborRouter = RoutingUtil.getRouter(world, neighborId);
-                if (!closed.contains(neighborRouter)) {
-                    open.enqueue(RoutingUtil.getRouter(world, neighborId));
+            if (current != null) {
+                Long2IntOpenHashMap neighborTable = current.getNeighborTable();
+                for (long neighborId : neighborTable.keySet()) {
+                    Router neighborRouter = RoutingUtil.getRouter(world, neighborId);
+                    if (!closed.contains(neighborRouter)) {
+                        open.enqueue(RoutingUtil.getRouter(world, neighborId));
+                    }
                 }
-            }
 
-            closed.add(current);
+                closed.add(current);
+            }
         }
 
         return closed;
