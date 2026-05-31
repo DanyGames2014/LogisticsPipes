@@ -18,7 +18,6 @@ import net.danygames2014.logisticspipes.util.ItemMessage;
 import net.danygames2014.logisticspipes.util.gui.BasicGuiHelper;
 import net.glasslauncher.mods.gcapi3.api.GCAPI;
 import net.glasslauncher.mods.gcapi3.impl.GlassYamlFile;
-import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.client.render.item.ItemRenderer;
@@ -35,7 +34,6 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSearch {
 

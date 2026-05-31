@@ -1,13 +1,11 @@
 package net.danygames2014.logisticspipes.gui.popup;
 
 import net.danygames2014.logisticspipes.client.gui.screen.LogisticsBaseScreen;
-import net.danygames2014.logisticspipes.client.gui.screen.NormalOrderScreenMk2;
 import net.danygames2014.logisticspipes.gui.ScreenWithDisk;
 import net.danygames2014.logisticspipes.gui.SmallButtonWidget;
 import net.danygames2014.logisticspipes.gui.SubScreen;
 import net.danygames2014.logisticspipes.gui.TextInputWidget;
 import net.danygames2014.logisticspipes.interfaces.ItemSearch;
-import net.danygames2014.logisticspipes.network.RequestDiskContentC2SPacket;
 import net.danygames2014.logisticspipes.network.SetDiskContentC2SPacket;
 import net.danygames2014.logisticspipes.util.ItemIdentifier;
 import net.danygames2014.logisticspipes.util.ItemIdentifierStack;

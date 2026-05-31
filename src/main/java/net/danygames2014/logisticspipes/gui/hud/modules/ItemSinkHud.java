@@ -21,7 +21,7 @@ public class ItemSinkHud implements HUDModuleRenderer {
     public void renderContent() {
         Minecraft mc = Minecraft.INSTANCE;
         GL11.glScalef(1.0F, 1.0F, -0.00001F);
-        BasicGuiHelper.renderItemIdentifierStackListIntoGui(ItemIdentifierStack.getListFromInventory(module.getFilterInventory()), null, 0, -25, -32, 3, 9, 18, 18, mc, false, false, true, true);
+        BasicGuiHelper.renderItemIdentifierStackListIntoHud(ItemIdentifierStack.getListFromInventory(module.getFilterInventory()), null, 0, -25, -32, 3, 9, 18, 18, mc, false, false, true, true);
         GL11.glScalef(1.0F, 1.0F, 1 / -0.00001F);
         mc.textRenderer.draw("Default:" , -29, 25, 0);
         if(module.isDefaultRoute()) {

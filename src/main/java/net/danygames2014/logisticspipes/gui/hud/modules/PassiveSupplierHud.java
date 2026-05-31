@@ -22,7 +22,7 @@ public class PassiveSupplierHud implements HUDModuleRenderer {
     public void renderContent() {
         Minecraft mc = Minecraft.INSTANCE;
         GL11.glScalef(1.0F, 1.0F, -0.000001F);
-        BasicGuiHelper.renderItemIdentifierStackListIntoGui(ItemIdentifierStack.getListFromInventory(module.getFilterInventory()), null, 0, -25, -32, 3, 9, 18, 18, mc, true, true, true, true);
+        BasicGuiHelper.renderItemIdentifierStackListIntoHud(ItemIdentifierStack.getListFromInventory(module.getFilterInventory()), null, 0, -25, -32, 3, 9, 18, 18, mc, true, true, true, true);
         GL11.glScalef(1.0F, 1.0F, 1 / -0.000001F);
     }
 

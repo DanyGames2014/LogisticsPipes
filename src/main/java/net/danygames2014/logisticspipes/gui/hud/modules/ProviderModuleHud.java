@@ -66,7 +66,7 @@ public class ProviderModuleHud implements HUDModuleRenderer {
     public void renderContent() {
         Minecraft mc = Minecraft.INSTANCE;
         GL11.glScalef(1.0F, 1.0F, -0.00001F);
-        BasicGuiHelper.renderItemIdentifierStackListIntoGui(module.displayList, null, page, -25, -24, 3, 9, 18, 18, mc, true, true, true, true);
+        BasicGuiHelper.renderItemIdentifierStackListIntoHud(module.displayList, null, page, -25, -24, 3, 9, 18, 18, mc, true, true, true, true);
         GL11.glScalef(1.0F, 1.0F, 1 / -0.00001F);
     }
 
