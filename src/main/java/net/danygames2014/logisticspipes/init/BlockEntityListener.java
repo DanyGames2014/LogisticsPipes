@@ -12,15 +12,15 @@ public class BlockEntityListener {
 
     @EventListener
     public void registerBlockEntities(BlockEntityRegisterEvent event) {
-        event.register(BasicLogisticPipeBlockEntity.class, NAMESPACE.id("basic_logistic_pipe").toString());
-        event.register(ChassisLogisticPipeBlockEntity.class, NAMESPACE.id("chassis_logistic_pipe").toString());
-        event.register(SupplierLogisticPipeBlockEntity.class, NAMESPACE.id("supplier_logistic_pipe").toString());
-        event.register(CraftingLogisticPipeBlockEntity.class, NAMESPACE.id("crafting_logistic_pipe").toString());
-        event.register(CraftingLogisticPipeBlockEntityMk2.class, NAMESPACE.id("crafting_logistic_pipe_mk2").toString());
-        event.register(SatelliteLogisticPipeBlockEntity.class, NAMESPACE.id("satellite_logistic_pipe").toString());
-        event.register(ProviderLogisticPipeBlockEntity.class, NAMESPACE.id("provider_logistic_pipe").toString());
-        event.register(ProviderLogisticPipeBlockEntityMk2.class, NAMESPACE.id("provider_logistic_pipe_mk2").toString());
-        event.register(RequestLogisticPipeBlockEntity.class, NAMESPACE.id("request_logistic_pipe").toString());
-        event.register(RequestTableLogisticPipeBlockEntity.class, NAMESPACE.id("request_table").toString());
+        event.register(NAMESPACE.id("basic_logistic_pipe"), BasicLogisticPipeBlockEntity.class);
+        event.register(NAMESPACE.id("chassis_logistic_pipe"), ChassisLogisticPipeBlockEntity.class);
+        event.register(NAMESPACE.id("supplier_logistic_pipe"), SupplierLogisticPipeBlockEntity.class);
+        event.register(NAMESPACE.id("crafting_logistic_pipe"), CraftingLogisticPipeBlockEntity.class);
+        event.register(NAMESPACE.id("crafting_logistic_pipe_mk2"), CraftingLogisticPipeBlockEntityMk2.class);
+        event.register(NAMESPACE.id("satellite_logistic_pipe"), SatelliteLogisticPipeBlockEntity.class);
+        event.register(NAMESPACE.id("provider_logistic_pipe"), ProviderLogisticPipeBlockEntity.class);
+        event.register(NAMESPACE.id("provider_logistic_pipe_mk2"), ProviderLogisticPipeBlockEntityMk2.class);
+        event.register(NAMESPACE.id("request_logistic_pipe"), RequestLogisticPipeBlockEntity.class);
+        event.register(NAMESPACE.id("request_table"), RequestTableLogisticPipeBlockEntity.class);
     }
 }
