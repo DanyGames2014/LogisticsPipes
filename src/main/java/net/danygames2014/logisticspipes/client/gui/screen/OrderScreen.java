@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSearch {
 
     protected final RequestItems itemRequester;
@@ -158,10 +159,10 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
             textRenderer.draw("Popup", guiLeft + 25 , bottom - 56, 0xA0A0A0);
         }
 
-        String StackrequestCount = ""+(requestCount/getStackAmount()) + "+" + (requestCount % getStackAmount());
+        String StackrequestCount = (requestCount/getStackAmount()) + "+" + (requestCount % getStackAmount());
 
         textRenderer.draw(requestCount + "", xCenter - textRenderer.getWidth(requestCount+"") / 2, bottom - 24, 0x404040);
-        textRenderer.draw(StackrequestCount + "", xCenter - textRenderer.getWidth(StackrequestCount+"") / 2, bottom - 14, 0x404040);
+        textRenderer.draw(StackrequestCount, xCenter - textRenderer.getWidth(StackrequestCount) / 2, bottom - 14, 0x404040);
 
         textInputWidget.render();
 
@@ -250,8 +251,9 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
     private boolean isSearched(String value, String search) {
         boolean flag = true;
         for(String s:search.split(" ")) {
-            if(!value.contains(s)) {
+            if (!value.contains(s)) {
                 flag = false;
+                break;
             }
         }
         return flag;
@@ -411,6 +413,7 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
         }
     }
 
+    // TODO: make it so you can request more craftables than there are in storage
     @Override
     protected void buttonClicked(ButtonWidget button) {
         clickWasButton = true;
