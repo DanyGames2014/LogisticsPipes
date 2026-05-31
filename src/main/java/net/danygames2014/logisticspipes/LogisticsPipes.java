@@ -37,6 +37,7 @@ public class LogisticsPipes {
     public static Block basicItemPipe;
     public static Block requestItemPipe;
     public static Block requestItemPipeMk2;
+    public static Block remoteOrdererItemPipe;
     public static Block providerItemPipe;
     public static Block providerItemPipeMk2;
     public static Block supplierItemPipe;
@@ -127,6 +128,17 @@ public class LogisticsPipes {
                 LogisticItemPipeTransporter::new,
                 RequestLogisticPipeBlockEntity::new
         ).setTranslationKey(NAMESPACE, "request_item_pipe_mk2").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
+
+        remoteOrdererItemPipe = new LogisticPipeBlock(
+                NAMESPACE.id("remote_orderer_item_pipe"),
+                pipeMaterial,
+                NAMESPACE.id("block/pipe/remote_orderer_item_pipe"),
+                null,
+                PipeType.ITEM,
+                logisticPipeBehavior,
+                LogisticItemPipeTransporter::new,
+                RemoteOrdererLogisticPipeBlockEntity::new
+        ).setTranslationKey(NAMESPACE, "remote_orderer_item_pipe").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
 
         providerItemPipe = new LogisticPipeBlock(
                 NAMESPACE.id("provider_item_pipe"),

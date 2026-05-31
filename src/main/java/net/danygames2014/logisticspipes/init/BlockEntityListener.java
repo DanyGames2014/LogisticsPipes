@@ -20,6 +20,7 @@ public class BlockEntityListener {
         event.register(NAMESPACE.id("satellite_logistic_pipe"), SatelliteLogisticPipeBlockEntity.class);
         event.register(NAMESPACE.id("provider_logistic_pipe"), ProviderLogisticPipeBlockEntity.class);
         event.register(NAMESPACE.id("provider_logistic_pipe_mk2"), ProviderLogisticPipeBlockEntityMk2.class);
+        event.register(NAMESPACE.id("remote_orderer_logistic_pipe"), RemoteOrdererLogisticPipeBlockEntity.class);
         event.register(NAMESPACE.id("request_logistic_pipe"), RequestLogisticPipeBlockEntity.class);
         event.register(NAMESPACE.id("request_table"), RequestTableLogisticPipeBlockEntity.class);
     }

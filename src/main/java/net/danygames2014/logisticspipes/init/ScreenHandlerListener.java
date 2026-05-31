@@ -5,18 +5,24 @@ import net.danygames2014.logisticspipes.client.gui.screen.*;
 import net.danygames2014.logisticspipes.interfaces.RequestItems;
 import net.danygames2014.logisticspipes.interfaces.SneakyDirectionReceiver;
 import net.danygames2014.logisticspipes.module.*;
+import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.gui.screen.GuiHandler;
 import net.modificationstation.stationapi.api.event.registry.GuiHandlerRegistryEvent;
 import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.api.util.Namespace;
+import net.modificationstation.stationapi.api.util.SideUtil;
+
+import java.util.Optional;
 
 public class ScreenHandlerListener {
     @Entrypoint.Namespace
@@ -32,6 +38,7 @@ public class ScreenHandlerListener {
         event.register(NAMESPACE.id("provider_pipe"), new GuiHandler(this::openProviderPipeScreen, ProviderLogisticPipeBlockEntity::new));
         event.register(NAMESPACE.id("normal_order"), new GuiHandler(this::openNormalOrderScreen, () -> null));
         event.register(NAMESPACE.id("normal_order_mk2"), new GuiHandler(this::openNormalOrderScreenMk2, () -> null));
+        event.register(NAMESPACE.id("remote_order"), new GuiHandler(this::openRemoteOrderScreen, () -> null));
         event.register(NAMESPACE.id("request_table"), new GuiHandler(this::openRequestTableScreen, RequestTableLogisticPipeBlockEntity::new));
         event.register(NAMESPACE.id("passive_supplier"), new GuiHandler(this::openPassiveSupplierScreen, PassiveSupplierModule::new));
         event.register(NAMESPACE.id("item_sink"), new GuiHandler(this::openItemSinkScreen, ItemSinkModule::new));
@@ -74,6 +81,29 @@ public class ScreenHandlerListener {
         BlockEntity blockEntity = player.world.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]);
         if (blockEntity instanceof RequestLogisticPipeBlockEntity pipe) {
             return new NormalOrderScreenMk2(pipe, player);
+        }
+
+        return null;
+    }
+
+    private Screen openRemoteOrderScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
+        BlockEntity blockEntity = SideUtil.get(() -> {
+
+            if(message.ints[4] == player.world.dimension.id && player.world.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]) instanceof RemoteOrdererLogisticPipeBlockEntity pipe){
+                return pipe;
+            }
+            return null;
+        }, () -> {
+//            MinecraftServer server = MinecraftServer.class.cast(FabricLoader.getInstance().getGameInstance());
+//            for(World serverWorld : server.worlds) {
+//                if(message.ints[4] == serverWorld.dimension.id && serverWorld.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]) instanceof RemoteOrdererLogisticPipeBlockEntity pipe){
+//                    return pipe;
+//                }
+//            }
+            return null;
+        });
+        if (blockEntity instanceof RequestItems requestItems) {
+            return new NormalOrderScreen(requestItems, player);
         }
 
         return null;
