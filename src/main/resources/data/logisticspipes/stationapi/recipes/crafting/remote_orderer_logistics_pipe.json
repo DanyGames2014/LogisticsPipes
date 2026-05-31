@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "c",
+    "p"
+  ],
+  "key": {
+    "c": {
+      "item": "buildcraft:redstone_emerald_chipset"
+    },
+    "p": {
+      "item": "logisticspipes:basic_item_pipe"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:remote_orderer_item_pipe",
+    "count": 1
+  }
+}

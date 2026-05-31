@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "dcd",
+    "dgd",
+    "ddd"
+  ],
+  "key": {
+    "d": {
+      "tag": "c:dusts/glowstone"
+    },
+    "c": {
+      "item": "buildcraft:redstone_diamond_chipset"
+    },
+    "g": {
+      "item": "minecraft:glass"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:hud_glass",
+    "count": 1
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "c",
+    "i"
+  ],
+  "key": {
+    "c": {
+      "item": "buildcraft:redstone_golden_chipset"
+    },
+    "i": {
+      "item": "logisticspipes:item_sink_module"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:mod_item_sink_module",
+    "count": 1
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " c ",
+    "d d"
+  ],
+  "key": {
+    "d": {
+      "tag": "c:gems/diamond"
+    },
+    "c": {
+      "item": "buildcraft:redstone_diamond_chipset"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:hud_nose_bridge",
+    "count": 1
+  }
+}

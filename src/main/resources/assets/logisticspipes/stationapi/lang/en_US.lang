@@ -35,6 +35,9 @@ item.logisticspipes.terminus_module.name=Terminus Module
 item.logisticspipes.quick_sort_module.name=QuickSort Module
 
 item.logisticspipes.disk.name=Logistics Disk
+item.logisticspipes.hud_bow.name=Logistics HUD Bow
+item.logisticspipes.hud_glass.name=Logistics HUD Glass
+item.logisticspipes.hud_nose_bridge.name=Logistics HUD Nose Bridge
 item.logisticspipes.hud_glasses.name=Logistics HUD Glasses
 
 item.logisticspipes.remote_orderer.name=Remote Orderer

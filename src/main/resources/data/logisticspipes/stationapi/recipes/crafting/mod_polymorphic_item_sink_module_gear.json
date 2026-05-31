@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "g",
+    "i"
+  ],
+  "key": {
+    "g": {
+      "item": "buildcraft:golden_gear"
+    },
+    "i": {
+      "item": "logisticspipes:polymorphic_item_sink_module"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:mod_polymorphic_item_sink_module",
+    "count": 1
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "sws",
+    "lvr",
+    "chc"
+  ],
+  "key": {
+    "s": {
+      "item": "minecraft:stone"
+    },
+    "w": {
+      "item": "minecraft:crafting_table"
+    },
+    "l": {
+      "item": "logisticspipes:crafting_item_pipe_mk2"
+    },
+    "v": {
+      "item": "buildcraft:chute"
+    },
+    "r": {
+      "item": "logisticspipes:request_item_pipe_mk2"
+    },
+    "c": {
+      "item": "buildcraft:redstone_diamond_chipset"
+    },
+    "h": {
+      "item": "minecraft:chest"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:request_table",
+    "count": 1
+  }
+}

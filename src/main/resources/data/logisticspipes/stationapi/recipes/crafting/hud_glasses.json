@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "b b",
+    "gng"
+  ],
+  "key": {
+    "b": {
+      "item": "logisticspipes:hud_bow"
+    },
+    "g": {
+      "item": "logisticspipes:hud_glass"
+    },
+    "n": {
+      "item": "logisticspipes:hud_nose_bridge"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:hud_glasses",
+    "count": 1
+  }
+}

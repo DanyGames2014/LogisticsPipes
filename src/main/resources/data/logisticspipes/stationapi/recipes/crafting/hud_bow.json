@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "ddd",
+    "  c"
+  ],
+  "key": {
+    "d": {
+      "tag": "c:gems/diamond"
+    },
+    "c": {
+      "item": "buildcraft:redstone_diamond_chipset"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:hud_bow",
+    "count": 1
+  }
+}

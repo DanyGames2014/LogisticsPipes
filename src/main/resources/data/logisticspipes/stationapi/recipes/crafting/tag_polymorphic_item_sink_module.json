@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "b",
+    "i"
+  ],
+  "key": {
+    "b": {
+      "item": "minecraft:book"
+    },
+    "i": {
+      "item": "logisticspipes:polymorphic_item_sink_module"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:tag_polymorphic_item_sink_module",
+    "count": 1
+  }
+}
