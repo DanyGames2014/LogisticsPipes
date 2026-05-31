@@ -34,6 +34,9 @@
     ],
     "nyalib:event_bus": [
       "net.danygames2014.logisticspipes.init.CapabilityListener"
+    ],
+    "alwaysmoreitems:plugin": [
+      "net.danygames2014.logisticspipes.compat.ami.LogisticsPipesAmiPlugin"
     ]
   },
   "accessWidener": "logisticspipes.accesswidener",
