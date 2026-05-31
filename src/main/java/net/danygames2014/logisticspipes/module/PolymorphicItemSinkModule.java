@@ -13,7 +13,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 public class PolymorphicItemSinkModule implements LogisticsModule {
-    private InventoryProvider invProvider;
+    protected InventoryProvider invProvider;
 
     @Override
     public void registerHandler(InventoryProvider invProvider, SendRoutedItem itemSender, WorldProvider world) {

@@ -1,9 +1,14 @@
 package net.danygames2014.logisticspipes.util;
 
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.modificationstation.stationapi.api.registry.ItemRegistry;
+import net.modificationstation.stationapi.api.tag.TagKey;
+import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.HashMap;
+import java.util.Set;
 
 public class InventoryUtil {
     private final Inventory inventory;
@@ -86,6 +91,29 @@ public class InventoryUtil {
             ItemStack stack = inventory.getStack(i);
             if (stack == null) continue;
             if (ItemIdentifier.get(stack) == item) return true;
+        }
+        return false;
+    }
+
+    public boolean containsModItem(ItemIdentifier item) {
+        for (int i = 0; i < inventory.size(); i++) {
+            ItemStack stack = inventory.getStack(i);
+            if (stack == null) continue;
+            Identifier itemId = ItemRegistry.INSTANCE.getId(item.item);
+            Identifier otherId = ItemRegistry.INSTANCE.getId(stack.getItem());
+            if(itemId != null && otherId != null && itemId.namespace == otherId.namespace) return true;
+        }
+        return false;
+    }
+
+    public boolean containsItemTag(ItemIdentifier item) {
+        for (int i = 0; i < inventory.size(); i++) {
+            ItemStack stack = inventory.getStack(i);
+            if (stack == null) continue;
+            Set<TagKey<Item>> tags = stack.getItem().getRegistryEntry().getTags();
+            for(TagKey<Item> tag : item.item.getRegistryEntry().getTags()) {
+                if(tags.contains(tag)) return true;
+            }
         }
         return false;
     }

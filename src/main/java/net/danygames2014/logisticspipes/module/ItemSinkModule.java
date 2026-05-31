@@ -17,8 +17,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ItemSinkModule implements LogisticsModule, ClientInformationProvider, HUDModuleHandler, ModuleWatchReceiver, ModuleInventoryReceive, Inventory {
-    private final SimpleInventory filterInventory = new SimpleInventory(9, "Requested items", 1, this::markDirty);
-    private boolean isDefaultRoute;
+    protected final SimpleInventory filterInventory = new SimpleInventory(9, "Requested items", 1, this::markDirty);
+    protected boolean isDefaultRoute;
     private int slot = 0;
     private int x = 0;
     private int y = 0;

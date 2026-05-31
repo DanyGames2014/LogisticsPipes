@@ -60,7 +60,11 @@ public class LogisticsPipes {
     public static Item providerModule;
     public static Item passiveSupplierModule;
     public static Item itemSinkModule;
+    public static Item modItemSinkModule;
+    public static Item tagItemSinkModule;
     public static Item polymorphicItemSinkModule;
+    public static Item modPolymorphicItemSinkModule;
+    public static Item tagPolymorphicItemSinkModule;
     public static Item extractorModule;
     public static Item extractorModuleMk2;
     public static Item extractorModuleMk3;
@@ -285,7 +289,11 @@ public class LogisticsPipes {
         providerModule = new ModuleItem(NAMESPACE.id("provider_module"), ProviderModule::new).setTranslationKey(NAMESPACE, "provider_module");
         passiveSupplierModule = new ModuleItem(NAMESPACE.id("passive_supplier_module"), PassiveSupplierModule::new).setTranslationKey(NAMESPACE, "passive_supplier_module");
         itemSinkModule = new ModuleItem(NAMESPACE.id("item_sink_module"), ItemSinkModule::new).setTranslationKey(NAMESPACE, "item_sink_module");
+        modItemSinkModule = new ModuleItem(NAMESPACE.id("mod_item_sink_module"), ModItemSinkModule::new).setTranslationKey(NAMESPACE, "mod_item_sink_module");
+        tagItemSinkModule = new ModuleItem(NAMESPACE.id("tag_item_sink_module"), TagItemSinkModule::new).setTranslationKey(NAMESPACE, "tag_item_sink_module");
         polymorphicItemSinkModule = new ModuleItem(NAMESPACE.id("polymorphic_item_sink_module"), PolymorphicItemSinkModule::new).setTranslationKey(NAMESPACE, "polymorphic_item_sink_module");
+        modPolymorphicItemSinkModule = new ModuleItem(NAMESPACE.id("mod_polymorphic_item_sink_module"), ModPolymorphicItemSinkModule::new).setTranslationKey(NAMESPACE, "mod_polymorphic_item_sink_module");
+        tagPolymorphicItemSinkModule = new ModuleItem(NAMESPACE.id("tag_polymorphic_item_sink_module"), TagPolymorphicItemSinkModule::new).setTranslationKey(NAMESPACE, "tag_polymorphic_item_sink_module");
         extractorModule = new ModuleItem(NAMESPACE.id("extractor_module"), ExtractorModule::new).setTranslationKey(NAMESPACE, "extractor_module");
         extractorModuleMk2 = new ModuleItem(NAMESPACE.id("extractor_module_mk2"), ExtractorModuleMk2::new).setTranslationKey(NAMESPACE, "extractor_module_mk2");
         extractorModuleMk3 = new ModuleItem(NAMESPACE.id("extractor_module_mk3"), ExtractorModuleMk3::new).setTranslationKey(NAMESPACE, "extractor_module_mk3");
