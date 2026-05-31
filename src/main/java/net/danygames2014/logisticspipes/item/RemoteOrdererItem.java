@@ -7,6 +7,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.ServerWorld;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.client.item.CustomTooltipProvider;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
@@ -89,16 +90,16 @@ public class RemoteOrdererItem extends TemplateItem implements CustomTooltipProv
             }
             return null;
         }, () -> {
-//            MinecraftServer server = MinecraftServer.class.cast(FabricLoader.getInstance().getGameInstance());
-//            for(World serverWorld : server.worlds) {
-//                Optional<Identifier> worldDimId = DimensionRegistry.INSTANCE.getIdByLegacyId(serverWorld.dimension.id);
-//                if(worldDimId.isEmpty()){
-//                    continue;
-//                }
-//                if(id.equals(worldDimId.get()) && serverWorld.getBlockEntity(x, y, z) instanceof RemoteOrdererLogisticPipeBlockEntity pipe){
-//                    return pipe;
-//                }
-//            }
+            MinecraftServer server = MinecraftServer.class.cast(FabricLoader.getInstance().getGameInstance());
+            for(ServerWorld serverWorld : server.worlds) {
+                Optional<Identifier> worldDimId = DimensionRegistry.INSTANCE.getIdByLegacyId(serverWorld.dimension.id);
+                if(worldDimId.isEmpty()){
+                    continue;
+                }
+                if(id.equals(worldDimId.get()) && serverWorld.getBlockEntity(x, y, z) instanceof RemoteOrdererLogisticPipeBlockEntity pipe){
+                    return pipe;
+                }
+            }
             return null;
         });
     }

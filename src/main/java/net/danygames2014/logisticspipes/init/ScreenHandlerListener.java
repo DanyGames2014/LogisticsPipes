@@ -13,7 +13,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.World;
+import net.minecraft.world.ServerWorld;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.client.gui.screen.GuiHandler;
 import net.modificationstation.stationapi.api.event.registry.GuiHandlerRegistryEvent;
@@ -21,8 +21,6 @@ import net.modificationstation.stationapi.api.mod.entrypoint.Entrypoint;
 import net.modificationstation.stationapi.api.network.packet.MessagePacket;
 import net.modificationstation.stationapi.api.util.Namespace;
 import net.modificationstation.stationapi.api.util.SideUtil;
-
-import java.util.Optional;
 
 public class ScreenHandlerListener {
     @Entrypoint.Namespace
@@ -88,20 +86,21 @@ public class ScreenHandlerListener {
 
     private Screen openRemoteOrderScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
         BlockEntity blockEntity = SideUtil.get(() -> {
-
-            if(message.ints[4] == player.world.dimension.id && player.world.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]) instanceof RemoteOrdererLogisticPipeBlockEntity pipe){
+            if (message.ints[4] == player.world.dimension.id && player.world.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]) instanceof RemoteOrdererLogisticPipeBlockEntity pipe) {
                 return pipe;
             }
             return null;
+            
         }, () -> {
-//            MinecraftServer server = MinecraftServer.class.cast(FabricLoader.getInstance().getGameInstance());
-//            for(World serverWorld : server.worlds) {
-//                if(message.ints[4] == serverWorld.dimension.id && serverWorld.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]) instanceof RemoteOrdererLogisticPipeBlockEntity pipe){
-//                    return pipe;
-//                }
-//            }
+            MinecraftServer server = MinecraftServer.class.cast(FabricLoader.getInstance().getGameInstance());
+            for (ServerWorld serverWorld : server.worlds) {
+                if (message.ints[4] == serverWorld.dimension.id && serverWorld.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]) instanceof RemoteOrdererLogisticPipeBlockEntity pipe) {
+                    return pipe;
+                }
+            }
             return null;
         });
+        
         if (blockEntity instanceof RequestItems requestItems) {
             return new NormalOrderScreen(requestItems, player);
         }
