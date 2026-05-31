@@ -31,6 +31,24 @@ item.logisticspipes.quick_sort_module.name=QuickSort Module
 
 item.logisticspipes.disk.name=Logistics Disk
 
+item.logisticspipes.remote_orderer.name=Remote Orderer
+item.logisticspipes.white_remote_orderer.name=Remote Orderer
+item.logisticspipes.orange_remote_orderer.name=Remote Orderer
+item.logisticspipes.magenta_remote_orderer.name=Remote Orderer
+item.logisticspipes.light_blue_remote_orderer.name=Remote Orderer
+item.logisticspipes.yellow_remote_orderer.name=Remote Orderer
+item.logisticspipes.lime_remote_orderer.name=Remote Orderer
+item.logisticspipes.pink_remote_orderer.name=Remote Orderer
+item.logisticspipes.gray_remote_orderer.name=Remote Orderer
+item.logisticspipes.light_gray_remote_orderer.name=Remote Orderer
+item.logisticspipes.cyan_remote_orderer.name=Remote Orderer
+item.logisticspipes.purple_remote_orderer.name=Remote Orderer
+item.logisticspipes.blue_remote_orderer.name=Remote Orderer
+item.logisticspipes.brown_remote_orderer.name=Remote Orderer
+item.logisticspipes.green_remote_orderer.name=Remote Orderer
+item.logisticspipes.red_remote_orderer.name=Remote Orderer
+item.logisticspipes.black_remote_orderer.name=Remote Orderer
+
 # Debug
 item.logisticspipes.magic_wand.name=Magic Wand
 item.logisticspipes.routing_debugger.name=Routing Debugger

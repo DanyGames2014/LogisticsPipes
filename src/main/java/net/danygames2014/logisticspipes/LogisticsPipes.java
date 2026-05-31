@@ -8,10 +8,7 @@ import net.danygames2014.logisticspipes.block.RequestTableLogisticPipeBlock;
 import net.danygames2014.logisticspipes.block.entity.*;
 import net.danygames2014.logisticspipes.block.pipe.behavior.LogisticPipeBehavior;
 import net.danygames2014.logisticspipes.block.pipe.transporter.LogisticItemPipeTransporter;
-import net.danygames2014.logisticspipes.item.DiskItem;
-import net.danygames2014.logisticspipes.item.MagicWand;
-import net.danygames2014.logisticspipes.item.ModuleItem;
-import net.danygames2014.logisticspipes.item.RoutingDebugger;
+import net.danygames2014.logisticspipes.item.*;
 import net.danygames2014.logisticspipes.module.*;
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
@@ -73,6 +70,24 @@ public class LogisticsPipes {
     public static Item quickSortModule;
 
     public static Item disk;
+    
+    public static Item remoteOrderer;
+    public static Item whiteRemoteOrderer;
+    public static Item orangeRemoteOrderer;
+    public static Item magentaRemoteOrderer;
+    public static Item lightBlueRemoteOrderer;
+    public static Item yellowRemoteOrderer;
+    public static Item limeRemoteOrderer;
+    public static Item pinkRemoteOrderer;
+    public static Item grayRemoteOrderer;
+    public static Item lightGrayRemoteOrderer;
+    public static Item cyanRemoteOrderer;
+    public static Item purpleRemoteOrderer;
+    public static Item blueRemoteOrderer;
+    public static Item brownRemoteOrderer;
+    public static Item greenRemoteOrderer;
+    public static Item redRemoteOrderer;
+    public static Item blackRemoteOrderer;
 
     @EventListener
     public void registerBlocks(BlockRegistryEvent event) {
@@ -268,5 +283,23 @@ public class LogisticsPipes {
         quickSortModule = new ModuleItem(NAMESPACE.id("quick_sort_module"), QuickSortModule::new).setTranslationKey(NAMESPACE, "quick_sort_module");
 
         disk = new DiskItem(NAMESPACE.id("disk")).setTranslationKey(NAMESPACE, "disk");
+        
+        remoteOrderer = new RemoteOrdererItem(NAMESPACE.id("remote_orderer")).setTranslationKey(NAMESPACE, "remote_orderer");
+        whiteRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("white_remote_orderer")).setTranslationKey(NAMESPACE, "white_remote_orderer");
+        orangeRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("orange_remote_orderer")).setTranslationKey(NAMESPACE, "orange_remote_orderer");
+        magentaRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("magenta_remote_orderer")).setTranslationKey(NAMESPACE, "magenta_remote_orderer");
+        lightBlueRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("light_blue_remote_orderer")).setTranslationKey(NAMESPACE, "light_blue_remote_orderer");
+        yellowRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("yellow_remote_orderer")).setTranslationKey(NAMESPACE, "yellow_remote_orderer");
+        limeRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("lime_remote_orderer")).setTranslationKey(NAMESPACE, "lime_remote_orderer");
+        pinkRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("pink_remote_orderer")).setTranslationKey(NAMESPACE, "pink_remote_orderer");
+        grayRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("gray_remote_orderer")).setTranslationKey(NAMESPACE, "gray_remote_orderer");
+        lightGrayRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("light_gray_remote_orderer")).setTranslationKey(NAMESPACE, "light_gray_remote_orderer");
+        cyanRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("cyan_remote_orderer")).setTranslationKey(NAMESPACE, "cyan_remote_orderer");
+        purpleRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("purple_remote_orderer")).setTranslationKey(NAMESPACE, "purple_remote_orderer");
+        blueRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("blue_remote_orderer")).setTranslationKey(NAMESPACE, "blue_remote_orderer");
+        brownRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("brown_remote_orderer")).setTranslationKey(NAMESPACE, "brown_remote_orderer");
+        greenRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("green_remote_orderer")).setTranslationKey(NAMESPACE, "green_remote_orderer");
+        redRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("red_remote_orderer")).setTranslationKey(NAMESPACE, "red_remote_orderer");
+        blackRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("black_remote_orderer")).setTranslationKey(NAMESPACE, "black_remote_orderer");
     }
 }
