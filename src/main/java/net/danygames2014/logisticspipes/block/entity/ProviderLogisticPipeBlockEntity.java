@@ -6,6 +6,7 @@ import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.pipe.ExtractionMode;
 import net.danygames2014.logisticspipes.block.pipe.ItemSendMode;
 import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
+import net.danygames2014.logisticspipes.gui.hud.modules.ProviderHud;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.request.RequestTreeNode;
 import net.danygames2014.logisticspipes.routing.LogisticsOrderManager;
@@ -30,7 +31,7 @@ public class ProviderLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
     public final LinkedList<ItemIdentifierStack> itemList = new LinkedList<>();
     public final LinkedList<ItemIdentifierStack> oldList = new LinkedList<>();
     public final LinkedList<ItemIdentifierStack> itemListOrderer = new LinkedList<>();
-//    private final HUDProvider HUD = new HUDProvider(this);
+    private final ProviderHud HUD = new ProviderHud(this);
 
     protected LogisticsOrderManager orderManager = new LogisticsOrderManager(this::markInventoryDirty);
 
@@ -329,7 +330,7 @@ public class ProviderLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
     @Override
     public HUDRenderer getRenderer() {
-        return super.getRenderer();
+        return HUD;
     }
 
     @Override

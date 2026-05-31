@@ -7,6 +7,7 @@ import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.pipe.ItemSendMode;
 import net.danygames2014.logisticspipes.capability.recipeprovider.CraftingPipeRecipeProviderBlockCapability;
 import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
+import net.danygames2014.logisticspipes.gui.hud.CraftingHud;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.interfaces.routing.CraftItems;
 import net.danygames2014.logisticspipes.network.CraftingPipeCommandC2SPacket;
@@ -42,7 +43,7 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
     public final LinkedList<ItemIdentifierStack> oldList = new LinkedList<>();
     public final LinkedList<ItemIdentifierStack> displayList = new LinkedList<>();
     public final List<PlayerEntity> localModeWatchers = new ArrayList<>();
-//    private final HUDCrafting HUD = new HUDCrafting(this);
+    private final CraftingHud HUD = new CraftingHud(this);
 
     protected int extras;
     private boolean init = false;
@@ -318,7 +319,7 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
     @Override
     public HUDRenderer getRenderer() {
-        return super.getRenderer();
+        return HUD;
     }
 
     @Override

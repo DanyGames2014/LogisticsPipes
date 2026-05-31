@@ -422,14 +422,14 @@ public class BasicGuiHelper {
             int x = left + xSize * column;
             int y = top + ySize * row;
 
-            GL11.glDisable(GL11.GL_LIGHTING);
-
             GL11.glPushMatrix();
-            GL11.glScaled(1d, 1d, -0.2d);
+            GL11.glScaled(1d, 1d, -0.001d);
+            GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 
             if(st != null) {
                 if(disableEffect) {
                     GL11.glTranslated(0, 0, -15);
+                    GL11.glDisable(GL11.GL_LIGHTING);
                     renderItem.renderGuiItem(textRenderer, mc.textureManager, st, x, y);
                     GL11.glTranslated(0, 0, 15);
                 } else {
@@ -441,7 +441,8 @@ public class BasicGuiHelper {
 
             GL11.glPopMatrix();
 
-            GL11.glEnable(GL11.GL_LIGHTING);
+            GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+            Lighting.turnOff();
 
             if(displayAmount) {
                 String s;
@@ -457,11 +458,9 @@ public class BasicGuiHelper {
                     s = st.count / 1000000 + "M";
                 }
 
-                GL11.glDisable(GL11.GL_LIGHTING);
                 GL11.glTranslated(0.0D, 0.0D, 100.0D);
                 drawStringWithShadow(textRenderer, s, x + 16 - textRenderer.getWidth(s), y + 8, 0xFFFFFF);
                 GL11.glTranslated(0.0D, 0.0D, -100.0D);
-                GL11.glEnable(GL11.GL_LIGHTING);
             }
 
             column++;
@@ -470,7 +469,6 @@ public class BasicGuiHelper {
                 column = 0;
             }
         }
-        GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
     }
 

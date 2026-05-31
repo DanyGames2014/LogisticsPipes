@@ -5,6 +5,7 @@ import net.danygames2014.buildcraft.block.entity.pipe.PipeBlockEntity;
 import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.pipe.ItemSendMode;
 import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
+import net.danygames2014.logisticspipes.gui.hud.SatelliteHud;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.network.SatelliteIdC2SPacket;
 import net.danygames2014.logisticspipes.request.RequestManager;
@@ -31,7 +32,7 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
     public final List<PlayerEntity> localModeWatchers = new ArrayList<>();
     public final LinkedList<ItemIdentifierStack> itemList = new LinkedList<>();
     public final LinkedList<ItemIdentifierStack> oldList = new LinkedList<>();
-//    private final HUDSatellite HUD = new HUDSatellite(this);
+    private final SatelliteHud HUD = new SatelliteHud(this);
 
     public static HashSet<SatelliteLogisticPipeBlockEntity> AllSatellites = new HashSet<>();
 
@@ -140,7 +141,7 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
 
     @Override
     public HUDRenderer getRenderer() {
-        return super.getRenderer();
+        return HUD;
     }
 
     @Override

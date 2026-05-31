@@ -94,7 +94,7 @@ public abstract class BasicHUDButton implements HUDButton {
         } else {
             color = 0xe0e0e0;
         }
-        minecraft.textRenderer.drawWithShadow(label, -(minecraft.textRenderer.getWidth(label) / 2) + posX + sizeX / 2, posY + (sizeY - 8) / 2, color);
+        minecraft.textRenderer.draw(label, -(minecraft.textRenderer.getWidth(label) / 2) + posX + sizeX / 2, posY + (sizeY - 8) / 2, color);
         if (hover && !clicked) {
             GL11.glTranslatef(0.0F, 0.0F, 0.02F);
         }
