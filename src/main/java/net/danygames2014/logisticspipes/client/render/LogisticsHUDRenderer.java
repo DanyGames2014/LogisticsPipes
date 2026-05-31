@@ -1,5 +1,6 @@
 package net.danygames2014.logisticspipes.client.render;
 
+import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.interfaces.HUDBlockRendererProvider;
 import net.danygames2014.logisticspipes.interfaces.HUDRendererProvider;
 import net.danygames2014.logisticspipes.util.MathVector;
@@ -154,9 +155,8 @@ public class LogisticsHUDRenderer {
                 && shouldItemStackShowHud(Minecraft.INSTANCE.player.inventory.armor[3]);
     }
 
-    // TODO: this should check debug goggles or something else
     private boolean shouldItemStackShowHud(ItemStack stack) {
-        return stack.itemId == Item.LEATHER_HELMET.id;
+        return stack.itemId == LogisticsPipes.hudGlasses.id;
     }
 
     private boolean displayCross = false;

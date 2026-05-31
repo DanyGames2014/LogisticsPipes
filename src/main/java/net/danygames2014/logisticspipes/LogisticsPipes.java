@@ -71,7 +71,8 @@ public class LogisticsPipes {
     public static Item quickSortModule;
 
     public static Item disk;
-    
+    public static Item hudGlasses;
+
     public static Item remoteOrderer;
     public static Item whiteRemoteOrderer;
     public static Item orangeRemoteOrderer;
@@ -295,7 +296,8 @@ public class LogisticsPipes {
         quickSortModule = new ModuleItem(NAMESPACE.id("quick_sort_module"), QuickSortModule::new).setTranslationKey(NAMESPACE, "quick_sort_module");
 
         disk = new DiskItem(NAMESPACE.id("disk")).setTranslationKey(NAMESPACE, "disk");
-        
+        hudGlasses = new HudGlassesItem(NAMESPACE.id("hud_glasses")).setTranslationKey(NAMESPACE, "hud_glasses");
+
         remoteOrderer = new RemoteOrdererItem(NAMESPACE.id("remote_orderer")).setTranslationKey(NAMESPACE, "remote_orderer");
         whiteRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("white_remote_orderer")).setTranslationKey(NAMESPACE, "white_remote_orderer");
         orangeRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("orange_remote_orderer")).setTranslationKey(NAMESPACE, "orange_remote_orderer");
