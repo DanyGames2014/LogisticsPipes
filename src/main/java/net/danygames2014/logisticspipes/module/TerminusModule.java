@@ -2,6 +2,7 @@ package net.danygames2014.logisticspipes.module;
 
 import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.interfaces.*;
+import net.danygames2014.logisticspipes.network.UpdatePlayerModuleWatchingStatusC2SPacket;
 import net.danygames2014.logisticspipes.screen.handler.TerminusScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -9,6 +10,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
+import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ public class TerminusModule implements LogisticsModule, ClientInformationProvide
     private int z;
     private int slot;
 
-    private final List<PlayerEntity> localModeWatchers = new ArrayList<>();
+    private final PlayerCollectionList localModeWatchers = new PlayerCollectionList();
 
     public TerminusModule() {
     }
@@ -98,22 +100,22 @@ public class TerminusModule implements LogisticsModule, ClientInformationProvide
 
     @Override
     public void startWatching() {
-
+        PacketHelper.send(new UpdatePlayerModuleWatchingStatusC2SPacket(x, y, z, slot, true));
     }
 
     @Override
     public void stopWatching() {
-
+        PacketHelper.send(new UpdatePlayerModuleWatchingStatusC2SPacket(x, y, z, slot, false));
     }
 
     @Override
     public void startWatching(PlayerEntity player) {
-
+        localModeWatchers.add(player);
     }
 
     @Override
     public void stopWatching(PlayerEntity player) {
-
+        localModeWatchers.remove(player);
     }
 
     @Override

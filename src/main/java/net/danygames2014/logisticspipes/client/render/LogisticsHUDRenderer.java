@@ -1,6 +1,7 @@
 package net.danygames2014.logisticspipes.client.render;
 
 import net.danygames2014.logisticspipes.LogisticsPipes;
+import net.danygames2014.logisticspipes.config.Config;
 import net.danygames2014.logisticspipes.interfaces.HUDBlockRendererProvider;
 import net.danygames2014.logisticspipes.interfaces.HUDRendererProvider;
 import net.danygames2014.logisticspipes.util.MathVector;
@@ -72,7 +73,7 @@ public class LogisticsHUDRenderer {
         for (Object blockEntity : Minecraft.INSTANCE.world.blockEntities) {
             if (blockEntity instanceof HUDRendererProvider provider && blockEntity instanceof BlockEntity be) {
                 double dis = Math.hypot(be.x - x + 0.5, Math.hypot(be.y - y + 0.5, be.z - z + 0.5));
-                if (dis < 40 && dis > 0.75) { //Configs.LOGISTICS_HUD_RENDER_DISTANCE
+                if (dis < Config.HUD_CONFIG.hudRenderDistance && dis > 0.75) {
                     newList.add(new Pair<>(dis, provider));
                     if (!list.contains(provider)) {
                         provider.startWatching();

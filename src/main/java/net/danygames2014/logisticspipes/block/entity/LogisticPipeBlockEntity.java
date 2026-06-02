@@ -15,6 +15,7 @@ import net.danygames2014.logisticspipes.config.Config;
 import net.danygames2014.logisticspipes.gui.hud.TestHud;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.network.PipeParticleS2CPacket;
+import net.danygames2014.logisticspipes.network.UpdatePlayerWatchingStatusC2SPacket;
 import net.danygames2014.logisticspipes.routing.LogisticsNetwork;
 import net.danygames2014.logisticspipes.routing.LogisticsNetworkManager;
 import net.danygames2014.logisticspipes.routing.RouteDestination;
@@ -29,6 +30,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
+import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 import java.util.Arrays;
@@ -36,7 +38,7 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
 
-public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements Router, HUDRendererProvider, RequestItems {
+public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements Router, HUDRendererProvider, RequestItems, WatchingHandler {
     public static int pipeCount = 0;
     public int updateOffset = 0;
 
@@ -68,8 +70,8 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
     private int[] queuedParticles = new int[ParticleColor.values().length];
     boolean hasQueuedParticles = false;
-    // HUD Rendering
-//    private final TestHud HUD = new TestHud(this);
+
+    public final PlayerCollectionList watchers = new PlayerCollectionList();
 
     public LogisticPipeBlockEntity() {
         init();
@@ -344,12 +346,28 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
     @Override
     public void startWatching() {
-
+        PacketHelper.send(new UpdatePlayerWatchingStatusC2SPacket(x, y, z, 1, true));
     }
 
     @Override
     public void stopWatching() {
+        PacketHelper.send(new UpdatePlayerWatchingStatusC2SPacket(x, y, z, 1, false));
+    }
 
+    @Override
+    public void playerStartWatching(PlayerEntity player, int mode) {
+        if(mode == 0) {
+            watchers.add(player);
+        }
+        // TODO: add this packet
+//        MainProxy.sendPacketToPlayer(PacketHandler.getPacket(StatUpdate.class).setPipe(this), (Player)player);
+    }
+
+    @Override
+    public void playerStopWatching(PlayerEntity player, int mode) {
+        if(mode == 0) {
+            watchers.remove(player);
+        }
     }
 
     @Override

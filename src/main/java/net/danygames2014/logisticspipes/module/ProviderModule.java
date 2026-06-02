@@ -5,6 +5,7 @@ import net.danygames2014.logisticspipes.block.pipe.ExtractionMode;
 import net.danygames2014.logisticspipes.gui.hud.modules.ItemSinkHud;
 import net.danygames2014.logisticspipes.gui.hud.modules.ProviderModuleHud;
 import net.danygames2014.logisticspipes.interfaces.*;
+import net.danygames2014.logisticspipes.network.UpdatePlayerModuleWatchingStatusC2SPacket;
 import net.danygames2014.logisticspipes.request.RequestTreeNode;
 import net.danygames2014.logisticspipes.routing.LogisticsOrderManager;
 import net.danygames2014.logisticspipes.routing.LogisticsPromise;
@@ -17,6 +18,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
+import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.*;
@@ -44,7 +46,7 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
     public LinkedList<ItemIdentifierStack> displayList = new LinkedList<>();
     public LinkedList<ItemIdentifierStack> oldList = new LinkedList<>();
 
-    private final List<PlayerEntity> localModeWatchers = new ArrayList<>();
+    private final PlayerCollectionList localModeWatchers = new PlayerCollectionList();
 
     private ProviderModuleHud HUD = new ProviderModuleHud(this);
 
@@ -287,12 +289,12 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
 
     @Override
     public void startWatching() {
-//        PacketDispatcher.sendPacketToServer(new PacketPipeInteger(NetworkConstants.HUD_START_WATCHING_MODULE, xCoord, yCoord, zCoord, slot).getPacket());
+        PacketHelper.send(new UpdatePlayerModuleWatchingStatusC2SPacket(x, y, z, slot, true));
     }
 
     @Override
     public void stopWatching() {
-//        PacketDispatcher.sendPacketToServer(new PacketPipeInteger(NetworkConstants.HUD_START_WATCHING_MODULE, xCoord, yCoord, zCoord, slot).getPacket());
+        PacketHelper.send(new UpdatePlayerModuleWatchingStatusC2SPacket(x, y, z, slot, false));
     }
 
     @Override

@@ -4,6 +4,7 @@ import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.gui.hud.modules.ItemSinkHud;
 import net.danygames2014.logisticspipes.gui.hud.modules.PassiveSupplierHud;
 import net.danygames2014.logisticspipes.interfaces.*;
+import net.danygames2014.logisticspipes.network.UpdatePlayerModuleWatchingStatusC2SPacket;
 import net.danygames2014.logisticspipes.screen.handler.PassiveSupplierScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,6 +12,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.screen.ScreenHandler;
+import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
 
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public class PassiveSupplierModule implements LogisticsModule, ClientInformation
     private int y = 0;
     private int z = 0;
 
-    private final List<PlayerEntity> localModeWatchers = new ArrayList<>();
+    private final PlayerCollectionList localModeWatchers = new PlayerCollectionList();
 
     private PassiveSupplierHud HUD = new PassiveSupplierHud(this);
 
@@ -104,12 +106,12 @@ public class PassiveSupplierModule implements LogisticsModule, ClientInformation
 
     @Override
     public void startWatching() {
-//        PacketDispatcher.sendPacketToServer(new PacketPipeInteger(NetworkConstants.HUD_START_WATCHING_MODULE, xCoord, yCoord, zCoord, slot).getPacket());
+        PacketHelper.send(new UpdatePlayerModuleWatchingStatusC2SPacket(x, y, z, slot, true));
     }
 
     @Override
     public void stopWatching() {
-//        PacketDispatcher.sendPacketToServer(new PacketPipeInteger(NetworkConstants.HUD_START_WATCHING_MODULE, xCoord, yCoord, zCoord, slot).getPacket());
+        PacketHelper.send(new UpdatePlayerModuleWatchingStatusC2SPacket(x, y, z, slot, false));
     }
 
     @Override
