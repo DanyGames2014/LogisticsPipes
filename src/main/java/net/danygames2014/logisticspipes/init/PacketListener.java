@@ -39,5 +39,7 @@ public class PacketListener {
         Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("update_module_inventory_content"), UpdateModuleInventoryContentS2CPacket.TYPE);
         Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("update_chassis_content"), UpdateChassisInventoryContentS2CPacket.TYPE);
         Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("update_module_data"), UpdateModuleDataS2CPacket.TYPE);
+        Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("update_pipe_inventory_content"), UpdatePipeInventoryContentS2CPacket.TYPE);
+        Registry.register(PacketTypeRegistry.INSTANCE, NAMESPACE.id("update_pipe_data"), UpdatePipeDataS2CPacket.TYPE);
     }
 }

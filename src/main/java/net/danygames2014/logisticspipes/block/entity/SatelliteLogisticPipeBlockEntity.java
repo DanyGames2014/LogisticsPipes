@@ -1,5 +1,6 @@
 package net.danygames2014.logisticspipes.block.entity;
 
+import net.danygames2014.buildcraft.api.core.Serializable;
 import net.danygames2014.buildcraft.block.PipeBlock;
 import net.danygames2014.buildcraft.block.entity.pipe.PipeBlockEntity;
 import net.danygames2014.logisticspipes.LogisticsPipes;
@@ -8,12 +9,13 @@ import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
 import net.danygames2014.logisticspipes.gui.hud.SatelliteHud;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.network.SatelliteIdC2SPacket;
+import net.danygames2014.logisticspipes.network.UpdatePipeDataS2CPacket;
+import net.danygames2014.logisticspipes.network.UpdatePipeInventoryContentS2CPacket;
+import net.danygames2014.logisticspipes.network.UpdatePlayerWatchingStatusC2SPacket;
 import net.danygames2014.logisticspipes.request.RequestManager;
 import net.danygames2014.logisticspipes.routing.LogisticsNetworkManager;
 import net.danygames2014.logisticspipes.screen.handler.SatelliteScreenHandler;
-import net.danygames2014.logisticspipes.util.ItemHandlerBlockCapabilityInventoryWrapper;
-import net.danygames2014.logisticspipes.util.ItemIdentifier;
-import net.danygames2014.logisticspipes.util.ItemIdentifierStack;
+import net.danygames2014.logisticspipes.util.*;
 import net.danygames2014.nyalib.capability.CapabilityHelper;
 import net.danygames2014.nyalib.capability.block.itemhandler.ItemHandlerBlockCapability;
 import net.minecraft.block.entity.BlockEntity;
@@ -26,10 +28,13 @@ import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.*;
 
-public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity implements RequestItems, HUDRendererProvider, ChestContentReceiver, RequireReliableTransport {
-    public final List<PlayerEntity> localModeWatchers = new ArrayList<>();
+public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity implements RequestItems, HUDRendererProvider, ChestContentReceiver, RequireReliableTransport, Serializable {
+    public final PlayerCollectionList localModeWatchers = new PlayerCollectionList();
     public final LinkedList<ItemIdentifierStack> itemList = new LinkedList<>();
     public final LinkedList<ItemIdentifierStack> oldList = new LinkedList<>();
     private final SatelliteHud HUD = new SatelliteHud(this);
@@ -129,7 +134,7 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
         if (!itemList.equals(oldList) || force) {
             oldList.clear();
             oldList.addAll(itemList);
-//            MainProxy.sendToPlayerList(new PacketPipeInvContent(NetworkConstants.PIPE_CHEST_CONTENT, xCoord, yCoord, zCoord, itemList).getPacket(), localModeWatchers);
+            PacketUtil.sendToPlayerList(new UpdatePipeInventoryContentS2CPacket(x, y, z, itemList), localModeWatchers);
         }
     }
 
@@ -250,5 +255,42 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
 
     @Override
     public void itemArrived(ItemIdentifier item) {
+    }
+
+    @Override
+    public void startWatching() {
+        PacketHelper.send(new UpdatePlayerWatchingStatusC2SPacket(x, y, z, 1, true));
+    }
+
+    @Override
+    public void stopWatching() {
+        PacketHelper.send(new UpdatePlayerWatchingStatusC2SPacket(x, y, z, 1, false));
+    }
+
+    @Override
+    public void playerStartWatching(PlayerEntity player, int mode) {
+        if(mode == 1) {
+            localModeWatchers.add(player);
+            PacketHelper.sendTo(player, new UpdatePipeDataS2CPacket(x, y, z, this));
+            updateInv(true);
+        } else {
+            super.playerStartWatching(player, mode);
+        }
+    }
+
+    @Override
+    public void playerStopWatching(PlayerEntity player, int mode) {
+        super.playerStopWatching(player, mode);
+        localModeWatchers.remove(player);
+    }
+
+    @Override
+    public void writeData(DataOutputStream stream) throws IOException {
+        stream.writeInt(satelliteId);
+    }
+
+    @Override
+    public void readData(DataInputStream stream) throws IOException {
+        satelliteId = stream.readInt();
     }
 }
