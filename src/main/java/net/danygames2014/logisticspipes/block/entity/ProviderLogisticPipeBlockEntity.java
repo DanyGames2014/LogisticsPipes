@@ -13,7 +13,7 @@ import net.danygames2014.logisticspipes.network.UpdatePlayerWatchingStatusC2SPac
 import net.danygames2014.logisticspipes.request.RequestTreeNode;
 import net.danygames2014.logisticspipes.routing.LogisticsOrderManager;
 import net.danygames2014.logisticspipes.routing.LogisticsPromise;
-import net.danygames2014.logisticspipes.screen.handler.ModuleScreenHandler;
+import net.danygames2014.logisticspipes.screen.handler.ProviderScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
 import net.danygames2014.logisticspipes.util.tuple.Pair;
 import net.danygames2014.nyalib.capability.CapabilityHelper;
@@ -55,7 +55,7 @@ public class ProviderLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
     @Override
     public void openModuleScreen(PlayerEntity player) {
-        GuiHelper.openGUI(player, LogisticsPipes.NAMESPACE.id("provider_pipe"), getFilterInventory(), new ModuleScreenHandler(player, getFilterInventory()), (messagePacket) -> {
+        GuiHelper.openGUI(player, LogisticsPipes.NAMESPACE.id("provider_pipe"), getFilterInventory(), new ProviderScreenHandler(player, this), (messagePacket) -> {
             messagePacket.ints = new int[]{messagePacket.ints != null ? messagePacket.ints[0] : 0, x, y, z};
         });
     }
@@ -409,5 +409,41 @@ public class ProviderLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
     public void setExtractionMode(ExtractionMode extractionMode) {
         this.extractionMode = extractionMode;
+    }
+    
+    // Inventory
+    @Override
+    public int size() {
+        return filterInventory.size();
+    }
+
+    @Override
+    public ItemStack getStack(int slot) {
+        return filterInventory.getStack(slot);
+    }
+
+    @Override
+    public ItemStack removeStack(int slot, int amount) {
+        return filterInventory.removeStack(slot, amount);
+    }
+
+    @Override
+    public void setStack(int slot, ItemStack stack) {
+        filterInventory.setStack(slot, stack);
+    }
+
+    @Override
+    public String getName() {
+        return filterInventory.getName();
+    }
+
+    @Override
+    public int getMaxCountPerStack() {
+        return filterInventory.getMaxCountPerStack();
+    }
+
+    @Override
+    public boolean canPlayerUse(PlayerEntity player) {
+        return filterInventory.canPlayerUse(player);
     }
 }

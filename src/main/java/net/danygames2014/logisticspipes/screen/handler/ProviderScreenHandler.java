@@ -9,7 +9,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.screen.ScreenHandlerListener;
 
-// TODO: cant access filter inventory of orderer and the excluded button is not synced in multiplayer
 public class ProviderScreenHandler extends ModuleScreenHandler {
     private boolean isExcludeFilter;
     private int extractionMode;
