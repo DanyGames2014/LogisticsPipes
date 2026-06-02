@@ -9,6 +9,9 @@ public class HudConfig {
     @ConfigEntry(name = "Display popup", description = "Set the default configuration for the popup of the Orderer Gui")
     public Boolean displayPopup = true;
 
+    @ConfigEntry(name = "Cap request add button amount", description = "Makes add button in request screen not order more than you have. can be ignored with shift")
+    public Boolean capAddAmount = true;
+
     @ConfigEntry(name = "Invert Mouse Wheel", description = "")
     public Boolean invertWheel = false;
 

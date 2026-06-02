@@ -1,6 +1,7 @@
 package net.danygames2014.logisticspipes.client.gui.screen;
 
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
+import net.danygames2014.logisticspipes.config.Config;
 import net.danygames2014.logisticspipes.gui.SmallButtonWidget;
 import net.danygames2014.logisticspipes.interfaces.RequestItems;
 import net.danygames2014.logisticspipes.network.RequestScreenContentC2SPacket;
@@ -80,5 +81,16 @@ public class NormalOrderScreen extends OrderScreen{
             button.text = displayString;
             refreshItems();
         }
+    }
+
+    @Override
+    boolean shouldCapAddAmount() {
+        if(!Config.HUD_CONFIG.capAddAmount) {
+            return false;
+        }
+        if(displayOptions == DisplayOptions.CraftOnly) {
+            return false;
+        }
+        return true;
     }
 }

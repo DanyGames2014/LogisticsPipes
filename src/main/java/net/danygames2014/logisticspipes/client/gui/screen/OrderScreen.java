@@ -437,7 +437,7 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
         } else if (button.id == 5) {
             requestCount = Math.max(1, requestCount - 1);
         } else if (button.id == 6) {
-            if(selectedItem != null && requestCount + 1 > selectedItem.stackSize && !isShift){
+            if(selectedItem != null && requestCount + 1 > selectedItem.stackSize && !isShift && shouldCapAddAmount()){
                 requestCount = selectedItem.stackSize;
             } else {
                 requestCount+=1;
@@ -446,7 +446,7 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
             if(requestCount == 1) {
                 requestCount-=1;
             }
-            if(selectedItem != null && requestCount + 10 > selectedItem.stackSize && !isShift){
+            if(selectedItem != null && requestCount + 10 > selectedItem.stackSize && !isShift && shouldCapAddAmount()){
                 requestCount = selectedItem.stackSize;
             } else {
                 requestCount+=10;
@@ -455,7 +455,7 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
             if(requestCount == 1) {
                 requestCount-=1;
             }
-            if(selectedItem != null && requestCount + 64 > selectedItem.stackSize && !isShift){
+            if(selectedItem != null && requestCount + 64 > selectedItem.stackSize && !isShift && shouldCapAddAmount()){
                 requestCount = selectedItem.stackSize;
             } else {
                 requestCount+=64;
@@ -523,4 +523,6 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
     protected int getLeftAddition() {
         return 0;
     }
+
+    abstract boolean shouldCapAddAmount();
 }

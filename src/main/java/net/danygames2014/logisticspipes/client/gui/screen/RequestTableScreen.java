@@ -2,6 +2,7 @@ package net.danygames2014.logisticspipes.client.gui.screen;
 
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.entity.RequestTableLogisticPipeBlockEntity;
+import net.danygames2014.logisticspipes.config.Config;
 import net.danygames2014.logisticspipes.gui.CheckBoxWidget;
 import net.danygames2014.logisticspipes.gui.ScreenWithDisk;
 import net.danygames2014.logisticspipes.gui.SmallButtonWidget;
@@ -163,6 +164,17 @@ public class RequestTableScreen extends OrderScreen implements ScreenWithDisk {
                 }
             }
         }
+    }
+
+    @Override
+    boolean shouldCapAddAmount() {
+        if(!Config.HUD_CONFIG.capAddAmount) {
+            return false;
+        }
+        if(displayOptions == DisplayOptions.CraftOnly) {
+            return false;
+        }
+        return true;
     }
 
     @Override
