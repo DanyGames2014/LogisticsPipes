@@ -91,6 +91,9 @@ public class NormalOrderScreen extends OrderScreen{
         if(displayOptions == DisplayOptions.CraftOnly) {
             return false;
         }
+        if(selectedItem != null && selectedItem.stackSize == 0) {
+            return false;
+        }
         return true;
     }
 }

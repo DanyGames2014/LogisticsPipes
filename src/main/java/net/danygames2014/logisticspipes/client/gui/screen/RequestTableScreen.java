@@ -177,6 +177,9 @@ public class RequestTableScreen extends OrderScreen implements ScreenWithDisk {
         if(displayOptions == DisplayOptions.CraftOnly) {
             return false;
         }
+        if(selectedItem != null && selectedItem.stackSize == 0) {
+            return false;
+        }
         return true;
     }
 

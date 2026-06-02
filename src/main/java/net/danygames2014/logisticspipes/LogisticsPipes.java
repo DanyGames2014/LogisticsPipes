@@ -279,7 +279,7 @@ public class LogisticsPipes {
                 logisticPipeBehavior,
                 LogisticItemPipeTransporter::new,
                 RequestTableLogisticPipeBlockEntity::new
-        ).setTranslationKey(NAMESPACE, "request_table").setHardness(0.1F).setSoundGroup(Block.STONE_SOUND_GROUP);
+        ).setTranslationKey(NAMESPACE, "request_table").setHardness(0.2F).setSoundGroup(Block.STONE_SOUND_GROUP);
     }
 
     @EventListener
