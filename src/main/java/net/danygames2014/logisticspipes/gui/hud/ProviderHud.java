@@ -1,6 +1,7 @@
 package net.danygames2014.logisticspipes.gui.hud;
 
 import net.danygames2014.logisticspipes.block.entity.ProviderLogisticPipeBlockEntity;
+import net.danygames2014.logisticspipes.config.Config;
 import net.danygames2014.logisticspipes.util.gui.BasicGuiHelper;
 import net.danygames2014.logisticspipes.util.gui.hud.BasicHUDButton;
 import net.minecraft.client.Minecraft;
@@ -135,7 +136,7 @@ public class ProviderHud extends BasicGuiHud {
 
     @Override
     public boolean display() {
-        return true;
+        return Config.HUD_CONFIG.providerHud;
     }
 
     @Override

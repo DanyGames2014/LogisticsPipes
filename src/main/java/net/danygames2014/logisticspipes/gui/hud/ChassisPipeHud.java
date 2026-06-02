@@ -1,6 +1,7 @@
 package net.danygames2014.logisticspipes.gui.hud;
 
 import net.danygames2014.logisticspipes.block.entity.ChassisLogisticPipeBlockEntity;
+import net.danygames2014.logisticspipes.config.Config;
 import net.danygames2014.logisticspipes.interfaces.HUDButton;
 import net.danygames2014.logisticspipes.interfaces.HUDModuleHandler;
 import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
@@ -153,7 +154,7 @@ public class ChassisPipeHud extends BasicGuiHud{
 
     @Override
     public boolean display() {
-//        if(!config.isHUDChassie()) return false;
+        if(!Config.HUD_CONFIG.chassisHud) return false;
         for(int i=0;i<moduleInventory.size();i++) {
             ItemStack stack = moduleInventory.getStack(i);
             if(stack != null) {

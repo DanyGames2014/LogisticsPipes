@@ -1,6 +1,7 @@
 package net.danygames2014.logisticspipes.gui.hud;
 
 import net.danygames2014.logisticspipes.block.entity.CraftingLogisticPipeBlockEntity;
+import net.danygames2014.logisticspipes.config.Config;
 import net.danygames2014.logisticspipes.util.ItemIdentifier;
 import net.danygames2014.logisticspipes.util.ItemIdentifierStack;
 import net.danygames2014.logisticspipes.util.gui.BasicGuiHelper;
@@ -64,7 +65,7 @@ public class CraftingHud extends BasicGuiHud{
 
     @Override
     public boolean display() {
-        return true;
+        return Config.HUD_CONFIG.craftingHud;
     }
 
     @Override
