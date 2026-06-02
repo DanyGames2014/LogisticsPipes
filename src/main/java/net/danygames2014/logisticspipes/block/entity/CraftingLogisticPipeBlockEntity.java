@@ -11,6 +11,9 @@ import net.danygames2014.logisticspipes.gui.hud.CraftingHud;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.interfaces.routing.CraftItems;
 import net.danygames2014.logisticspipes.network.CraftingPipeCommandC2SPacket;
+import net.danygames2014.logisticspipes.network.UpdateOrderManagerContentS2CPacket;
+import net.danygames2014.logisticspipes.network.UpdatePipeChestContentS2CPacket;
+import net.danygames2014.logisticspipes.network.UpdatePlayerWatchingStatusC2SPacket;
 import net.danygames2014.logisticspipes.request.CraftingTemplate;
 import net.danygames2014.logisticspipes.request.RequestManager;
 import net.danygames2014.logisticspipes.request.RequestTreeNode;
@@ -42,7 +45,7 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
     public final LinkedList<ItemIdentifierStack> oldList = new LinkedList<>();
     public final LinkedList<ItemIdentifierStack> displayList = new LinkedList<>();
-    public final List<PlayerEntity> localModeWatchers = new ArrayList<>();
+    public final PlayerCollectionList localModeWatchers = new PlayerCollectionList();
     private final CraftingHud HUD = new CraftingHud(this);
 
     protected int extras;
@@ -292,22 +295,12 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         return orderManager.hasOrders();
     }
 
-    @Override
-    public void startWatching() {
-        super.startWatching();
-    }
-
-    @Override
-    public void stopWatching() {
-        super.stopWatching();
-    }
-
     public void onChange() {
         LinkedList<ItemIdentifierStack> all = orderManager.getContentList(world);
         if (!oldList.equals(all)) {
             oldList.clear();
             oldList.addAll(all);
-//            MainProxy.sendToPlayerList(new PacketPipeInvContent(NetworkConstants.ORDER_MANAGER_CONTENT, xCoord, yCoord, zCoord, all).getPacket(), localModeWatchers);
+            PacketUtil.sendToPlayerList(new UpdateOrderManagerContentS2CPacket(x, y, z, all), localModeWatchers);
         }
     }
 
@@ -541,5 +534,31 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
         dummyInventory.readNbt(nbt, "crafting_pipe_inventory_");
+    }
+
+    @Override
+    public void startWatching() {
+        PacketHelper.send(new UpdatePlayerWatchingStatusC2SPacket(x, y, z, 1, true));
+    }
+
+    @Override
+    public void stopWatching() {
+        PacketHelper.send(new UpdatePlayerWatchingStatusC2SPacket(x, y, z, 1, false));
+    }
+
+    @Override
+    public void playerStartWatching(PlayerEntity player, int mode) {
+        if(mode == 1) {
+            localModeWatchers.add(player);
+            PacketHelper.sendTo(player, new UpdateOrderManagerContentS2CPacket(x, y, z, orderManager.getContentList(world)));
+        } else {
+            super.playerStartWatching(player, mode);
+        }
+    }
+
+    @Override
+    public void playerStopWatching(PlayerEntity player, int mode) {
+        super.playerStopWatching(player, mode);
+        localModeWatchers.remove(player);
     }
 }

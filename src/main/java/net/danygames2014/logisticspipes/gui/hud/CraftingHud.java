@@ -51,8 +51,8 @@ public class CraftingHud extends BasicGuiHud{
         GL11.glScalef(0.8F, 0.8F, -1F);
         List<ItemIdentifierStack> list = new ArrayList<>();
         ItemIdentifier item = pipe.getCraftedItem();
-        if(item != null){
-            list.add(item.makeStack(1));
+        if(item != null && pipe.getCraftedItemLogic() != null){
+            list.add(item.makeStack(pipe.getCraftedItemLogic().count));
         }
         if(!pipe.displayList.isEmpty()) {
             BasicGuiHelper.renderItemIdentifierStackListIntoHud(list, null, 0, 13, -17, 1, 1, 18, 18, mc, true, true, true, true);
