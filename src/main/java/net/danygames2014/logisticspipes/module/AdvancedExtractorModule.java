@@ -1,14 +1,18 @@
 package net.danygames2014.logisticspipes.module;
 
+import net.danygames2014.buildcraft.api.core.Serializable;
 import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.pipe.LogisticsManager;
 import net.danygames2014.logisticspipes.gui.hud.modules.AdvancedExtractorHud;
 import net.danygames2014.logisticspipes.gui.hud.modules.ExtractorHud;
 import net.danygames2014.logisticspipes.interfaces.*;
+import net.danygames2014.logisticspipes.network.UpdateModuleDataS2CPacket;
 import net.danygames2014.logisticspipes.network.UpdateModuleInventoryContentS2CPacket;
 import net.danygames2014.logisticspipes.network.UpdatePlayerModuleWatchingStatusC2SPacket;
 import net.danygames2014.logisticspipes.screen.handler.AdvancedExtractorScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
@@ -19,11 +23,14 @@ import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class AdvancedExtractorModule implements LogisticsModule, SneakyDirectionReceiver, ClientInformationProvider, HUDModuleHandler, ModuleWatchReceiver, ModuleInventoryReceive, Inventory {
+public class AdvancedExtractorModule implements LogisticsModule, SneakyDirectionReceiver, ClientInformationProvider, HUDModuleHandler, ModuleWatchReceiver, ModuleInventoryReceive, Inventory, Serializable {
     protected int currentTick = 0;
     private final SimpleInventory filterInventory = new SimpleInventory(9, "Item list", 1, this::markDirty);
 
@@ -194,7 +201,9 @@ public class AdvancedExtractorModule implements LogisticsModule, SneakyDirection
 
     public void setItemsIncluded(boolean flag) {
         itemsIncluded = flag;
-//        MainProxy.sendToPlayerList(new PacketModuleInteger(NetworkConstants.ADVANCED_EXTRACTOR_MODULE_INCLUDED_RESPONSE, xCoord, yCoord, zCoord, slot, areItemsIncluded() ? 1 : 0).getPacket(), localModeWatchers);
+        if(FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+            PacketUtil.sendToPlayerList(new UpdateModuleDataS2CPacket(x, y, z, slot, this), localModeWatchers);
+        }
     }
 
     @Override
@@ -234,6 +243,7 @@ public class AdvancedExtractorModule implements LogisticsModule, SneakyDirection
     @Override
     public void startWatching(PlayerEntity player) {
         localModeWatchers.add(player);
+        PacketHelper.sendTo(player, new UpdateModuleDataS2CPacket(x, y, z, slot, this));
         PacketHelper.sendTo(player, new UpdateModuleInventoryContentS2CPacket(x, y, z, slot, ItemIdentifierStack.getListFromInventory(filterInventory)));
     }
 
@@ -285,5 +295,15 @@ public class AdvancedExtractorModule implements LogisticsModule, SneakyDirection
     @Override
     public boolean canPlayerUse(PlayerEntity player) {
         return filterInventory.canPlayerUse(player);
+    }
+
+    @Override
+    public void readData(DataInputStream stream) throws IOException {
+        setItemsIncluded(stream.readBoolean());
+    }
+
+    @Override
+    public void writeData(DataOutputStream stream) throws IOException {
+        stream.writeBoolean(areItemsIncluded());
     }
 }

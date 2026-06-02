@@ -1,12 +1,16 @@
 package net.danygames2014.logisticspipes.module;
 
+import net.danygames2014.buildcraft.api.core.Serializable;
 import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.gui.hud.modules.ItemSinkHud;
 import net.danygames2014.logisticspipes.interfaces.*;
+import net.danygames2014.logisticspipes.network.UpdateModuleDataS2CPacket;
 import net.danygames2014.logisticspipes.network.UpdateModuleInventoryContentS2CPacket;
 import net.danygames2014.logisticspipes.network.UpdatePlayerModuleWatchingStatusC2SPacket;
 import net.danygames2014.logisticspipes.screen.handler.ItemSinkScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -15,11 +19,14 @@ import net.minecraft.screen.ScreenHandler;
 import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ItemSinkModule implements LogisticsModule, ClientInformationProvider, HUDModuleHandler, ModuleWatchReceiver, ModuleInventoryReceive, Inventory {
+public class ItemSinkModule implements LogisticsModule, ClientInformationProvider, HUDModuleHandler, ModuleWatchReceiver, ModuleInventoryReceive, Inventory, Serializable {
     protected final SimpleInventory filterInventory = new SimpleInventory(9, "Requested items", 1, this::markDirty);
     protected boolean isDefaultRoute;
     private int slot = 0;
@@ -41,7 +48,9 @@ public class ItemSinkModule implements LogisticsModule, ClientInformationProvide
 
     public void setDefaultRoute(boolean isDefaultRoute) {
         this.isDefaultRoute = isDefaultRoute;
-//        MainProxy.sendToPlayerList(new PacketModuleInteger(NetworkConstants.ITEM_SINK_STATUS, xCoord, yCoord, zCoord, slot, isDefaultRoute() ? 1 : 0).getPacket(), localModeWatchers);
+        if(FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+            PacketUtil.sendToPlayerList(new UpdateModuleDataS2CPacket(x, y, z, slot, this), localModeWatchers);
+        }
     }
 
     @Override
@@ -131,7 +140,7 @@ public class ItemSinkModule implements LogisticsModule, ClientInformationProvide
     public void startWatching(PlayerEntity player) {
         localModeWatchers.add(player);
         PacketHelper.sendTo(player, new UpdateModuleInventoryContentS2CPacket(x, y, z, slot, ItemIdentifierStack.getListFromInventory(filterInventory)));
-//        PacketDispatcher.sendPacketToPlayer(new PacketModuleInteger(NetworkConstants.ITEM_SINK_STATUS, xCoord, yCoord, zCoord, slot, isDefaultRoute() ? 1 : 0).getPacket(), (Player)player);
+        PacketHelper.sendTo(player, new UpdateModuleDataS2CPacket(x, y, z, slot, this));
     }
 
     @Override
@@ -187,5 +196,15 @@ public class ItemSinkModule implements LogisticsModule, ClientInformationProvide
     @Override
     public boolean canPlayerUse(PlayerEntity player) {
         return filterInventory.canPlayerUse(player);
+    }
+
+    @Override
+    public void writeData(DataOutputStream stream) throws IOException {
+        stream.writeBoolean(isDefaultRoute());
+    }
+
+    @Override
+    public void readData(DataInputStream stream) throws IOException {
+        setDefaultRoute(stream.readBoolean());
     }
 }

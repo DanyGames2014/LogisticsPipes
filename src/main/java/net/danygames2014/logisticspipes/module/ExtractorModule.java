@@ -1,16 +1,16 @@
 package net.danygames2014.logisticspipes.module;
 
+import net.danygames2014.buildcraft.api.core.Serializable;
 import net.danygames2014.logisticspipes.LogisticsPipes;
 import net.danygames2014.logisticspipes.block.pipe.LogisticsManager;
 import net.danygames2014.logisticspipes.gui.hud.modules.ExtractorHud;
-import net.danygames2014.logisticspipes.gui.hud.modules.ItemSinkHud;
 import net.danygames2014.logisticspipes.interfaces.*;
+import net.danygames2014.logisticspipes.network.UpdateModuleDataS2CPacket;
 import net.danygames2014.logisticspipes.network.UpdatePlayerModuleWatchingStatusC2SPacket;
 import net.danygames2014.logisticspipes.screen.handler.ExtractorScreenHandler;
-import net.danygames2014.logisticspipes.util.ItemHandlerBlockCapabilityInventoryWrapper;
-import net.danygames2014.logisticspipes.util.PlayerCollectionList;
-import net.danygames2014.logisticspipes.util.SinkReply;
-import net.danygames2014.logisticspipes.util.SneakyDirection;
+import net.danygames2014.logisticspipes.util.*;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -20,10 +20,13 @@ import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.Identifier;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExtractorModule implements LogisticsModule, SneakyDirectionReceiver, ClientInformationProvider, HUDModuleHandler, ModuleWatchReceiver, Inventory {
+public class ExtractorModule implements LogisticsModule, SneakyDirectionReceiver, ClientInformationProvider, HUDModuleHandler, ModuleWatchReceiver, Inventory, Serializable {
 
     private int currentTick;
 
@@ -77,6 +80,9 @@ public class ExtractorModule implements LogisticsModule, SneakyDirectionReceiver
     @Override
     public void setSneakyDirection(SneakyDirection sneakyDirection) {
         this.sneakyDirection = sneakyDirection;
+        if(FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+            PacketUtil.sendToPlayerList(new UpdateModuleDataS2CPacket(x, y, z, slot, this), localModeWatchers);
+        }
     }
 
     @Override
@@ -177,6 +183,7 @@ public class ExtractorModule implements LogisticsModule, SneakyDirectionReceiver
     @Override
     public void startWatching(PlayerEntity player) {
         localModeWatchers.add(player);
+        PacketHelper.sendTo(player, new UpdateModuleDataS2CPacket(x, y, z, slot, this));
     }
 
     @Override
@@ -228,5 +235,15 @@ public class ExtractorModule implements LogisticsModule, SneakyDirectionReceiver
     @Override
     public boolean canPlayerUse(PlayerEntity player) {
         return true;
+    }
+
+    @Override
+    public void readData(DataInputStream stream) throws IOException {
+        setSneakyDirection(SneakyDirection.values()[stream.readInt()]);
+    }
+
+    @Override
+    public void writeData(DataOutputStream stream) throws IOException {
+        stream.writeInt(getSneakyDirection().ordinal());
     }
 }

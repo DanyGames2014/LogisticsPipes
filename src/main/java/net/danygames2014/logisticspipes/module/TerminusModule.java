@@ -1,7 +1,6 @@
 package net.danygames2014.logisticspipes.module;
 
 import net.danygames2014.logisticspipes.LogisticsPipes;
-import net.danygames2014.logisticspipes.gui.hud.modules.ProviderModuleHud;
 import net.danygames2014.logisticspipes.gui.hud.modules.TerminusHud;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.network.UpdateModuleInventoryContentS2CPacket;
