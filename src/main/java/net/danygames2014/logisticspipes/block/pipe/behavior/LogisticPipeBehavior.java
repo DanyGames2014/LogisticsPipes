@@ -10,6 +10,7 @@ import net.danygames2014.buildcraft.entity.TravellingItemEntity;
 import net.danygames2014.buildcraft.util.MathUtil;
 import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.interfaces.RoutedItem;
+import net.danygames2014.logisticspipes.routing.Router;
 import net.danygames2014.logisticspipes.util.ItemUtil;
 import net.danygames2014.uniwrench.api.WrenchMode;
 import net.minecraft.entity.player.PlayerEntity;
@@ -23,6 +24,10 @@ public class LogisticPipeBehavior extends PipeBehavior {
         boolean forcePacket = !(item instanceof RoutedItem routedItem) || !routedItem.isDestinationValid();
         RoutedItem routedItem = ItemUtil.GetOrCreateRoutedItem(blockEntity.world, item);
         LogisticPipeBlockEntity pipe = (LogisticPipeBlockEntity) blockEntity;
+        if(routedItem.isDestinationValid() && pipe.getRouterId() != routedItem.getDestination()) {
+            pipe.statLifetimeRelayed++;
+            pipe.statSessionRelayed++;
+        }
         return pipe.getDirectionForItem(routedItem);
     }
 

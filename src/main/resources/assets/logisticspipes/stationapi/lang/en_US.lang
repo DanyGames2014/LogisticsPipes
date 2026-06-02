@@ -39,6 +39,7 @@ item.logisticspipes.hud_bow.name=Logistics HUD Bow
 item.logisticspipes.hud_glass.name=Logistics HUD Glass
 item.logisticspipes.hud_nose_bridge.name=Logistics HUD Nose Bridge
 item.logisticspipes.hud_glasses.name=Logistics HUD Glasses
+item.logisticspipes.network_monitor.name=Network Monitor
 
 item.logisticspipes.remote_orderer.name=Remote Orderer
 item.logisticspipes.white_remote_orderer.name=Remote Orderer

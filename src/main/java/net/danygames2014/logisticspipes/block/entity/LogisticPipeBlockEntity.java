@@ -52,6 +52,8 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
     public long statLifetimeReceived;
     public long statLifetimeRelayed;
 
+    public int networkSize;
+
     public int throttleTime = 20;
     private int throttleTimeLeft = 0;
 

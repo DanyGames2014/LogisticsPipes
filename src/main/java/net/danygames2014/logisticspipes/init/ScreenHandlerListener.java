@@ -5,6 +5,7 @@ import net.danygames2014.logisticspipes.client.gui.screen.*;
 import net.danygames2014.logisticspipes.interfaces.RequestItems;
 import net.danygames2014.logisticspipes.interfaces.SneakyDirectionReceiver;
 import net.danygames2014.logisticspipes.module.*;
+import net.danygames2014.logisticspipes.routing.Router;
 import net.fabricmc.loader.api.FabricLoader;
 import net.mine_diver.unsafeevents.listener.EventListener;
 import net.minecraft.block.entity.BlockEntity;
@@ -37,6 +38,7 @@ public class ScreenHandlerListener {
         event.register(NAMESPACE.id("normal_order"), new GuiHandler(this::openNormalOrderScreen, () -> null));
         event.register(NAMESPACE.id("normal_order_mk2"), new GuiHandler(this::openNormalOrderScreenMk2, () -> null));
         event.register(NAMESPACE.id("remote_order"), new GuiHandler(this::openRemoteOrderScreen, () -> null));
+        event.register(NAMESPACE.id("routing_stats"), new GuiHandler(this::openRoutingStatsScreen, () -> null));
         event.register(NAMESPACE.id("request_table"), new GuiHandler(this::openRequestTableScreen, RequestTableLogisticPipeBlockEntity::new));
         event.register(NAMESPACE.id("passive_supplier"), new GuiHandler(this::openPassiveSupplierScreen, PassiveSupplierModule::new));
         event.register(NAMESPACE.id("item_sink"), new GuiHandler(this::openItemSinkScreen, ItemSinkModule::new));
@@ -79,6 +81,15 @@ public class ScreenHandlerListener {
         BlockEntity blockEntity = player.world.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]);
         if (blockEntity instanceof RequestLogisticPipeBlockEntity pipe) {
             return new NormalOrderScreenMk2(pipe, player);
+        }
+
+        return null;
+    }
+
+    private Screen openRoutingStatsScreen(PlayerEntity player, Inventory inventory, MessagePacket message) {
+        BlockEntity blockEntity = player.world.getBlockEntity(message.ints[1], message.ints[2], message.ints[3]);
+        if (blockEntity instanceof Router router) {
+            return new RoutingStatsScreen(router, player);
         }
 
         return null;

@@ -86,6 +86,8 @@ public class RequestTableLogisticPipeBlockEntity extends RequestLogisticPipeBloc
     @Override
     public Direction itemArrived(RoutedItem item) {
         if(item.getItemStack() != null) {
+            statLifetimeReceived++;
+            statSessionReceived++;
             ItemStack stack = item.getItemStack();
             stack.count = inv.addCompressed(stack);
             item.setItemStack(stack);

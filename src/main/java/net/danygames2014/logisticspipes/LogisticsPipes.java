@@ -79,6 +79,7 @@ public class LogisticsPipes {
     public static Item hudGlass;
     public static Item hudNoseBridge;
     public static Item hudGlasses;
+    public static Item networkMonitor;
 
     public static Item remoteOrderer;
     public static Item whiteRemoteOrderer;
@@ -311,6 +312,7 @@ public class LogisticsPipes {
         hudGlass = new TemplateItem(NAMESPACE.id("hud_glass")).setTranslationKey(NAMESPACE, "hud_glass");
         hudNoseBridge = new TemplateItem(NAMESPACE.id("hud_nose_bridge")).setTranslationKey(NAMESPACE, "hud_nose_bridge");
         hudGlasses = new HudGlassesItem(NAMESPACE.id("hud_glasses")).setTranslationKey(NAMESPACE, "hud_glasses");
+        networkMonitor = new NetworkMonitorItem(NAMESPACE.id("network_monitor")).setTranslationKey(NAMESPACE, "network_monitor");
 
         remoteOrderer = new RemoteOrdererItem(NAMESPACE.id("remote_orderer")).setTranslationKey(NAMESPACE, "remote_orderer");
         whiteRemoteOrderer = new RemoteOrdererItem(NAMESPACE.id("white_remote_orderer")).setTranslationKey(NAMESPACE, "white_remote_orderer");
