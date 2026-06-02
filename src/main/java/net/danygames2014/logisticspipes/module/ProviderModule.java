@@ -5,6 +5,7 @@ import net.danygames2014.logisticspipes.block.pipe.ExtractionMode;
 import net.danygames2014.logisticspipes.gui.hud.modules.ItemSinkHud;
 import net.danygames2014.logisticspipes.gui.hud.modules.ProviderModuleHud;
 import net.danygames2014.logisticspipes.interfaces.*;
+import net.danygames2014.logisticspipes.network.UpdateModuleInventoryContentS2CPacket;
 import net.danygames2014.logisticspipes.network.UpdatePlayerModuleWatchingStatusC2SPacket;
 import net.danygames2014.logisticspipes.request.RequestTreeNode;
 import net.danygames2014.logisticspipes.routing.LogisticsOrderManager;
@@ -26,6 +27,7 @@ import java.util.*;
 public class ProviderModule implements LogisticsModule, LegacyActiveModule, ClientInformationProvider, HUDModuleHandler, ModuleWatchReceiver, ModuleInventoryReceive, Inventory {
     protected InventoryProvider invProvider;
     protected SendRoutedItem itemSender;
+    protected WorldProvider worldProvider;
 
     protected LogisticsOrderManager orderManager = new LogisticsOrderManager();
 
@@ -57,6 +59,7 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
     public void registerHandler(InventoryProvider invProvider, SendRoutedItem itemSender, WorldProvider world) {
         this.invProvider = invProvider;
         this.itemSender = itemSender;
+        this.worldProvider = world;
     }
 
     @Override
@@ -95,6 +98,7 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
 
     @Override
     public void tick() {
+        if(worldProvider.getWorld().isRemote) return;
         if (++currentTick < ticksToAction) return;
         currentTick = 0;
         checkUpdate(null);
@@ -278,12 +282,12 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
             displayList.add(new ItemIdentifierStack(item, list.get(item)));
         }
         if (!oldList.equals(displayList)) {
-//            MainProxy.sendToPlayerList(new PacketModuleInvContent(NetworkConstants.MODULE_INV_CONTENT, xCoord, yCoord, zCoord, slot, displayList).getPacket(), localModeWatchers);
+            PacketUtil.sendToPlayerList(new UpdateModuleInventoryContentS2CPacket(x, y, z, slot, displayList), localModeWatchers);
             oldList.clear();
             oldList.addAll(displayList);
         }
         if (player != null) {
-//            PacketDispatcher.sendPacketToPlayer(new PacketModuleInvContent(NetworkConstants.MODULE_INV_CONTENT, xCoord, yCoord, zCoord, slot, displayList).getPacket(), (Player)player);
+            PacketHelper.sendTo(player, new UpdateModuleInventoryContentS2CPacket(x, y, z, slot, displayList));
         }
     }
 

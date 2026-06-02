@@ -1,7 +1,10 @@
 package net.danygames2014.logisticspipes.module;
 
 import net.danygames2014.logisticspipes.LogisticsPipes;
+import net.danygames2014.logisticspipes.gui.hud.modules.ProviderModuleHud;
+import net.danygames2014.logisticspipes.gui.hud.modules.TerminusHud;
 import net.danygames2014.logisticspipes.interfaces.*;
+import net.danygames2014.logisticspipes.network.UpdateModuleInventoryContentS2CPacket;
 import net.danygames2014.logisticspipes.network.UpdatePlayerModuleWatchingStatusC2SPacket;
 import net.danygames2014.logisticspipes.screen.handler.TerminusScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
@@ -26,6 +29,8 @@ public class TerminusModule implements LogisticsModule, ClientInformationProvide
     private int slot;
 
     private final PlayerCollectionList localModeWatchers = new PlayerCollectionList();
+
+    private TerminusHud HUD = new TerminusHud(this);
 
     public TerminusModule() {
     }
@@ -111,6 +116,7 @@ public class TerminusModule implements LogisticsModule, ClientInformationProvide
     @Override
     public void startWatching(PlayerEntity player) {
         localModeWatchers.add(player);
+        PacketHelper.sendTo(player, new UpdateModuleInventoryContentS2CPacket(x, y, z, slot, ItemIdentifierStack.getListFromInventory(filterInventory)));
     }
 
     @Override
@@ -120,7 +126,7 @@ public class TerminusModule implements LogisticsModule, ClientInformationProvide
 
     @Override
     public HUDModuleRenderer getRenderer() {
-        return null;
+        return HUD;
     }
 
     @Override
@@ -160,7 +166,7 @@ public class TerminusModule implements LogisticsModule, ClientInformationProvide
     }
 
     public void markDirty() {
-//        MainProxy.sendToPlayerList(new PacketModuleInvContent(NetworkConstants.MODULE_INV_CONTENT, xCoord, yCoord, zCoord, slot, ItemIdentifierStack.getListFromInventory(inventory)).getPacket(), localModeWatchers);
+        PacketUtil.sendToPlayerList(new UpdateModuleInventoryContentS2CPacket(x, y, z, slot, ItemIdentifierStack.getListFromInventory(filterInventory)), localModeWatchers);
     }
 
     @Override

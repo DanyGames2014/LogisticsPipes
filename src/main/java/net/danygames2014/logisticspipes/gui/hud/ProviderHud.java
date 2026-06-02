@@ -1,7 +1,6 @@
-package net.danygames2014.logisticspipes.gui.hud.modules;
+package net.danygames2014.logisticspipes.gui.hud;
 
 import net.danygames2014.logisticspipes.block.entity.ProviderLogisticPipeBlockEntity;
-import net.danygames2014.logisticspipes.gui.hud.BasicGuiHud;
 import net.danygames2014.logisticspipes.util.gui.BasicGuiHelper;
 import net.danygames2014.logisticspipes.util.gui.hud.BasicHUDButton;
 import net.minecraft.client.Minecraft;
