@@ -13,8 +13,7 @@ import net.minecraft.recipe.CraftingRecipeManager;
 import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.screen.slot.Slot;
 
-public class RequestTableScreenHandler extends ModuleScreenHandler{
-
+public class RequestTableScreenHandler extends ModuleScreenHandler {
     public RequestTableLogisticPipeBlockEntity table;
 
     public CraftingInventory craftingMatrix;
@@ -69,6 +68,7 @@ public class RequestTableScreenHandler extends ModuleScreenHandler{
         super.onSlotUpdate(inventory);
     }
 
+    @Environment(EnvType.SERVER)
     @Override
     public void addListener(ScreenHandlerListener listener) {
         super.addListener(listener);

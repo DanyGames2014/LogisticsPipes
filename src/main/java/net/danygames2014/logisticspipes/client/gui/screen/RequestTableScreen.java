@@ -10,6 +10,7 @@ import net.danygames2014.logisticspipes.gui.popup.DiskPopupSubScreen;
 import net.danygames2014.logisticspipes.network.DropDiskC2SPacket;
 import net.danygames2014.logisticspipes.network.RequestDiskContentC2SPacket;
 import net.danygames2014.logisticspipes.network.RequestScreenContentC2SPacket;
+import net.danygames2014.logisticspipes.network.RequestTableRefillToggleC2SPacket;
 import net.danygames2014.logisticspipes.request.RequestHandler;
 import net.danygames2014.logisticspipes.screen.handler.RequestTableScreenHandler;
 import net.danygames2014.logisticspipes.util.ItemIdentifier;
@@ -23,8 +24,9 @@ import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 
 import java.util.LinkedList;
 
+@SuppressWarnings("unchecked")
 public class RequestTableScreen extends OrderScreen implements ScreenWithDisk {
-    private enum DisplayOptions {
+    protected enum DisplayOptions {
         Both,
         SupplyOnly,
         CraftOnly,
@@ -32,7 +34,6 @@ public class RequestTableScreen extends OrderScreen implements ScreenWithDisk {
 
     protected DisplayOptions displayOptions = DisplayOptions.Both;
     public RequestTableLogisticPipeBlockEntity table;
-
     private SmallButtonWidget macroButton;
 
     public RequestTableScreen(PlayerEntity player, RequestTableLogisticPipeBlockEntity table) {
@@ -59,13 +60,13 @@ public class RequestTableScreen extends OrderScreen implements ScreenWithDisk {
     @Override
     protected void drawBackground(float tickDelta) {
         super.drawBackground(tickDelta);
-        for(int x = 0;x < 9;x++) {
-            for(int y = 0;y < 3;y++) {
+        for (int x = 0; x < 9; x++) {
+            for (int y = 0; y < 3; y++) {
                 BasicGuiHelper.drawSlotBackground(minecraft, guiLeft + (x * 18) + 19, guiTop + (y * 18) + 79);
             }
         }
-        for(int x = 0;x < 3;x++) {
-            for(int y = 0;y < 3;y++) {
+        for (int x = 0; x < 3; x++) {
+            for (int y = 0; y < 3; y++) {
                 BasicGuiHelper.drawSlotBackground(minecraft, guiLeft + (x * 18) + 19, guiTop + (y * 18) + 14);
             }
         }
@@ -73,20 +74,19 @@ public class RequestTableScreen extends OrderScreen implements ScreenWithDisk {
         fill(right - 39, bottom - 47, right - 19, bottom - 27, Colors.Black);
         fill(right - 37, bottom - 45, right - 21, bottom - 29, Colors.DarkGrey);
 
-
         BasicGuiHelper.drawSlotBackground(minecraft, guiLeft + 100, guiTop + 32);
         BasicGuiHelper.drawSlotBackground(minecraft, guiLeft + 163, guiTop + 50);
         fill(guiLeft + 75, guiTop + 38, guiLeft + 95, guiTop + 43, Colors.DarkGrey);
-        for(int a = 0; a < 10;a++) {
+        for (int a = 0; a < 10; a++) {
             fill(guiLeft + 97 - a, guiTop + 40 - a, guiLeft + 98 - a, guiTop + 41 + a, Colors.DarkGrey);
         }
-        for(int a = 0; a < 15;a++) {
+        for (int a = 0; a < 15; a++) {
             fill(guiLeft + 164 + a, guiTop + 51 + a, guiLeft + 166 + a, guiTop + 53 + a, Colors.DarkGrey);
             fill(guiLeft + 164 + a, guiTop + 65 - a, guiLeft + 166 + a, guiTop + 67 - a, Colors.DarkGrey);
         }
         BasicGuiHelper.drawPlayerInventoryBackground(minecraft, guiLeft + 20, guiTop + 150);
 
-        if(getDisk() != null) {
+        if (getDisk() != null) {
             itemRenderer.renderGuiItem(textRenderer, minecraft.textureManager, getDisk(), right - 37, bottom - 45);
             Lighting.turnOff();
             macroButton.active = true;
@@ -94,7 +94,7 @@ public class RequestTableScreen extends OrderScreen implements ScreenWithDisk {
             macroButton.active = false;
         }
 
-        if(buttons.get(11) instanceof CheckBoxWidget checkBoxWidget && checkBoxWidget.getState()) {
+        if (buttons.get(11) instanceof CheckBoxWidget checkBoxWidget && checkBoxWidget.getState()) {
             textRenderer.draw("Refill", guiLeft + 91, guiTop + 60, 0x404040);
         } else {
             textRenderer.draw("Refill", guiLeft + 91, guiTop + 60, 0xA0A0A0);
@@ -103,7 +103,7 @@ public class RequestTableScreen extends OrderScreen implements ScreenWithDisk {
 
     @Override
     protected void refreshItems() {
-        LogisticPipeBlockEntity requestPipe = (LogisticPipeBlockEntity)itemRequester;
+        LogisticPipeBlockEntity requestPipe = (LogisticPipeBlockEntity) itemRequester;
         RequestHandler.DisplayOptions options = switch (displayOptions) {
             case SupplyOnly -> RequestHandler.DisplayOptions.SupplyOnly;
             case CraftOnly -> RequestHandler.DisplayOptions.CraftOnly;
@@ -117,7 +117,7 @@ public class RequestTableScreen extends OrderScreen implements ScreenWithDisk {
         super.buttonClicked(button);
         if (button.id == 9) {
             String displayString = "";
-            switch (displayOptions){
+            switch (displayOptions) {
                 case Both:
                     displayOptions = DisplayOptions.CraftOnly;
                     displayString = "Craft";
@@ -133,7 +133,7 @@ public class RequestTableScreen extends OrderScreen implements ScreenWithDisk {
             }
             button.text = displayString;
             refreshItems();
-        } else if(button.id == 14) {
+        } else if (button.id == 14) {
 //            SimpleInventory compress = new SimpleInventory(9, "", Integer.MAX_VALUE);
 //            for(int i=0; i < 9;i++) {
 //                compress.addCompressed(_table.matrix.getStackInSlot(i));
@@ -149,8 +149,11 @@ public class RequestTableScreen extends OrderScreen implements ScreenWithDisk {
             this.setSubScreen(new DiskPopupSubScreen(this));
         }
         if (button.id == 32) {
-            CheckBoxWidget checkbox = (CheckBoxWidget)buttons.get(11);
+            CheckBoxWidget checkbox = (CheckBoxWidget) buttons.get(11);
             table.refillMatrix = checkbox.change();
+            if (player.world.isRemote) {
+                PacketHelper.send(new RequestTableRefillToggleC2SPacket(table.refillMatrix));
+            }
         }
     }
 
@@ -188,7 +191,7 @@ public class RequestTableScreen extends OrderScreen implements ScreenWithDisk {
     }
 
     @Override
-    public ItemStack getDisk(){
+    public ItemStack getDisk() {
         return table.getDiskInventory().getStack(0);
     }
 
