@@ -10,7 +10,7 @@ import net.danygames2014.logisticspipes.gui.hud.SatelliteHud;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.network.SatelliteIdC2SPacket;
 import net.danygames2014.logisticspipes.network.UpdatePipeDataS2CPacket;
-import net.danygames2014.logisticspipes.network.UpdatePipeInventoryContentS2CPacket;
+import net.danygames2014.logisticspipes.network.UpdatePipeChestContentS2CPacket;
 import net.danygames2014.logisticspipes.network.UpdatePlayerWatchingStatusC2SPacket;
 import net.danygames2014.logisticspipes.request.RequestManager;
 import net.danygames2014.logisticspipes.routing.LogisticsNetworkManager;
@@ -18,6 +18,8 @@ import net.danygames2014.logisticspipes.screen.handler.SatelliteScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
 import net.danygames2014.nyalib.capability.CapabilityHelper;
 import net.danygames2014.nyalib.capability.block.itemhandler.ItemHandlerBlockCapability;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -134,7 +136,7 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
         if (!itemList.equals(oldList) || force) {
             oldList.clear();
             oldList.addAll(itemList);
-            PacketUtil.sendToPlayerList(new UpdatePipeInventoryContentS2CPacket(x, y, z, itemList), localModeWatchers);
+            PacketUtil.sendToPlayerList(new UpdatePipeChestContentS2CPacket(x, y, z, itemList), localModeWatchers);
         }
     }
 
@@ -271,7 +273,9 @@ public class SatelliteLogisticPipeBlockEntity extends LogisticPipeBlockEntity im
     public void playerStartWatching(PlayerEntity player, int mode) {
         if(mode == 1) {
             localModeWatchers.add(player);
-            PacketHelper.sendTo(player, new UpdatePipeDataS2CPacket(x, y, z, this));
+            if(FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+                PacketHelper.sendTo(player, new UpdatePipeDataS2CPacket(x, y, z, this));
+            }
             updateInv(true);
         } else {
             super.playerStartWatching(player, mode);

@@ -8,6 +8,8 @@ import net.danygames2014.logisticspipes.block.pipe.ItemSendMode;
 import net.danygames2014.logisticspipes.entity.RoutedItemEntity;
 import net.danygames2014.logisticspipes.gui.hud.ProviderHud;
 import net.danygames2014.logisticspipes.interfaces.*;
+import net.danygames2014.logisticspipes.network.UpdatePipeChestContentS2CPacket;
+import net.danygames2014.logisticspipes.network.UpdatePlayerWatchingStatusC2SPacket;
 import net.danygames2014.logisticspipes.request.RequestTreeNode;
 import net.danygames2014.logisticspipes.routing.LogisticsOrderManager;
 import net.danygames2014.logisticspipes.routing.LogisticsPromise;
@@ -22,12 +24,13 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
+import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 import java.util.*;
 
 public class ProviderLogisticPipeBlockEntity extends LogisticPipeBlockEntity implements ProvideItems, HUDRendererProvider, ChestContentReceiver, OrderManagerContentReceiver {
-    public final List<PlayerEntity> localModeWatchers = new ArrayList<>();
+    public final PlayerCollectionList localModeWatchers = new PlayerCollectionList();
     public final LinkedList<ItemIdentifierStack> itemList = new LinkedList<>();
     public final LinkedList<ItemIdentifierStack> oldList = new LinkedList<>();
     public final LinkedList<ItemIdentifierStack> itemListOrderer = new LinkedList<>();
@@ -142,6 +145,9 @@ public class ProviderLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
     @Override
     public void tick() {
         super.tick();
+        if (world.getTime() % 20 == 0) {
+            updateInv(false);
+        }
         if (!orderManager.hasOrders() || world.getTime() % 6 != 0) return;
 
         if(!this.getClass().equals(ProviderLogisticPipeBlockEntity.class)) return;
@@ -238,16 +244,6 @@ public class ProviderLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         return null;
     }
 
-    @Override
-    public void startWatching() {
-        super.startWatching();
-    }
-
-    @Override
-    public void stopWatching() {
-        super.stopWatching();
-    }
-
     public Inventory getInventory(Direction direction) {
         BlockEntity blockEntity = world.getBlockEntity(x + direction.getOffsetX(), y + direction.getOffsetY(), z + direction.getOffsetZ());
         if (blockEntity == null || blockEntity instanceof PipeBlockEntity) {
@@ -294,7 +290,7 @@ public class ProviderLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         if(!itemList.equals(oldList) || force) {
             oldList.clear();
             oldList.addAll(itemList);
-//            MainProxy.sendToPlayerList(new PacketPipeInvContent(NetworkConstants.PIPE_CHEST_CONTENT, xCoord, yCoord, zCoord, itemList).getPacket(), localModeWatchers);
+            PacketUtil.sendToPlayerList(new UpdatePipeChestContentS2CPacket(x, y, z, itemList), localModeWatchers);
         }
     }
 
@@ -318,7 +314,7 @@ public class ProviderLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         if(!oldList.equals(all)) {
             oldList.clear();
             oldList.addAll(all);
-//            MainProxy.sendToPlayerList(new PacketPipeInvContent(NetworkConstants.ORDER_MANAGER_CONTENT, xCoord, yCoord, zCoord, all).getPacket(), localModeWatchers);
+            PacketUtil.sendToPlayerList(new UpdatePipeChestContentS2CPacket(x, y, z, all), localModeWatchers);
         }
     }
 
@@ -358,6 +354,33 @@ public class ProviderLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         filterInventory.writeNbt(nbt, "");
         nbt.putBoolean("filterisexclude", filterIsExclude);
         nbt.putInt("extractionMode", extractionMode.ordinal());
+    }
+
+    @Override
+    public void startWatching() {
+        PacketHelper.send(new UpdatePlayerWatchingStatusC2SPacket(x, y, z, 1, true));
+    }
+
+    @Override
+    public void stopWatching() {
+        PacketHelper.send(new UpdatePlayerWatchingStatusC2SPacket(x, y, z, 1, false));
+    }
+
+    @Override
+    public void playerStartWatching(PlayerEntity player, int mode) {
+        if(mode == 1) {
+            localModeWatchers.add(player);
+            updateInv(true);
+            PacketUtil.sendToPlayerList(new UpdatePipeChestContentS2CPacket(x, y, z, orderManager.getContentList(world)), localModeWatchers);
+        } else {
+            super.playerStartWatching(player, mode);
+        }
+    }
+
+    @Override
+    public void playerStopWatching(PlayerEntity player, int mode) {
+        super.playerStopWatching(player, mode);
+        localModeWatchers.remove(player);
     }
 
     public boolean hasFilter(){

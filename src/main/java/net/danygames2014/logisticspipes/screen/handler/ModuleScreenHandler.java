@@ -69,6 +69,7 @@ public class ModuleScreenHandler extends ScreenHandler {
         System.out.println("index = " + index + ", button = " + button + ", shift = " + shift + ", player = " + player);
 
         if (index < 0 || index >= slots.size()) {
+            // TODO: when clicking a filter slot on a provider pipe on server this will crash the game, dany pls fix
             return super.onSlotClick(index, button, shift, player);
         }
 

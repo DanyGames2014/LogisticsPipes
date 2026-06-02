@@ -1,8 +1,6 @@
 package net.danygames2014.logisticspipes.network;
 
-import net.danygames2014.logisticspipes.block.entity.ChassisLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.interfaces.ChestContentReceiver;
-import net.danygames2014.logisticspipes.interfaces.ModuleInventoryReceive;
 import net.danygames2014.logisticspipes.util.ItemIdentifierStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.NetworkHandler;
@@ -11,19 +9,16 @@ import net.modificationstation.stationapi.api.network.packet.ManagedPacket;
 import net.modificationstation.stationapi.api.network.packet.PacketType;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.LinkedList;
 
-public class UpdatePipeInventoryContentS2CPacket extends InventoryContentPacket implements ManagedPacket<UpdatePipeInventoryContentS2CPacket> {
+public class UpdatePipeChestContentS2CPacket extends InventoryContentPacket implements ManagedPacket<UpdatePipeChestContentS2CPacket> {
 
-    public static final PacketType<UpdatePipeInventoryContentS2CPacket> TYPE = PacketType.builder(true, false, UpdatePipeInventoryContentS2CPacket::new).build();
+    public static final PacketType<UpdatePipeChestContentS2CPacket> TYPE = PacketType.builder(true, false, UpdatePipeChestContentS2CPacket::new).build();
 
-    public UpdatePipeInventoryContentS2CPacket() {
+    public UpdatePipeChestContentS2CPacket() {
     }
 
-    public UpdatePipeInventoryContentS2CPacket(int x, int y, int z, LinkedList<ItemIdentifierStack> allItems) {
+    public UpdatePipeChestContentS2CPacket(int x, int y, int z, LinkedList<ItemIdentifierStack> allItems) {
         super(x, y, z, allItems);
     }
 
@@ -36,7 +31,7 @@ public class UpdatePipeInventoryContentS2CPacket extends InventoryContentPacket 
     }
 
     @Override
-    public @NotNull PacketType<UpdatePipeInventoryContentS2CPacket> getType() {
+    public @NotNull PacketType<UpdatePipeChestContentS2CPacket> getType() {
         return TYPE;
     }
 }
