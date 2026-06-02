@@ -44,8 +44,8 @@ public class PipeParticleS2CPacket extends Packet implements ManagedPacket<PipeP
                 queuedParticles[i] = stream.readInt();
             }
             pos = StationBlockPos.fromLong(stream.readLong());
-        } catch (IOException ignored) {
-
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -56,8 +56,8 @@ public class PipeParticleS2CPacket extends Packet implements ManagedPacket<PipeP
                 stream.writeInt(queuedParticles[i]);
             }
             stream.writeLong(pos.asLong());
-        } catch (IOException ignored) {
-
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

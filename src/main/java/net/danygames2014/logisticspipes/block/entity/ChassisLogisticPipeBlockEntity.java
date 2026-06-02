@@ -11,6 +11,8 @@ import net.danygames2014.logisticspipes.gui.hud.TestHud;
 import net.danygames2014.logisticspipes.interfaces.*;
 import net.danygames2014.logisticspipes.item.ModuleItem;
 import net.danygames2014.logisticspipes.module.ChassisModule;
+import net.danygames2014.logisticspipes.network.UpdateChassisInventoryContentS2CPacket;
+import net.danygames2014.logisticspipes.network.UpdatePlayerWatchingStatusC2SPacket;
 import net.danygames2014.logisticspipes.request.RequestTreeNode;
 import net.danygames2014.logisticspipes.routing.LogisticsPromise;
 import net.danygames2014.logisticspipes.routing.Router;
@@ -29,6 +31,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import net.modificationstation.stationapi.api.block.BlockState;
 import net.modificationstation.stationapi.api.gui.screen.container.GuiHelper;
+import net.modificationstation.stationapi.api.network.packet.PacketHelper;
 import net.modificationstation.stationapi.api.util.math.Direction;
 
 import java.util.*;
@@ -45,7 +48,7 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
 
     //HUD
     public final LinkedList<ItemIdentifierStack> displayList = new LinkedList<>();
-    public final List<PlayerEntity> localModeWatchers = new ArrayList<>();
+    public final PlayerCollectionList localModeWatchers = new PlayerCollectionList();
     private ChassisPipeHud HUD;
 
     public ChassisLogisticPipeBlockEntity() {
@@ -290,9 +293,9 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
 //                }
             }
         }
-//        if(MainProxy.isServer()) {
-//            MainProxy.sendToPlayerList(new PacketPipeInvContent(NetworkConstants.CHASSIE_PIPE_MODULE_CONTENT, xCoord, yCoord, zCoord, ItemIdentifierStack.getListFromInventory(_moduleInventory)).getPacket(), localModeWatchers);
-//        }
+        if(FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+            PacketUtil.sendToPlayerList(new UpdateChassisInventoryContentS2CPacket(x, y, z, true, ItemIdentifierStack.getListFromInventory(moduleInventory)), localModeWatchers);
+        }
     }
 
     @Override
@@ -431,5 +434,37 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
     @Override
     public HUDRenderer getRenderer() {
         return HUD;
+    }
+
+    public void handleItemStackList(LinkedList<ItemIdentifierStack> allItems) {
+        moduleInventory.handleItemStackList(allItems);
+    }
+
+    @Override
+    public void startWatching() {
+        PacketHelper.send(new UpdatePlayerWatchingStatusC2SPacket(x, y, z, 1, true));
+    }
+
+    @Override
+    public void stopWatching() {
+        PacketHelper.send(new UpdatePlayerWatchingStatusC2SPacket(x, y, z, 1, false));
+        HUD.stopWatching();
+    }
+
+    @Override
+    public void playerStartWatching(PlayerEntity player, int mode) {
+        if(mode == 1) {
+            localModeWatchers.add(player);
+            PacketHelper.sendTo(player, new UpdateChassisInventoryContentS2CPacket(x, y, z, true, ItemIdentifierStack.getListFromInventory(moduleInventory)));
+            PacketHelper.sendTo(player, new UpdateChassisInventoryContentS2CPacket(x, y, z, false, displayList));
+        } else {
+            super.playerStartWatching(player, mode);
+        }
+    }
+
+    @Override
+    public void playerStopWatching(PlayerEntity player, int mode) {
+        super.playerStopWatching(player, mode);
+        localModeWatchers.remove(player);
     }
 }

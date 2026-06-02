@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.LinkedList;
 
 public class SendScreenContentS2CPacket extends Packet implements ManagedPacket<SendScreenContentS2CPacket> {
@@ -40,8 +41,8 @@ public class SendScreenContentS2CPacket extends Packet implements ManagedPacket<
                 allItems.add(ItemIdentifier.get(Item.ITEMS[itemID], dataValue, tag).makeStack(amount));
             }
         }
-        catch (Exception ignored){
-
+        catch (IOException e){
+            throw new RuntimeException(e);
         }
     }
 
@@ -57,8 +58,8 @@ public class SendScreenContentS2CPacket extends Packet implements ManagedPacket<
             }
             stream.writeByte(0);
         }
-        catch (Exception ignored){
-
+        catch (IOException e){
+            throw new RuntimeException(e);
         }
     }
 

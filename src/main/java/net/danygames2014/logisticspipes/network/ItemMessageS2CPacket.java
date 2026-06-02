@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -50,8 +51,8 @@ public class ItemMessageS2CPacket extends Packet implements ManagedPacket<ItemMe
                 items.add(error);
             }
         }
-        catch (Exception ignored){
-
+        catch (IOException e){
+            throw new RuntimeException(e);
         }
     }
 
@@ -67,8 +68,8 @@ public class ItemMessageS2CPacket extends Packet implements ManagedPacket<ItemMe
             }
             stream.writeByte(0);
         }
-        catch (Exception ignored){
-
+        catch (IOException e){
+            throw new RuntimeException(e);
         }
     }
 

@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 
 public class SubmitRequestC2SPacket extends CoordinatesPacket implements ManagedPacket<SubmitRequestC2SPacket> {
     public int itemID;
@@ -46,8 +47,8 @@ public class SubmitRequestC2SPacket extends CoordinatesPacket implements Managed
             amount = stream.readInt();
             tag = SendNbtCompound.readNbtCompound(stream);
         }
-        catch (Exception ignored) {
-
+        catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -60,8 +61,8 @@ public class SubmitRequestC2SPacket extends CoordinatesPacket implements Managed
             stream.writeInt(amount);
             SendNbtCompound.writeNbtCompound(tag, stream);
         }
-        catch (Exception ignored) {
-
+        catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

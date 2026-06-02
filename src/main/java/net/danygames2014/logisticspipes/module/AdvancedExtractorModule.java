@@ -5,6 +5,7 @@ import net.danygames2014.logisticspipes.block.pipe.LogisticsManager;
 import net.danygames2014.logisticspipes.gui.hud.modules.AdvancedExtractorHud;
 import net.danygames2014.logisticspipes.gui.hud.modules.ExtractorHud;
 import net.danygames2014.logisticspipes.interfaces.*;
+import net.danygames2014.logisticspipes.network.UpdateModuleInventoryContentS2CPacket;
 import net.danygames2014.logisticspipes.network.UpdatePlayerModuleWatchingStatusC2SPacket;
 import net.danygames2014.logisticspipes.screen.handler.AdvancedExtractorScreenHandler;
 import net.danygames2014.logisticspipes.util.*;
@@ -233,6 +234,7 @@ public class AdvancedExtractorModule implements LogisticsModule, SneakyDirection
     @Override
     public void startWatching(PlayerEntity player) {
         localModeWatchers.add(player);
+        PacketHelper.sendTo(player, new UpdateModuleInventoryContentS2CPacket(x, y, z, slot, ItemIdentifierStack.getListFromInventory(filterInventory)));
     }
 
     @Override
@@ -277,7 +279,7 @@ public class AdvancedExtractorModule implements LogisticsModule, SneakyDirection
     }
 
     public void markDirty() {
-//        MainProxy.sendToPlayerList(new PacketModuleInvContent(NetworkConstants.MODULE_INV_CONTENT, xCoord, yCoord, zCoord, slot, ItemIdentifierStack.getListFromInventory(inventory)).getPacket(), localModeWatchers);
+        PacketUtil.sendToPlayerList(new UpdateModuleInventoryContentS2CPacket(x, y, z, slot, ItemIdentifierStack.getListFromInventory(filterInventory)), localModeWatchers);
     }
 
     @Override

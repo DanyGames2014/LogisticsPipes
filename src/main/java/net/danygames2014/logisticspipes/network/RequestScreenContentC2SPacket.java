@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 
 public class RequestScreenContentC2SPacket extends CoordinatesPacket implements ManagedPacket<RequestScreenContentC2SPacket> {
 
@@ -34,8 +35,8 @@ public class RequestScreenContentC2SPacket extends CoordinatesPacket implements 
         try {
             option = RequestHandler.DisplayOptions.values()[stream.readInt()];
         }
-        catch (Exception ignored) {
-
+        catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -45,8 +46,8 @@ public class RequestScreenContentC2SPacket extends CoordinatesPacket implements 
         try {
             stream.writeInt(option.ordinal());
         }
-        catch (Exception ignored) {
-
+        catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

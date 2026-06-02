@@ -346,12 +346,12 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
     @Override
     public void startWatching() {
-        PacketHelper.send(new UpdatePlayerWatchingStatusC2SPacket(x, y, z, 1, true));
+        PacketHelper.send(new UpdatePlayerWatchingStatusC2SPacket(x, y, z, 0, true));
     }
 
     @Override
     public void stopWatching() {
-        PacketHelper.send(new UpdatePlayerWatchingStatusC2SPacket(x, y, z, 1, false));
+        PacketHelper.send(new UpdatePlayerWatchingStatusC2SPacket(x, y, z, 0, false));
     }
 
     @Override

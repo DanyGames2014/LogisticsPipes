@@ -40,8 +40,8 @@ public class UpdatePlayerWatchingStatusC2SPacket extends CoordinatesPacket imple
         try {
             stream.writeInt(mode);
             stream.writeBoolean(startWatching);
-        } catch (IOException ignored) {
-
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -51,8 +51,8 @@ public class UpdatePlayerWatchingStatusC2SPacket extends CoordinatesPacket imple
         try {
             mode = stream.readInt();
             startWatching = stream.readBoolean();
-        } catch (IOException ignored) {
-
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

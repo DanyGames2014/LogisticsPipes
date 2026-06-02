@@ -16,4 +16,10 @@ public class PacketUtil {
             }
         }
     }
+
+    public static void sendToPlayerList(Packet packet, PlayerCollectionList players) {
+        for(PlayerEntity player : players.players()) {
+            PacketHelper.sendTo(player, packet);
+        }
+    }
 }
