@@ -30,7 +30,7 @@ public class AdvancedExtractorScreen extends ScreenWithPrevious {
         super.init();
         buttons.clear();
         buttons.add(new ButtonWidget(0, width / 2 + 20, height / 2 - 34, 60, 20, advancedExtractor.areItemsIncluded() ? "Included" : "Excluded"));
-        buttons.add(new ButtonWidget(1, width / 2 - 25, height / 2 - 34, 40, 20, "Sneaky"));
+//        buttons.add(new ButtonWidget(1, width / 2 - 25, height / 2 - 34, 40, 20, "Sneaky"));
     }
 
     @Override
