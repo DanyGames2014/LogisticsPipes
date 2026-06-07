@@ -84,7 +84,6 @@ public class RequestTableLogisticPipeBlockEntity extends RequestLogisticPipeBloc
         }
     }
 
-    // TODO: check if this is correct
     @Override
     public Direction itemArrived(RoutedItem item) {
         if(item.getItemStack() != null) {

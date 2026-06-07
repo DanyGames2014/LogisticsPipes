@@ -129,7 +129,6 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
         LogisticsPromise promise = new LogisticsPromise();
         promise.item = tree.getStack().getItem();
         promise.numberOfItems = Math.min(canProvide, tree.getMissingItemCount());
-        //TODO: FIX THIS CAST
         promise.sender = (ProvideItems) itemSender;
         tree.addPromise(promise);
     }

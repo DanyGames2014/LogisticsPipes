@@ -362,7 +362,6 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         if(mode == 0) {
             watchers.add(player);
         }
-        // TODO: add this packet
 //        MainProxy.sendPacketToPlayer(PacketHandler.getPacket(StatUpdate.class).setPipe(this), (Player)player);
     }
 

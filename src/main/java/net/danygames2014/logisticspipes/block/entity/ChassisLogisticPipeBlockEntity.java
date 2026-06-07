@@ -287,7 +287,6 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
                 }
             }
         }
-        // TODO: handle this
         if (reInitGui) {
             if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
 //                if (FMLClientHandler.instance().getClient().currentScreen instanceof GuiChassiPipe){

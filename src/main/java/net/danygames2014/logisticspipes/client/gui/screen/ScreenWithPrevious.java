@@ -20,7 +20,6 @@ public class ScreenWithPrevious extends LogisticsBaseScreen {
         if (keyCode == 1 || character == 'e') {
             if (previousScreen instanceof ScreenIdentifierProvider provider) {
                 super.keyPressed(character, keyCode);
-                // TODO: Fix in multiplayer
                 if (!player.world.isRemote) {
                     minecraft.setScreen(previousScreen);
                 }

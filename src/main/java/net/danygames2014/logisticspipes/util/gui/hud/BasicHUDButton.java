@@ -74,7 +74,7 @@ public abstract class BasicHUDButton implements HUDButton {
     @Override
     public void renderButton(boolean hover, boolean clicked) {
         Minecraft minecraft = Minecraft.INSTANCE;
-        minecraft.textureManager.bindTexture(minecraft.textureManager.getTextureId("/gui/gui.png")); //TODO: check this change
+        minecraft.textureManager.bindTexture(minecraft.textureManager.getTextureId("/gui/gui.png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         int k = !buttonEnabled() ? 0 : hover ? 2 : 1;
 

@@ -233,7 +233,6 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
 
     public abstract void specialItemRendering(ItemIdentifier item, int x, int y);
 
-    // TODO: implement
     @Override
     protected void drawForeground() {
         if(super.hasSubScreen()) return;
@@ -413,7 +412,6 @@ public abstract class OrderScreen extends LogisticsBaseScreen implements ItemSea
         }
     }
 
-    // TODO: make it so you can request more craftables than there are in storage
     @Override
     protected void buttonClicked(ButtonWidget button) {
         clickWasButton = true;
