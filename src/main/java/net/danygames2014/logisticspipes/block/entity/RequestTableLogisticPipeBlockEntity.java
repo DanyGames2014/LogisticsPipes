@@ -97,4 +97,12 @@ public class RequestTableLogisticPipeBlockEntity extends RequestLogisticPipeBloc
         }
         return null;
     }
+
+    @Override
+    public void onBreak() {
+        super.onBreak();
+        net.danygames2014.buildcraft.util.ItemUtil.dropItems(world, inv, x, y, z);
+        net.danygames2014.buildcraft.util.ItemUtil.dropItems(world, matrix, x, y, z);
+        net.danygames2014.buildcraft.util.ItemUtil.dropItems(world, toSortInv, x, y, z);
+    }
 }
