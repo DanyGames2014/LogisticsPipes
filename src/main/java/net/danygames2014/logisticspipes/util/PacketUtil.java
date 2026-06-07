@@ -1,5 +1,7 @@
 package net.danygames2014.logisticspipes.util;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.world.World;
@@ -18,8 +20,10 @@ public class PacketUtil {
     }
 
     public static void sendToPlayerList(Packet packet, PlayerCollectionList players) {
-        for(PlayerEntity player : players.players()) {
-            PacketHelper.sendTo(player, packet);
+        if(FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+            for(PlayerEntity player : players.players()) {
+                PacketHelper.sendTo(player, packet);
+            }
         }
     }
 }

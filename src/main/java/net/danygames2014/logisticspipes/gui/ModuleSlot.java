@@ -1,6 +1,7 @@
 package net.danygames2014.logisticspipes.gui;
 
 import net.danygames2014.logisticspipes.block.entity.ChassisLogisticPipeBlockEntity;
+import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
 import net.danygames2014.logisticspipes.item.ModuleItem;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -19,9 +20,11 @@ public class ModuleSlot extends RestrictedSlot {
         return itemStack.getItem() instanceof ModuleItem;
     }
 
-    @Override
-    public void onTakeItem(ItemStack stack) {
-        super.onTakeItem(stack);
-        ModuleItem.saveInformation(stack, pipe.getLogisticsModule().getSubModule(moduleIndex), pipe.world);
-    }
+//    @Override
+//    public ItemStack takeStack(int amount) {
+//        ItemStack stack = inventory.getStack(moduleIndex);
+//        ModuleItem.saveInformation(stack, pipe.getLogisticsModule().getSubModule(moduleIndex), pipe.world);
+//        super.takeStack(amount);
+//        return stack;
+//    }
 }

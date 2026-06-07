@@ -88,7 +88,8 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
         }
 
         if (moduleInventory == null) {
-            moduleInventory = new SimpleInventory(getChassisSize(), "Chassis pipe", 1, this::markInventoryDirty);
+            moduleInventory = new ChassisInventory(getChassisSize(), "Chassis pipe", 1, this::markInventoryDirty, this);
+//            moduleInventory = new SimpleInventory(getChassisSize(), "Chassis pipe", 1, this::markInventoryDirty);
         }
         
         if (module == null) {
@@ -213,7 +214,8 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
             chassisSize = nbt.getInt("chassisSize");
         }
         if (moduleInventory == null) {
-            moduleInventory = new SimpleInventory(getChassisSize(), "Chassis pipe", 1, this::markInventoryDirty);
+            moduleInventory = new ChassisInventory(getChassisSize(), "Chassis pipe", 1, this::markInventoryDirty, this);
+//            moduleInventory = new SimpleInventory(getChassisSize(), "Chassis pipe", 1, this::markInventoryDirty);
         }
         if (module == null) {
             module = new ChassisModule(getChassisSize(), this);
@@ -455,8 +457,10 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
     public void playerStartWatching(PlayerEntity player, int mode) {
         if(mode == 1) {
             localModeWatchers.add(player);
-            PacketHelper.sendTo(player, new UpdateChassisInventoryContentS2CPacket(x, y, z, true, ItemIdentifierStack.getListFromInventory(moduleInventory)));
-            PacketHelper.sendTo(player, new UpdateChassisInventoryContentS2CPacket(x, y, z, false, displayList));
+            if(FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+                PacketHelper.sendTo(player, new UpdateChassisInventoryContentS2CPacket(x, y, z, true, ItemIdentifierStack.getListFromInventory(moduleInventory)));
+                PacketHelper.sendTo(player, new UpdateChassisInventoryContentS2CPacket(x, y, z, false, displayList));
+            }
         } else {
             super.playerStartWatching(player, mode);
         }

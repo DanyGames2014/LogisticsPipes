@@ -136,6 +136,8 @@ public class SimpleInventory implements Inventory, SaveState {
     }
 
     public void handleItemStackList(LinkedList<ItemIdentifierStack> _allItems) {
+
+//        Arrays.fill(contents, null);
         int i = 0;
         for (ItemIdentifierStack stack : _allItems) {
             if (contents.length <= i) break;

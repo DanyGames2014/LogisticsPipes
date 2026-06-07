@@ -32,7 +32,7 @@ public class ModuleItem extends TemplateItem {
     }
 
     public static void saveInformation(ItemStack itemStack, LogisticsModule module, World world) {
-        if (module == null) {
+        if (module == null || itemStack == null) {
             return;
         }
 

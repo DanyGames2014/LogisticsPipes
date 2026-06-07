@@ -28,7 +28,10 @@ public class InventoryContentPacket extends CoordinatesPacket {
         super.write(stream);
         try {
             for (final ItemIdentifierStack item : allItems) {
-                if(item == null) continue;
+                if(item == null) {
+                    stream.writeByte(2);
+                    continue;
+                }
                 stream.writeByte(1); // byte
                 stream.writeInt(item.getItem().item.id);
                 stream.writeInt(item.getItem().itemDamage);
@@ -46,12 +49,17 @@ public class InventoryContentPacket extends CoordinatesPacket {
     public void read(DataInputStream stream) {
         super.read(stream);
         try {
-            while (stream.readByte() != 0) { // read until the end
-                final int itemID = stream.readInt();
-                final int dataValue = stream.readInt();
-                final int amount = stream.readInt();
-                final NbtCompound tag = SendNbtCompound.readNbtCompound(stream);
-                allItems.add(ItemIdentifier.get(Item.ITEMS[itemID], dataValue, tag).makeStack(amount));
+            byte v;
+            while ((v = stream.readByte()) != 0) { // read until the end
+                if(v == 1) {
+                    final int itemID = stream.readInt();
+                    final int dataValue = stream.readInt();
+                    final int amount = stream.readInt();
+                    final NbtCompound tag = SendNbtCompound.readNbtCompound(stream);
+                    allItems.add(ItemIdentifier.get(Item.ITEMS[itemID], dataValue, tag).makeStack(amount));
+                } else {
+                    allItems.add(null);
+                }
             }
         }
         catch (IOException e){

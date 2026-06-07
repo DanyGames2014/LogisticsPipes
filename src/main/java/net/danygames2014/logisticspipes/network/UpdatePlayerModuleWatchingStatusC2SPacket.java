@@ -4,6 +4,8 @@ import net.danygames2014.buildcraft.packet.CoordinatesPacket;
 import net.danygames2014.logisticspipes.block.entity.ChassisLogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.interfaces.ModuleWatchReceiver;
 import net.danygames2014.logisticspipes.interfaces.WatchingHandler;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.NetworkHandler;
 import net.modificationstation.stationapi.api.entity.player.PlayerHelper;
@@ -59,6 +61,9 @@ public class UpdatePlayerModuleWatchingStatusC2SPacket extends CoordinatesPacket
 
     @Override
     public void apply(NetworkHandler networkHandler) {
+        if(FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+            return;
+        }
         PlayerEntity player = PlayerHelper.getPlayerFromPacketHandler(networkHandler);
         if(player.world.getBlockEntity(x, y, z) instanceof ChassisLogisticPipeBlockEntity pipe && pipe.getLogisticsModule() != null && pipe.getLogisticsModule().getSubModule(slot) instanceof ModuleWatchReceiver receiver) {
             if(startWatching) {
