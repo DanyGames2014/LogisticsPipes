@@ -2,6 +2,7 @@ package net.danygames2014.logisticspipes.module;
 
 import net.danygames2014.buildcraft.api.core.Serializable;
 import net.danygames2014.logisticspipes.LogisticsPipes;
+import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.pipe.LogisticsManager;
 import net.danygames2014.logisticspipes.gui.hud.modules.AdvancedExtractorHud;
 import net.danygames2014.logisticspipes.gui.hud.modules.ExtractorHud;
@@ -158,6 +159,14 @@ public class AdvancedExtractorModule implements LogisticsModule, SneakyDirection
             if ((slot != null) && (slot.count > 0) && (CanExtract(slot))) {
                 if (doRemove) {
                     int count = Math.min(itemsToExtract(), slot.count);
+
+                    if(count > 0) {
+                        for(int j = 0; j < count; j++){
+                            if(worldProvider.getWorld().getBlockEntity(x, y, z) instanceof LogisticPipeBlockEntity pipe) {
+                                pipe.queueParticle(ParticleColor.ORANGE, 2);
+                            }
+                        }
+                    }
 
                     if (count <= 0) {
                         return null;

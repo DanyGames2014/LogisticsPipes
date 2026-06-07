@@ -124,6 +124,8 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
             return;
         }
 
+        queueParticle(ParticleColor.VIOLET, 2);
+
         LinkedList<AdjacentBlockEntity> crafters = locateCrafters();
         if (crafters.isEmpty()) {
             orderManager.sendFailed();
@@ -225,6 +227,7 @@ public class CraftingLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
         }
         
         orderManager.addOrder(new ItemIdentifierStack(promise.item, promise.numberOfItems), destination);
+        queueParticle(ParticleColor.WHITE, 2);
     }
 
     @Override

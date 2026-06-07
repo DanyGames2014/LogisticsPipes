@@ -6,6 +6,7 @@ import net.danygames2014.logisticspipes.block.pipe.LogisticsManager;
 import net.danygames2014.logisticspipes.interfaces.RoutedItem;
 import net.danygames2014.logisticspipes.screen.handler.RequestTableScreenHandler;
 import net.danygames2014.logisticspipes.util.ItemUtil;
+import net.danygames2014.logisticspipes.util.ParticleColor;
 import net.danygames2014.logisticspipes.util.SimpleInventory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -73,6 +74,7 @@ public class RequestTableLogisticPipeBlockEntity extends RequestLogisticPipeBloc
             if(itemToSend.isDestinationValid()) {
                 Direction dir = getDirectionForItem(itemToSend);
                 super.queueRoutedItem(itemToSend, dir.getOpposite());
+                queueParticle(ParticleColor.ORANGE, 4);
                 toSortInv.setStack(0, null);
             } else {
                 delay = 100;

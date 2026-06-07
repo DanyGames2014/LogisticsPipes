@@ -160,6 +160,11 @@ public class SupplierLogisticPipeBlockEntity extends LogisticPipeBlockEntity imp
 
             }
         }
+        for(int amount : requestedItems.values()) {
+            if(amount > 0) {
+                queueParticle(ParticleColor.VIOLET, 2);
+            }
+        }
     }
 
     @Override

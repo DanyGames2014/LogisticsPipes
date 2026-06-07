@@ -8,4 +8,7 @@ public class Config {
 
     @ConfigRoot(value = "hud", visibleName = "HUD Config", index = 1)
     public static final HudConfig HUD_CONFIG = new HudConfig();
+
+    @ConfigRoot(value = "pipe", visibleName = "Pipe Config", index = 2)
+    public static final PipeConfig PIPE_CONFIG = new PipeConfig();
 }

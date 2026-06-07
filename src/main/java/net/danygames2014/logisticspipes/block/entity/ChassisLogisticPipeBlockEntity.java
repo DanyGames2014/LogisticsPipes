@@ -384,6 +384,7 @@ public class ChassisLogisticPipeBlockEntity extends LogisticPipeBlockEntity impl
             LogisticsModule x = module.getSubModule(i);
             if (x instanceof LegacyActiveModule) {
                 ((LegacyActiveModule) x).fullFill(promise, destination);
+                queueParticle(ParticleColor.WHITE, 2);
             }
         }
     }

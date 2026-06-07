@@ -1,11 +1,13 @@
 package net.danygames2014.logisticspipes.block.pipe;
 
+import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
 import net.danygames2014.logisticspipes.interfaces.ProvideItems;
 import net.danygames2014.logisticspipes.interfaces.RoutedItem;
 import net.danygames2014.logisticspipes.interfaces.routing.CraftItems;
 import net.danygames2014.logisticspipes.routing.Router;
 import net.danygames2014.logisticspipes.util.ItemIdentifier;
+import net.danygames2014.logisticspipes.util.ParticleColor;
 import net.danygames2014.logisticspipes.util.RoutingUtil;
 import net.danygames2014.logisticspipes.util.SinkReply;
 import net.danygames2014.logisticspipes.util.tuple.Pair;
@@ -152,6 +154,11 @@ public class LogisticsManager implements net.danygames2014.logisticspipes.interf
                 potentialDestination = candidateRouter.getRouterId();
                 continue;
             }
+        }
+
+        if(potentialDestination != Long.MIN_VALUE){
+            LogisticPipeBlockEntity pipe = RoutingUtil.getRouter(sourceRouter.getPipe().world, potentialDestination).getPipe();
+            pipe.queueParticle(ParticleColor.BLUE, 10);
         }
 
         return new Pair<>(potentialDestination, bestReply);

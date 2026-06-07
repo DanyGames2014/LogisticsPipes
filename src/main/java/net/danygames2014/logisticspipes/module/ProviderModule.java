@@ -1,6 +1,7 @@
 package net.danygames2014.logisticspipes.module;
 
 import net.danygames2014.logisticspipes.LogisticsPipes;
+import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.pipe.ExtractionMode;
 import net.danygames2014.logisticspipes.gui.hud.modules.ItemSinkHud;
 import net.danygames2014.logisticspipes.gui.hud.modules.ProviderModuleHud;
@@ -108,6 +109,9 @@ public class ProviderModule implements LogisticsModule, LegacyActiveModule, Clie
 
             if (sent > 0) {
                 orderManager.sendSuccessfull(sent);
+                if(worldProvider.getWorld().getBlockEntity(x, y, z) instanceof LogisticPipeBlockEntity pipe) {
+                    pipe.queueParticle(ParticleColor.VIOLET, 3);
+                }
             } else {
                 orderManager.sendFailed();
                 break;

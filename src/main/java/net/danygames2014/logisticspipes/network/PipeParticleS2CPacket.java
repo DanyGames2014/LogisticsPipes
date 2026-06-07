@@ -1,6 +1,7 @@
 package net.danygames2014.logisticspipes.network;
 
 import net.danygames2014.logisticspipes.client.particle.SparkleParticle;
+import net.danygames2014.logisticspipes.config.Config;
 import net.danygames2014.logisticspipes.util.ParticleColor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -24,7 +25,7 @@ import java.util.Random;
 public class PipeParticleS2CPacket extends Packet implements ManagedPacket<PipeParticleS2CPacket> {
     public static final PacketType<PipeParticleS2CPacket> TYPE = PacketType.builder(true, false, PipeParticleS2CPacket::new).build();
 
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
     private int[] queuedParticles = new int[ParticleColor.values().length];
     private BlockPos pos;
@@ -33,7 +34,7 @@ public class PipeParticleS2CPacket extends Packet implements ManagedPacket<PipeP
     }
 
     public PipeParticleS2CPacket(int[] queuedParticles, int x, int y, int z) {
-        this.queuedParticles = queuedParticles;
+        this.queuedParticles = queuedParticles.clone();
         this.pos = new BlockPos(x, y, z);
     }
 
@@ -71,6 +72,7 @@ public class PipeParticleS2CPacket extends Packet implements ManagedPacket<PipeP
 
     @Environment(EnvType.CLIENT)
     public void applyClient(NetworkHandler networkHandler) {
+        if(!Config.PIPE_CONFIG.spawnParticles) return;
         PlayerEntity player = PlayerHelper.getPlayerFromPacketHandler(networkHandler);
         if (player != null && player.world != null) {
             for (int i = 0; i < queuedParticles.length; i++) {

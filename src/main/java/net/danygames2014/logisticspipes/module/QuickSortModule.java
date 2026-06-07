@@ -1,10 +1,12 @@
 package net.danygames2014.logisticspipes.module;
 
+import net.danygames2014.logisticspipes.block.entity.LogisticPipeBlockEntity;
 import net.danygames2014.logisticspipes.block.pipe.LogisticsManager;
 import net.danygames2014.logisticspipes.interfaces.InventoryProvider;
 import net.danygames2014.logisticspipes.interfaces.LogisticsModule;
 import net.danygames2014.logisticspipes.interfaces.SendRoutedItem;
 import net.danygames2014.logisticspipes.interfaces.WorldProvider;
+import net.danygames2014.logisticspipes.util.ParticleColor;
 import net.danygames2014.logisticspipes.util.SinkReply;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
@@ -20,6 +22,10 @@ public class QuickSortModule implements LogisticsModule {
     private InventoryProvider invProvider;
     private SendRoutedItem itemSender;
     private WorldProvider worldProvider;
+
+    private int x;
+    private int y;
+    private int z;
 
     public QuickSortModule(){}
 
@@ -77,6 +83,9 @@ public class QuickSortModule implements LogisticsModule {
                 continue;
             }
             itemSender.sendStack(stackToSend);
+            if(worldProvider.getWorld().getBlockEntity(x, y, z) instanceof LogisticPipeBlockEntity pipe) {
+                pipe.queueParticle(ParticleColor.ORANGE, 8);
+            }
             targetInventory.setStack(i, null);
 
             sent = true;
@@ -90,7 +99,9 @@ public class QuickSortModule implements LogisticsModule {
 
     @Override
     public void registerPosition(int x, int y, int z, int slot) {
-
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     @Override

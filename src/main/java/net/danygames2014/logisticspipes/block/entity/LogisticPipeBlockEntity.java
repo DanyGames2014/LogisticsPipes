@@ -311,6 +311,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
             statLifetimeSent++;
             statSessionSent++;
             ItemUtil.spawnRoutedItem(world, routedItem, x, y, z, from);
+            queueParticle(ParticleColor.ORANGE, 2);
         }
     }
 
