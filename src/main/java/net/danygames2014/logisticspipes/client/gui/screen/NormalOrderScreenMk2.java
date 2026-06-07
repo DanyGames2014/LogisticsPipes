@@ -75,6 +75,9 @@ public class NormalOrderScreenMk2 extends NormalOrderScreen implements ScreenWit
         if (button == 0) {
             if (mouseX >= right - 39 && mouseX < right - 19 && mouseY >= bottom - 47 && mouseY < bottom - 27) {
                 if (getDisk() != null) {
+                    if(pipe.world.isRemote) {
+                        pipe.getDiskInventory().setStack(0, null);
+                    }
                     PacketHelper.send(new DropDiskC2SPacket(pipe.x, pipe.y, pipe.z));
                 }
             }

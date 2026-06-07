@@ -163,6 +163,9 @@ public class RequestTableScreen extends OrderScreen implements ScreenWithDisk {
         if (button == 0) {
             if (mouseX >= right - 39 && mouseX < right - 19 && mouseY >= bottom - 47 && mouseY < bottom - 27) {
                 if (getDisk() != null) {
+                    if(table.world.isRemote) {
+                        table.getDiskInventory().setStack(0, null);
+                    }
                     PacketHelper.send(new DropDiskC2SPacket(table.x, table.y, table.z));
                 }
             }
