@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "logisticspipes:remote_orderer"
+    },
+    {
+      "item": "minecraft:dye",
+      "damage": 4
+    }
+  ],
+  "result": {
+    "item": "logisticspipes:blue_remote_orderer",
+    "count": 1
+  }
+}

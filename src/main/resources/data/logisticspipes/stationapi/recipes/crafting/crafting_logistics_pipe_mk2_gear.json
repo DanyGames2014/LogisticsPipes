@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "g",
+    "p"
+  ],
+  "key": {
+    "g": {
+      "item": "buildcraft:golden_gear"
+    },
+    "p": {
+      "item": "logisticspipes:crafting_item_pipe"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:crafting_item_pipe_mk2",
+    "count": 1
+  }
+}

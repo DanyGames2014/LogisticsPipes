@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "g",
+    "p"
+  ],
+  "key": {
+    "g": {
+      "item": "buildcraft:diamond_gear"
+    },
+    "p": {
+      "item": "logisticspipes:provider_item_pipe"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:provider_item_pipe_mk2",
+    "count": 1
+  }
+}

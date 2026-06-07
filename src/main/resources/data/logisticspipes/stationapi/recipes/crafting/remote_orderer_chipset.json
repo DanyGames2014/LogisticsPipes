@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "gg",
+    "gg",
+    "dd"
+  ],
+  "key": {
+    "g": {
+      "item": "minecraft:glass"
+    },
+    "d": {
+      "item": "buildcraft:redstone_diamond_chipset"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:remote_orderer",
+    "count": 1
+  }
+}

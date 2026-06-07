@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "igi",
+    "grg",
+    "igi"
+  ],
+  "key": {
+    "i": {
+      "item": "minecraft:dye",
+      "meta": 0
+    },
+    "g": {
+      "item": "minecraft:gold_ingot"
+    },
+    "r": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "logisticspipes:disk",
+    "count": 1
+  }
+}
