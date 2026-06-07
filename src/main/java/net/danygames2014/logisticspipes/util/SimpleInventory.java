@@ -126,6 +126,7 @@ public class SimpleInventory implements Inventory, SaveState {
             }
         }
         nbt.put(prefix + "items", nbtList);
+        nbt.putInt(prefix + "itemsCount", contents.length);
     }
 
     public void dropContents(World world, int x, int y, int z) {
