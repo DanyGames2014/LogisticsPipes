@@ -39,8 +39,8 @@ import java.util.Map;
 import java.util.Queue;
 
 public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements Router, HUDRendererProvider, RequestItems, WatchingHandler {
-    public static int pipeCount = 0;
-    public int updateOffset = 0;
+    private static int pipeCount = 0;
+    private int updateOffset = 0;
 
     private boolean enabled = true;
 
@@ -89,7 +89,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
 
         // Offset the updates of this pipe evenly between ticks
         pipeCount++;
-        this.updateOffset = pipeCount % Config.NETWORK_CONFIG.neighborDetectionFrequency;
+        this.updateOffset = pipeCount & 0b00011111; // Config.NETWORK_CONFIG.neighborDetectionFrequency;
 
         setup();
     }
@@ -124,7 +124,7 @@ public abstract class LogisticPipeBlockEntity extends PipeBlockEntity implements
         spawnParticleTick();
 
         if (world != null && !world.isRemote) {
-            if (updateNeighbors || (world.getTime() % Config.NETWORK_CONFIG.neighborDetectionFrequency == this.updateOffset)) {
+            if (updateNeighbors || ((world.getTime() & 0b00011111) == this.updateOffset)) {
                 updateNeighbors();
                 updateNeighbors = false;
             }
